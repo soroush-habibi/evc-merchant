@@ -13,7 +13,8 @@ export enum errorEnum {
     ACTIVE_OTP = 104,
     NO_OTP = 105,
     WRONG_OTP = 106,
-    USER_NOT_FOUND = 107
+    USER_NOT_FOUND = 107,
+    ALREADY_REGISTERED = 108,
 }
 
 export class CustomErrorClass {
@@ -79,6 +80,14 @@ export class CustomErrorClass {
         return {
             name: "WRONG_OTP",
             code: errorEnum.WRONG_OTP,
+            httpCode: 400
+        };
+    }
+
+    static alreadyRegistered(): errorType {
+        return {
+            name: "ALREADY_REGISTERED",
+            code: errorEnum.ALREADY_REGISTERED,
             httpCode: 400
         };
     }

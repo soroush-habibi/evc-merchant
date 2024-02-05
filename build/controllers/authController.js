@@ -28,6 +28,8 @@ export default class authController {
             let user = await User.findOne({ phoneNumber });
             if (!user)
                 return next(CustomErrorClass.userNotFound());
+            if (user.fullName)
+                return next(CustomErrorClass.alreadyRegistered());
             const existedOtp = await redis.get(`OTP_${phoneNumber}`);
             if (!existedOtp)
                 return next(CustomErrorClass.noOtp());
@@ -45,7 +47,7 @@ export default class authController {
             await redis.del(`OTP_${phoneNumber}`);
             res.json({
                 message: "saved!",
-                data: refreshToken
+                data: accessToken
             });
         }
         catch (e) {
