@@ -7,7 +7,9 @@ export interface errorType {
 
 export enum errorEnum {
     INTERNAL_ERROR = 9999,
-    ENV = 101, INVALID_MOBILE = 102
+    ENV = 101,
+    JOI_ERROR = 102,
+    AUTH_ERROR = 103
 }
 
 export class CustomErrorClass {
@@ -25,6 +27,23 @@ export class CustomErrorClass {
             name: "INTERNAL_ERROR",
             code: errorEnum.INTERNAL_ERROR,
             httpCode: 500
+        };
+    }
+
+    static joiError(message: any): errorType {
+        return {
+            name: "JOI_ERROR",
+            code: errorEnum.JOI_ERROR,
+            httpCode: 400,
+            message: message
+        };
+    }
+
+    static authError(): errorType {
+        return {
+            name: "AUTH_ERROR",
+            code: errorEnum.AUTH_ERROR,
+            httpCode: 403
         };
     }
 }

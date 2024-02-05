@@ -8,11 +8,19 @@ import { checkEnv } from './utils/checkEnv.js';
 import path from 'path';
 import { fileURLToPath } from "url";
 import errorHandler from './middlewares/errorHandler.js';
-checkEnv("APP_PORT");
+import indexRouter from './routers/indexRouter.js';
+import mongoose from 'mongoose';
+checkEnv("APP_PORT", "JWT_SECRET", "DB_URL");
 let temp = path.dirname(fileURLToPath(import.meta.url)).split('');
 temp.splice(temp.length - 6);
 const ROOT = temp.join('');
 process.env.ROOT = ROOT;
+await mongoose.connect(process.env.DB_URL).then(() => {
+    console.log('MongoDB connected');
+}).catch((err) => {
+    console.log(err);
+    process.exit(1);
+});
 const app = express();
 //!-----------PARSING MIDDLEWARES-----------
 app.use(cookieParser());
@@ -29,13 +37,14 @@ app.use(rateLimit({
 app.use(helmet());
 app.use(cors());
 //!-----------MAIN MIDDLEWARES-----------
-app.use(errorHandler);
+app.use(indexRouter);
 app.use((req, res, next) => {
     res.status(404).json({
         message: "not found!"
     });
 });
 //!-----------HANDLERS MIDDLEWARES-----------
+app.use(errorHandler);
 app.listen(process.env.APP_PORT || 3000, () => {
     console.log(`App is running on port ${process.env.APP_PORT || 3000}`);
 });

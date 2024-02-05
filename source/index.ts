@@ -9,23 +9,35 @@ import path from 'path';
 import { fileURLToPath } from "url";
 import errorHandler from './middlewares/errorHandler.js';
 import indexRouter from './routers/indexRouter.js';
+import mongoose from 'mongoose';
 
 declare global {
     namespace Express {
         interface Request {
-            user?: any
+            user?: {
+                phoneNumber: string
+            }
         }
     }
 }
 
 checkEnv(
-    "APP_PORT"
+    "APP_PORT",
+    "JWT_SECRET",
+    "DB_URL"
 );
 
 let temp: string[] = path.dirname(fileURLToPath(import.meta.url)).split('');
 temp.splice(temp.length - 6);
 const ROOT = temp.join('');
 process.env.ROOT = ROOT;
+
+await mongoose.connect(process.env.DB_URL!).then(() => {
+    console.log('MongoDB connected');
+}).catch((err) => {
+    console.log(err)
+    process.exit(1);
+});
 
 const app = express();
 
@@ -62,5 +74,5 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use(errorHandler);
 
 app.listen(process.env.APP_PORT || 3000, () => {
-    console.log(`App is running on port ${process.env.APP_PORT || 3000}`)
+    console.log(`App is running on port ${process.env.APP_PORT || 3000}`);
 });
