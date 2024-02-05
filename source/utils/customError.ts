@@ -9,7 +9,11 @@ export enum errorEnum {
     INTERNAL_ERROR = 9999,
     ENV = 101,
     JOI_ERROR = 102,
-    AUTH_ERROR = 103
+    AUTH_ERROR = 103,
+    ACTIVE_OTP = 104,
+    NO_OTP = 105,
+    WRONG_OTP = 106,
+    USER_NOT_FOUND = 107
 }
 
 export class CustomErrorClass {
@@ -44,6 +48,38 @@ export class CustomErrorClass {
             name: "AUTH_ERROR",
             code: errorEnum.AUTH_ERROR,
             httpCode: 403
+        };
+    }
+
+    static activeOtp(): errorType {
+        return {
+            name: "ACTIVE_OTP",
+            code: errorEnum.ACTIVE_OTP,
+            httpCode: 400
+        };
+    }
+
+    static userNotFound(): errorType {
+        return {
+            name: "USER_NOT_FOUND",
+            code: errorEnum.USER_NOT_FOUND,
+            httpCode: 404
+        };
+    }
+
+    static noOtp(): errorType {
+        return {
+            name: "NO_OTP",
+            code: errorEnum.NO_OTP,
+            httpCode: 404
+        };
+    }
+
+    static wrongOtp(): errorType {
+        return {
+            name: "WRONG_OTP",
+            code: errorEnum.WRONG_OTP,
+            httpCode: 400
         };
     }
 }

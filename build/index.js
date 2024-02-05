@@ -10,7 +10,8 @@ import { fileURLToPath } from "url";
 import errorHandler from './middlewares/errorHandler.js';
 import indexRouter from './routers/indexRouter.js';
 import mongoose from 'mongoose';
-checkEnv("APP_PORT", "JWT_SECRET", "DB_URL");
+import { redis } from './utils/redis.js';
+checkEnv("APP_PORT", "JWT_SECRET", "JWT_REFRESH_SECRET", "DB_URL", "REDIS_URL", "REDIS_PORT", "REDIS_PASSWORD");
 let temp = path.dirname(fileURLToPath(import.meta.url)).split('');
 temp.splice(temp.length - 6);
 const ROOT = temp.join('');
@@ -23,6 +24,11 @@ await mongoose.connect(process.env.DB_URL).then(() => {
 });
 const app = express();
 //!-----------PARSING MIDDLEWARES-----------
+//*add redis instance
+app.use((req, res, next) => {
+    req.redis = redis;
+    next();
+});
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

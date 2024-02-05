@@ -3,8 +3,6 @@ import JWT, { JwtPayload } from 'jsonwebtoken';
 import { CustomErrorClass } from "source/utils/customError.js";
 import { User } from "../models/user.model.js";
 
-const secret = process.env.JWT_SECRET;
-
 export default async (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers['authorization'];
     const tokenType = authHeader ? authHeader.split(" ")[0] : "";

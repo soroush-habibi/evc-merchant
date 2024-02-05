@@ -1,7 +1,6 @@
 import JWT from 'jsonwebtoken';
 import { CustomErrorClass } from "source/utils/customError.js";
 import { User } from "../models/user.model.js";
-const secret = process.env.JWT_SECRET;
 export default async (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const tokenType = authHeader ? authHeader.split(" ")[0] : "";

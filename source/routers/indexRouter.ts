@@ -1,7 +1,8 @@
 import express from "express";
-import { FieldType, genericValidator } from "../utils/requestChecker.js";
-import indexController from "../controllers/indexController.js";
+import authRouter from "./authRouter.js";
 
 const indexRouter = express.Router();
+
+indexRouter.use("/auth", authRouter);
 
 export default indexRouter;

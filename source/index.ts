@@ -10,13 +10,16 @@ import { fileURLToPath } from "url";
 import errorHandler from './middlewares/errorHandler.js';
 import indexRouter from './routers/indexRouter.js';
 import mongoose from 'mongoose';
+import { redis } from './utils/redis.js';
+import { Redis } from 'ioredis';
 
 declare global {
     namespace Express {
         interface Request {
             user?: {
-                phoneNumber: string
-            }
+                phoneNumber: string,
+            },
+            redis: Redis
         }
     }
 }
@@ -24,7 +27,11 @@ declare global {
 checkEnv(
     "APP_PORT",
     "JWT_SECRET",
-    "DB_URL"
+    "JWT_REFRESH_SECRET",
+    "DB_URL",
+    "REDIS_URL",
+    "REDIS_PORT",
+    "REDIS_PASSWORD"
 );
 
 let temp: string[] = path.dirname(fileURLToPath(import.meta.url)).split('');
@@ -42,6 +49,12 @@ await mongoose.connect(process.env.DB_URL!).then(() => {
 const app = express();
 
 //!-----------PARSING MIDDLEWARES-----------
+//*add redis instance
+app.use((req: Request, res: Response, next: NextFunction) => {
+    req.redis = redis;
+    next();
+});
+
 app.use(cookieParser());
 
 app.use(express.json());

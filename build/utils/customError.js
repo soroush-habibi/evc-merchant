@@ -4,6 +4,10 @@ export var errorEnum;
     errorEnum[errorEnum["ENV"] = 101] = "ENV";
     errorEnum[errorEnum["JOI_ERROR"] = 102] = "JOI_ERROR";
     errorEnum[errorEnum["AUTH_ERROR"] = 103] = "AUTH_ERROR";
+    errorEnum[errorEnum["ACTIVE_OTP"] = 104] = "ACTIVE_OTP";
+    errorEnum[errorEnum["NO_OTP"] = 105] = "NO_OTP";
+    errorEnum[errorEnum["WRONG_OTP"] = 106] = "WRONG_OTP";
+    errorEnum[errorEnum["USER_NOT_FOUND"] = 107] = "USER_NOT_FOUND";
 })(errorEnum = errorEnum || (errorEnum = {}));
 export class CustomErrorClass {
     static noEnv(varName) {
@@ -34,6 +38,34 @@ export class CustomErrorClass {
             name: "AUTH_ERROR",
             code: errorEnum.AUTH_ERROR,
             httpCode: 403
+        };
+    }
+    static activeOtp() {
+        return {
+            name: "ACTIVE_OTP",
+            code: errorEnum.ACTIVE_OTP,
+            httpCode: 400
+        };
+    }
+    static userNotFound() {
+        return {
+            name: "USER_NOT_FOUND",
+            code: errorEnum.USER_NOT_FOUND,
+            httpCode: 404
+        };
+    }
+    static noOtp() {
+        return {
+            name: "NO_OTP",
+            code: errorEnum.NO_OTP,
+            httpCode: 404
+        };
+    }
+    static wrongOtp() {
+        return {
+            name: "WRONG_OTP",
+            code: errorEnum.WRONG_OTP,
+            httpCode: 400
         };
     }
 }
