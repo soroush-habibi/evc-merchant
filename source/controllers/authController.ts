@@ -3,7 +3,7 @@ import { User } from "../models/user.model.js";
 import { redis } from "../utils/redis.js";
 import { createTokens, generateRandomNumber } from "../utils/generators.js";
 import { CustomErrorClass } from "../utils/customError.js";
-import { registerDtoType, preRegisterDtoType, loginDtoType } from "../dtos/auth.dto.js";
+import { registerDtoType, preRegisterDtoType, loginDtoType, preRegisterEmailDtoType, registerEmailDtoType } from "../dtos/auth.dto.js";
 import bcrypt from 'bcrypt';
 
 const ENV = process.env.PRODUCTION
@@ -12,21 +12,25 @@ export default class authController {
     static async preRegister(req: Request, res: Response, next: NextFunction) {
         const { phoneNumber } = req.body as preRegisterDtoType;
 
-        let user = await User.findOne({ phoneNumber });
-        if (!user) user = await User.create({ phoneNumber });
+        try {
+            let user = await User.findOne({ phoneNumber });
+            if (!user) user = await User.create({ phoneNumber });
 
-        const existedOtp = await redis.get(`OTP_${phoneNumber as string}`);
-        if (existedOtp) return next(CustomErrorClass.activeOtp());
+            const existedOtp = await redis.get(`OTP_${phoneNumber as string}`);
+            if (existedOtp) return next(CustomErrorClass.activeOtp());
 
-        const newOtp = ENV === "production" ? generateRandomNumber(6) : '123456';
-        //todo:where is sendSMS service?
-        // const sms = ENV === "production" ? await sendSms(phoneNumber as string, newOtp) : { code: 200, msg: "testing" };
+            const newOtp = ENV === "production" ? generateRandomNumber(6) : '123456';
+            //todo:where is sendSMS service?
+            // const sms = ENV === "production" ? await sendSms(phoneNumber as string, newOtp) : { code: 200, msg: "testing" };
 
-        await redis.set(`OTP_${phoneNumber as string}`, newOtp, 'EX', process.env.REDIS_TTL || "60");
+            await redis.set(`OTP_${phoneNumber as string}`, newOtp, 'EX', process.env.REDIS_TTL || "60");
 
-        res.json({
-            message: "otp sent!"
-        });
+            res.status(201).json({
+                message: "otp sent!"
+            });
+        } catch (e) {
+            return next(e);
+        }
     }
 
     static async register(req: Request, res: Response, next: NextFunction) {
@@ -56,7 +60,7 @@ export default class authController {
             await user.save();
             await redis.del(`OTP_${phoneNumber as string}`);
 
-            res.json({
+            res.status(201).json({
                 message: "saved!",
                 data: { accessToken, refreshToken }
             });
@@ -66,7 +70,7 @@ export default class authController {
     }
 
     static async login(req: Request, res: Response, next: NextFunction) {
-        const { phoneNumber, otp, password } = req.body as loginDtoType;
+        const { phoneNumber, otp, password } = req.query as loginDtoType;
 
         try {
             let user = await User.findOne({ phoneNumber });
@@ -110,6 +114,51 @@ export default class authController {
                     data: { accessToken, refreshToken }
                 });
             }
+        } catch (e) {
+            return next(e);
+        }
+    }
+
+    static async preRegisterEmail(req: Request, res: Response, next: NextFunction) {
+        const { email } = req.body as preRegisterEmailDtoType;
+
+        try {
+            const newOtp = ENV === "production" ? generateRandomNumber(6) : '123456';
+            //todo:where is send email service?
+            // const sms = ENV === "production" ? await sendSms(phoneNumber as string, newOtp) : { code: 200, msg: "testing" };
+
+            await redis.set(`EOTP_${email as string}`, newOtp, 'EX', process.env.REDIS_EMAIL_TTL || "120");
+
+            res.status(201).json({
+                message: "otp sent!"
+            });
+        } catch (e) {
+            return next(e);
+        }
+    }
+
+    static async registerEmail(req: Request, res: Response, next: NextFunction) {
+        const { email, otp } = req.body as registerEmailDtoType;
+
+        try {
+            const existedOtp = await redis.get(`EOTP_${email as string}`);
+            if (!existedOtp) return next(CustomErrorClass.noOtp());
+
+            if (existedOtp !== otp) {
+                await redis.del(`EOTP_${email as string}`);
+                return next(CustomErrorClass.wrongOtp());
+            }
+
+            let user = await User.findOne({ phoneNumber: req.user?.phoneNumber });
+            if (!user) return next(CustomErrorClass.userNotFound());
+
+            user.email = email;
+            await user.save();
+            await redis.del(`EOTP_${email as string}`);
+
+            res.status(201).json({
+                message: "email saved!"
+            });
         } catch (e) {
             return next(e);
         }

@@ -14,6 +14,7 @@ import validator from 'validator';
 export interface IUser {
     phoneNumber: string,
     fullName?: string,
+    email?: string,
     password?: string,
     refreshToken?: string
 }
@@ -25,6 +26,10 @@ type UserModel = Model<IUser, {}, IUserMethods>;
 const userSchema = new Schema<IUser, UserModel, IUserMethods>({
     fullName: {
         type: String,
+    },
+    email: {
+        type: String,
+        validate: [validator.isEmail, 'not valid email address']
     },
     phoneNumber: {
         type: String,

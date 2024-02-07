@@ -4,6 +4,10 @@ const userSchema = new Schema({
     fullName: {
         type: String,
     },
+    email: {
+        type: String,
+        validate: [validator.isEmail, 'not valid email address']
+    },
     phoneNumber: {
         type: String,
         required: true,

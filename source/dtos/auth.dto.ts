@@ -45,3 +45,27 @@ type loginDtoType = {
 }
 
 export { loginDto, loginDtoType }
+
+//*preRegisterEmail
+const preRegisterEmailDto = Joi.object({
+    email: Joi.string().email().required()
+});
+
+type preRegisterEmailDtoType = {
+    email: string
+}
+
+export { preRegisterEmailDto, preRegisterEmailDtoType }
+
+//*registerEmail
+const registerEmailDto = Joi.object({
+    email: Joi.string().email().required(),
+    otp: Joi.string().min(6).max(6).required()
+});
+
+type registerEmailDtoType = {
+    email: string,
+    otp: string
+}
+
+export { registerEmailDto, registerEmailDtoType }

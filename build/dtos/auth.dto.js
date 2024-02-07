@@ -20,3 +20,14 @@ const loginDto = Joi.object({
     password: Joi.string().min(4),
 }).xor("otp", "password");
 export { loginDto };
+//*preRegisterEmail
+const preRegisterEmailDto = Joi.object({
+    email: Joi.string().email().required()
+});
+export { preRegisterEmailDto };
+//*registerEmail
+const registerEmailDto = Joi.object({
+    email: Joi.string().email().required(),
+    otp: Joi.string().min(6).max(6).required()
+});
+export { registerEmailDto };
