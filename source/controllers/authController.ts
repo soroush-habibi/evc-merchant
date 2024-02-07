@@ -3,7 +3,7 @@ import { User } from "../models/user.model.js";
 import { redis } from "../utils/redis.js";
 import { createTokens, generateRandomNumber } from "../utils/generators.js";
 import { CustomErrorClass } from "../utils/customError.js";
-import { registerDtoType, preRegisterDtoType, loginDtoType, preRegisterEmailDtoType, registerEmailDtoType } from "../dtos/auth.dto.js";
+import { registerDtoType, preRegisterDtoType, loginDtoType, preRegisterEmailDtoType, registerEmailDtoType, registerAddressDtoType } from "../dtos/auth.dto.js";
 import bcrypt from 'bcrypt';
 
 const ENV = process.env.PRODUCTION
@@ -123,6 +123,10 @@ export default class authController {
         const { email } = req.body as preRegisterEmailDtoType;
 
         try {
+            let user = await User.findOne({ phoneNumber: req.user?.phoneNumber });
+            if (!user || !user.password) return next(CustomErrorClass.userNotFound());
+            if (user.email) return next(CustomErrorClass.emailRegisteredAlready());
+
             const newOtp = ENV === "production" ? generateRandomNumber(6) : '123456';
             //todo:where is send email service?
             // const sms = ENV === "production" ? await sendSms(phoneNumber as string, newOtp) : { code: 200, msg: "testing" };
@@ -162,5 +166,9 @@ export default class authController {
         } catch (e) {
             return next(e);
         }
+    }
+
+    static async registerAddress(req: Request, res: Response, next: NextFunction) {
+        const { address, city, owner, longitude, latitude, postCode, state, number } = req.body as registerAddressDtoType;
     }
 }

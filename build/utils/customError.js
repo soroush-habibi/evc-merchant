@@ -10,6 +10,7 @@ export var errorEnum;
     errorEnum[errorEnum["USER_NOT_FOUND"] = 107] = "USER_NOT_FOUND";
     errorEnum[errorEnum["ALREADY_REGISTERED"] = 108] = "ALREADY_REGISTERED";
     errorEnum[errorEnum["WRONG_PASSWORD"] = 109] = "WRONG_PASSWORD";
+    errorEnum[errorEnum["EMAIL_REGISTERED_ALREADY"] = 110] = "EMAIL_REGISTERED_ALREADY";
 })(errorEnum = errorEnum || (errorEnum = {}));
 export class CustomErrorClass {
     static noEnv(varName) {
@@ -82,6 +83,13 @@ export class CustomErrorClass {
             name: "WRONG_PASSWORD",
             code: errorEnum.WRONG_PASSWORD,
             httpCode: 400
+        };
+    }
+    static emailRegisteredAlready() {
+        return {
+            name: "EMAIL_REGISTERED_ALREADY",
+            code: errorEnum.EMAIL_REGISTERED_ALREADY,
+            httpCode: 403
         };
     }
 }

@@ -108,6 +108,11 @@ export default class authController {
     static async preRegisterEmail(req, res, next) {
         const { email } = req.body;
         try {
+            let user = await User.findOne({ phoneNumber: req.user?.phoneNumber });
+            if (!user || !user.password)
+                return next(CustomErrorClass.userNotFound());
+            if (user.email)
+                return next(CustomErrorClass.emailRegisteredAlready());
             const newOtp = ENV === "production" ? generateRandomNumber(6) : '123456';
             //todo:where is send email service?
             // const sms = ENV === "production" ? await sendSms(phoneNumber as string, newOtp) : { code: 200, msg: "testing" };
@@ -143,5 +148,8 @@ export default class authController {
         catch (e) {
             return next(e);
         }
+    }
+    static async registerAddress(req, res, next) {
+        const { address, city, owner, longitude, latitude, postCode, state, number } = req.body;
     }
 }
