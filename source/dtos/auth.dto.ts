@@ -1,5 +1,5 @@
 import Joi, { number } from "joi";
-import { statesEnum } from "source/enum/states.enum.js";
+import { statesEnum } from "../enum/states.enum.js";
 
 const phoneRegex = /^09[0-9]{9}$/;
 const latitudeRegex = /^-?([1-8]?[0-9](\.[0-9]+)?|90(\.0+)?)$/;
@@ -76,10 +76,9 @@ export { registerEmailDto, registerEmailDtoType }
 
 //*registerAddress
 const registerAddressDto = Joi.object({
-    owner: Joi.string().required(),
     longitude: Joi.string().pattern(new RegExp(longitudeRegex)).message("invalid longitude").required(),
     latitude: Joi.string().pattern(new RegExp(latitudeRegex)).message("invalid latitude").required(),
-    state: Joi.string().valid(statesEnum).required(),
+    state: Joi.string().valid(...Object.values(statesEnum)).required(),
     city: Joi.string().required(),                                              //todo:add validation
     address: Joi.string().required(),
     number: Joi.number().min(0),
@@ -87,7 +86,6 @@ const registerAddressDto = Joi.object({
 });
 
 type registerAddressDtoType = {
-    owner: string,
     longitude: string,
     latitude: string,
     state: statesEnum,
@@ -98,3 +96,14 @@ type registerAddressDtoType = {
 }
 
 export { registerAddressDto, registerAddressDtoType }
+
+//*getUserAddresses
+const getUserAddressesDto = Joi.object({
+    page: Joi.number()
+});
+
+type getUserAddressesDtoType = {
+    page: string
+}
+
+export { getUserAddressesDto, getUserAddressesDtoType }

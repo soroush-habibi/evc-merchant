@@ -1,4 +1,5 @@
 import { User } from "../models/user.model.js";
+import { Address } from "../models/address.model.js";
 import { redis } from "../utils/redis.js";
 import { createTokens, generateRandomNumber } from "../utils/generators.js";
 import { CustomErrorClass } from "../utils/customError.js";
@@ -150,6 +151,40 @@ export default class authController {
         }
     }
     static async registerAddress(req, res, next) {
-        const { address, city, owner, longitude, latitude, postCode, state, number } = req.body;
+        const { address, city, longitude, latitude, postCode, state, number } = req.body;
+        try {
+            const addressDoc = new Address({
+                phoneNumber: req.user?.phoneNumber,
+                longitude,
+                latitude,
+                city,
+                state,
+                postCode,
+                number,
+                address
+            });
+            await addressDoc.save();
+            res.status(201).json({
+                message: "address saved!"
+            });
+        }
+        catch (e) {
+            next(e);
+        }
+    }
+    static async getUserAddresses(req, res, next) {
+        let { page } = req.query;
+        if (!page)
+            page = String(0);
+        try {
+            const addresses = await Address.find({ phoneNumber: req.user?.phoneNumber }, undefined, { limit: 5, skip: (Number(page) - 1) * 5 });
+            res.status(200).json({
+                message: "ok",
+                data: addresses
+            });
+        }
+        catch (e) {
+            next(e);
+        }
     }
 }

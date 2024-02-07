@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import { User } from "../models/user.model.js";
+import { Address } from "../models/address.model.js";
 import { redis } from "../utils/redis.js";
 import { createTokens, generateRandomNumber } from "../utils/generators.js";
 import { CustomErrorClass } from "../utils/customError.js";
-import { registerDtoType, preRegisterDtoType, loginDtoType, preRegisterEmailDtoType, registerEmailDtoType, registerAddressDtoType } from "../dtos/auth.dto.js";
+import { registerDtoType, preRegisterDtoType, loginDtoType, preRegisterEmailDtoType, registerEmailDtoType, registerAddressDtoType, getUserAddressesDtoType } from "../dtos/auth.dto.js";
 import bcrypt from 'bcrypt';
 
 const ENV = process.env.PRODUCTION
@@ -169,6 +170,44 @@ export default class authController {
     }
 
     static async registerAddress(req: Request, res: Response, next: NextFunction) {
-        const { address, city, owner, longitude, latitude, postCode, state, number } = req.body as registerAddressDtoType;
+        const { address, city, longitude, latitude, postCode, state, number } = req.body as registerAddressDtoType;
+
+        try {
+            const addressDoc = new Address({
+                phoneNumber: req.user?.phoneNumber,
+                longitude,
+                latitude,
+                city,
+                state,
+                postCode,
+                number,
+                address
+            });
+
+            await addressDoc.save();
+
+            res.status(201).json({
+                message: "address saved!"
+            })
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    static async getUserAddresses(req: Request, res: Response, next: NextFunction) {
+        let { page } = req.query as getUserAddressesDtoType;
+
+        if (!page) page = String(0)
+
+        try {
+            const addresses = await Address.find({ phoneNumber: req.user?.phoneNumber }, undefined, { limit: 5, skip: (Number(page) - 1) * 5 });
+
+            res.status(200).json({
+                message: "ok",
+                data: addresses
+            });
+        } catch (e) {
+            next(e)
+        }
     }
 }

@@ -1,13 +1,14 @@
 import mongoose, { Model, model, Schema } from 'mongoose';
-import { statesEnum } from 'source/enum/states.enum.js';
+import { statesEnum } from '../enum/states.enum.js';
 import validator from 'validator';
 
 const latitudeRegex = /^-?([1-8]?[0-9](\.[0-9]+)?|90(\.0+)?)$/;
 const longitudeRegex = /^-?((1?[0-7]?|[1-9]?[0-9])(\.[0-9]+)?|180(\.0+)?)$/;
 const postcodeRegex = /^\d{10}$/;
+const phoneRegex = /^09[0-9]{9}$/;
 
 export interface IAddress {
-    owner: mongoose.Schema.Types.ObjectId,
+    phoneNumber: String,
     longitude: string,
     latitude: string,
     state: statesEnum,
@@ -22,9 +23,9 @@ export interface IAddressMethods { }
 type AddressModel = Model<IAddress, {}, IAddressMethods>;
 
 const addressSchema = new Schema<IAddress, AddressModel, IAddressMethods>({
-    owner: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+    phoneNumber: {
+        type: String,
+        match: [phoneRegex, "invalid phone number"],
         required: true
     },
     longitude: {
@@ -66,15 +67,11 @@ const addressSchema = new Schema<IAddress, AddressModel, IAddressMethods>({
         versionKey: false,
         // remove _id 
         transform: function (doc, ret) {
-            delete ret._id;
-            delete ret.refreshToken;
+            // delete ret._id;
             // delete ret.__v;
         }
     },
 });
-
-// searches are based on national-code and mobile-number
-addressSchema.index({ phoneNumber: 1 }, { unique: true });
 
 const Address = model<IAddress, AddressModel>('Address', addressSchema);
 

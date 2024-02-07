@@ -1,2 +1,8 @@
 
 Mon Feb 05 2024 10:32:23 GMT+0330 (Iran Standard Time): {}
+Wed Feb 07 2024 17:03:14 GMT+0330 (Iran Standard Time): {"expose":true,"statusCode":400,"status":400,"body":"{\n    \"longitude\": \"550\",\n    \"latitude\": \"50\",\n    \"state\": statesEnum,\n    \"city\": string,\n    \"address\": string,\n    \"number\": number,\n    \"postCode\": string\n}","type":"entity.parse.failed"}
+Wed Feb 07 2024 17:03:40 GMT+0330 (Iran Standard Time): {"expose":true,"statusCode":400,"status":400,"body":"{\n    \"longitude\": \"50\",\n    \"latitude\": \"50\",\n}","type":"entity.parse.failed"}
+Wed Feb 07 2024 17:21:26 GMT+0330 (Iran Standard Time): {"ok":0,"code":51024,"codeName":"Location51024"}
+Wed Feb 07 2024 17:22:02 GMT+0330 (Iran Standard Time): {"ok":0,"code":51024,"codeName":"Location51024"}
+Wed Feb 07 2024 17:22:15 GMT+0330 (Iran Standard Time): {"ok":0,"code":51024,"codeName":"Location51024"}
+Wed Feb 07 2024 17:23:53 GMT+0330 (Iran Standard Time): {"ok":0,"code":51024,"codeName":"Location51024"}
