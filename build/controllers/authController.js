@@ -28,7 +28,7 @@ export default class authController {
             let user = await User.findOne({ phoneNumber });
             if (!user)
                 return next(CustomErrorClass.userNotFound());
-            if (user.fullName)
+            if (user.password)
                 return next(CustomErrorClass.alreadyRegistered());
             const existedOtp = await redis.get(`OTP_${phoneNumber}`);
             if (!existedOtp)
@@ -47,8 +47,54 @@ export default class authController {
             await redis.del(`OTP_${phoneNumber}`);
             res.json({
                 message: "saved!",
-                data: accessToken
+                data: { accessToken, refreshToken }
             });
+        }
+        catch (e) {
+            return next(e);
+        }
+    }
+    static async login(req, res, next) {
+        const { phoneNumber, otp, password } = req.body;
+        try {
+            let user = await User.findOne({ phoneNumber });
+            if (!user || !user.password)
+                return next(CustomErrorClass.userNotFound());
+            if (otp) {
+                const existedOtp = await redis.get(`OTP_${phoneNumber}`);
+                if (!existedOtp)
+                    return next(CustomErrorClass.noOtp());
+                if (existedOtp !== otp) {
+                    await redis.del(`OTP_${phoneNumber}`);
+                    return next(CustomErrorClass.wrongOtp());
+                }
+                let accessToken, refreshToken;
+                [accessToken, refreshToken] = createTokens({
+                    phoneNumber: phoneNumber
+                });
+                user.refreshToken = refreshToken;
+                await user.save();
+                await redis.del(`OTP_${phoneNumber}`);
+                res.json({
+                    message: "logged in!",
+                    data: { accessToken, refreshToken }
+                });
+            }
+            else if (password) {
+                if (!bcrypt.compareSync(password, user.password)) {
+                    return next(CustomErrorClass.wrongPassword());
+                }
+                let accessToken, refreshToken;
+                [accessToken, refreshToken] = createTokens({
+                    phoneNumber: phoneNumber
+                });
+                user.refreshToken = refreshToken;
+                await user.save();
+                res.json({
+                    message: "logged in!",
+                    data: { accessToken, refreshToken }
+                });
+            }
         }
         catch (e) {
             return next(e);

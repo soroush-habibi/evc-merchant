@@ -9,6 +9,7 @@ export var errorEnum;
     errorEnum[errorEnum["WRONG_OTP"] = 106] = "WRONG_OTP";
     errorEnum[errorEnum["USER_NOT_FOUND"] = 107] = "USER_NOT_FOUND";
     errorEnum[errorEnum["ALREADY_REGISTERED"] = 108] = "ALREADY_REGISTERED";
+    errorEnum[errorEnum["WRONG_PASSWORD"] = 109] = "WRONG_PASSWORD";
 })(errorEnum = errorEnum || (errorEnum = {}));
 export class CustomErrorClass {
     static noEnv(varName) {
@@ -73,6 +74,13 @@ export class CustomErrorClass {
         return {
             name: "ALREADY_REGISTERED",
             code: errorEnum.ALREADY_REGISTERED,
+            httpCode: 400
+        };
+    }
+    static wrongPassword() {
+        return {
+            name: "WRONG_PASSWORD",
+            code: errorEnum.WRONG_PASSWORD,
             httpCode: 400
         };
     }

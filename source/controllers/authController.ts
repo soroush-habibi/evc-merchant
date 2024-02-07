@@ -3,7 +3,7 @@ import { User } from "../models/user.model.js";
 import { redis } from "../utils/redis.js";
 import { createTokens, generateRandomNumber } from "../utils/generators.js";
 import { CustomErrorClass } from "../utils/customError.js";
-import { registerDtoType, preRegisterDtoType } from "../dtos/auth.dto.js";
+import { registerDtoType, preRegisterDtoType, loginDtoType } from "../dtos/auth.dto.js";
 import bcrypt from 'bcrypt';
 
 const ENV = process.env.PRODUCTION
@@ -37,7 +37,7 @@ export default class authController {
             let user = await User.findOne({ phoneNumber });
             if (!user) return next(CustomErrorClass.userNotFound());
 
-            if (user.fullName) return next(CustomErrorClass.alreadyRegistered());
+            if (user.password) return next(CustomErrorClass.alreadyRegistered());
 
             const existedOtp = await redis.get(`OTP_${phoneNumber as string}`);
             if (!existedOtp) return next(CustomErrorClass.noOtp());
@@ -58,8 +58,58 @@ export default class authController {
 
             res.json({
                 message: "saved!",
-                data: accessToken
+                data: { accessToken, refreshToken }
             });
+        } catch (e) {
+            return next(e);
+        }
+    }
+
+    static async login(req: Request, res: Response, next: NextFunction) {
+        const { phoneNumber, otp, password } = req.body as loginDtoType;
+
+        try {
+            let user = await User.findOne({ phoneNumber });
+            if (!user || !user.password) return next(CustomErrorClass.userNotFound());
+
+            if (otp) {
+                const existedOtp = await redis.get(`OTP_${phoneNumber as string}`);
+                if (!existedOtp) return next(CustomErrorClass.noOtp());
+
+                if (existedOtp !== otp) {
+                    await redis.del(`OTP_${phoneNumber as string}`);
+                    return next(CustomErrorClass.wrongOtp());
+                }
+
+                let accessToken, refreshToken;
+                [accessToken, refreshToken] = createTokens({
+                    phoneNumber: phoneNumber
+                });
+                user.refreshToken = refreshToken;
+                await user.save();
+                await redis.del(`OTP_${phoneNumber as string}`);
+
+                res.json({
+                    message: "logged in!",
+                    data: { accessToken, refreshToken }
+                });
+            } else if (password) {
+                if (!bcrypt.compareSync(password, user.password)) {
+                    return next(CustomErrorClass.wrongPassword());
+                }
+
+                let accessToken, refreshToken;
+                [accessToken, refreshToken] = createTokens({
+                    phoneNumber: phoneNumber
+                });
+                user.refreshToken = refreshToken;
+                await user.save();
+
+                res.json({
+                    message: "logged in!",
+                    data: { accessToken, refreshToken }
+                });
+            }
         } catch (e) {
             return next(e);
         }

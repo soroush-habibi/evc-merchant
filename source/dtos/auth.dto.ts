@@ -30,3 +30,18 @@ type registerDtoType = {
 }
 
 export { registerDto, registerDtoType }
+
+//*login
+const loginDto = Joi.object({
+    phoneNumber: Joi.string().pattern(new RegExp(phoneRegex)).message('invalid phone number').required(),
+    otp: Joi.string().min(6).max(6),
+    password: Joi.string().min(4),
+}).xor("otp", "password");
+
+type loginDtoType = {
+    phoneNumber: string,
+    otp?: string,
+    password?: string
+}
+
+export { loginDto, loginDtoType }

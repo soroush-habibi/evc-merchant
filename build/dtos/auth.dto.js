@@ -13,3 +13,10 @@ const registerDto = Joi.object({
     password: Joi.string().required().min(4)
 });
 export { registerDto };
+//*login
+const loginDto = Joi.object({
+    phoneNumber: Joi.string().pattern(new RegExp(phoneRegex)).message('invalid phone number').required(),
+    otp: Joi.string().min(6).max(6),
+    password: Joi.string().min(4),
+}).xor("otp", "password");
+export { loginDto };
