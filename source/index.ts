@@ -18,8 +18,10 @@ declare global {
         interface Request {
             user?: {
                 phoneNumber: string,
+                id: string
             },
-            redis: Redis
+            redis: Redis,
+            form?: object
         }
     }
 }
@@ -31,7 +33,8 @@ checkEnv(
     "DB_URL",
     "REDIS_URL",
     "REDIS_PORT",
-    "REDIS_PASSWORD"
+    "REDIS_PASSWORD",
+    "PRODUCT_PHOTO_FOLDER"
 );
 
 let temp: string[] = path.dirname(fileURLToPath(import.meta.url)).split('');

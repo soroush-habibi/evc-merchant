@@ -1,4 +1,4 @@
-import Joi, { number } from "joi";
+import Joi from "joi";
 import { statesEnum } from "../enum/states.enum.js";
 
 const phoneRegex = /^09[0-9]{9}$/;

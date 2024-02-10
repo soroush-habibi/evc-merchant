@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { User } from "../models/user.model.js";
 import { Address } from "../models/address.model.js";
-import { redis } from "../utils/redis.js";
 import { createTokens, generateRandomNumber } from "../utils/generators.js";
 import { CustomErrorClass } from "../utils/customError.js";
 import { registerDtoType, preRegisterDtoType, loginDtoType, preRegisterEmailDtoType, registerEmailDtoType, registerAddressDtoType, getUserAddressesDtoType } from "../dtos/auth.dto.js";
@@ -17,14 +16,14 @@ export default class authController {
             let user = await User.findOne({ phoneNumber });
             if (!user) user = await User.create({ phoneNumber });
 
-            const existedOtp = await redis.get(`OTP_${phoneNumber as string}`);
+            const existedOtp = await req.redis.get(`OTP_${phoneNumber as string}`);
             if (existedOtp) return next(CustomErrorClass.activeOtp());
 
             const newOtp = ENV === "production" ? generateRandomNumber(6) : '123456';
             //todo:where is sendSMS service?
             // const sms = ENV === "production" ? await sendSms(phoneNumber as string, newOtp) : { code: 200, msg: "testing" };
 
-            await redis.set(`OTP_${phoneNumber as string}`, newOtp, 'EX', process.env.REDIS_TTL || "60");
+            await req.redis.set(`OTP_${phoneNumber as string}`, newOtp, 'EX', process.env.REDIS_TTL || "60");
 
             res.status(201).json({
                 message: "otp sent!"
@@ -44,22 +43,23 @@ export default class authController {
 
             if (user.password) return next(CustomErrorClass.alreadyRegistered());
 
-            const existedOtp = await redis.get(`OTP_${phoneNumber as string}`);
+            const existedOtp = await req.redis.get(`OTP_${phoneNumber as string}`);
             if (!existedOtp) return next(CustomErrorClass.noOtp());
 
             if (existedOtp !== otp) {
-                await redis.del(`OTP_${phoneNumber as string}`);
+                await req.redis.del(`OTP_${phoneNumber as string}`);
                 return next(CustomErrorClass.wrongOtp());
             }
 
             user.fullName = fullName;
             user.password = bcrypt.hashSync(password, 10);
             [accessToken, refreshToken] = createTokens({
-                phoneNumber: phoneNumber
+                phoneNumber: phoneNumber,
+                id: user.id
             });
             user.refreshToken = refreshToken;
             await user.save();
-            await redis.del(`OTP_${phoneNumber as string}`);
+            await req.redis.del(`OTP_${phoneNumber as string}`);
 
             res.status(201).json({
                 message: "saved!",
@@ -78,21 +78,22 @@ export default class authController {
             if (!user || !user.password) return next(CustomErrorClass.userNotFound());
 
             if (otp) {
-                const existedOtp = await redis.get(`OTP_${phoneNumber as string}`);
+                const existedOtp = await req.redis.get(`OTP_${phoneNumber as string}`);
                 if (!existedOtp) return next(CustomErrorClass.noOtp());
 
                 if (existedOtp !== otp) {
-                    await redis.del(`OTP_${phoneNumber as string}`);
+                    await req.redis.del(`OTP_${phoneNumber as string}`);
                     return next(CustomErrorClass.wrongOtp());
                 }
 
                 let accessToken, refreshToken;
                 [accessToken, refreshToken] = createTokens({
-                    phoneNumber: phoneNumber
+                    phoneNumber: phoneNumber,
+                    id: user.id
                 });
                 user.refreshToken = refreshToken;
                 await user.save();
-                await redis.del(`OTP_${phoneNumber as string}`);
+                await req.redis.del(`OTP_${phoneNumber as string}`);
 
                 res.json({
                     message: "logged in!",
@@ -105,7 +106,8 @@ export default class authController {
 
                 let accessToken, refreshToken;
                 [accessToken, refreshToken] = createTokens({
-                    phoneNumber: phoneNumber
+                    phoneNumber: phoneNumber,
+                    id: user.id
                 });
                 user.refreshToken = refreshToken;
                 await user.save();
@@ -132,7 +134,7 @@ export default class authController {
             //todo:where is send email service?
             // const sms = ENV === "production" ? await sendSms(phoneNumber as string, newOtp) : { code: 200, msg: "testing" };
 
-            await redis.set(`EOTP_${email as string}`, newOtp, 'EX', process.env.REDIS_EMAIL_TTL || "120");
+            await req.redis.set(`EOTP_${email as string}`, newOtp, 'EX', process.env.REDIS_EMAIL_TTL || "120");
 
             res.status(201).json({
                 message: "otp sent!"
@@ -146,11 +148,11 @@ export default class authController {
         const { email, otp } = req.body as registerEmailDtoType;
 
         try {
-            const existedOtp = await redis.get(`EOTP_${email as string}`);
+            const existedOtp = await req.redis.get(`EOTP_${email as string}`);
             if (!existedOtp) return next(CustomErrorClass.noOtp());
 
             if (existedOtp !== otp) {
-                await redis.del(`EOTP_${email as string}`);
+                await req.redis.del(`EOTP_${email as string}`);
                 return next(CustomErrorClass.wrongOtp());
             }
 
@@ -159,7 +161,7 @@ export default class authController {
 
             user.email = email;
             await user.save();
-            await redis.del(`EOTP_${email as string}`);
+            await req.redis.del(`EOTP_${email as string}`);
 
             res.status(201).json({
                 message: "email saved!"

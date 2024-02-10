@@ -1,17 +1,42 @@
 import { CustomErrorClass } from "./customError.js";
+import Formidable from "formidable";
+import { PersistentFile } from "formidable";
 export var FieldType;
 (function (FieldType) {
     FieldType["QUERY"] = "query";
     FieldType["BODY"] = "body";
+    FieldType["form"] = "FORM";
 })(FieldType = FieldType || (FieldType = {}));
 export const genericValidator = (templateObj, fieldType = FieldType.BODY) => {
-    return (req, res, next) => {
+    return async (req, res, next) => {
         try {
-            const dataToBeValidate = req[fieldType];
-            const validate = templateObj.validate(dataToBeValidate);
-            if (validate.error)
-                throw validate.error;
-            next();
+            if (fieldType === FieldType.form) {
+                const formidable = Formidable({ multiples: true, maxFileSize: 8 * 1024 * 1024 });
+                const [fields, files] = await formidable.parse(req);
+                const data = Object.assign(fields, files);
+                for (const key in data) {
+                    if (Array.isArray(data[key]) && !(data[key][0] instanceof PersistentFile)) {
+                        data[key] = data[key][0];
+                    }
+                    try {
+                        const object = JSON.parse(String(data[key]));
+                        data[key] = object;
+                    }
+                    catch (e) { }
+                }
+                const validate = templateObj.validate(data);
+                if (validate.error)
+                    throw validate.error;
+                req.form = data;
+                next();
+            }
+            else {
+                const dataToBeValidate = req[fieldType];
+                const validate = templateObj.validate(dataToBeValidate);
+                if (validate.error)
+                    throw validate.error;
+                next();
+            }
         }
         catch (e) {
             if (typeof (e._original) === 'object') {

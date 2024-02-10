@@ -20,7 +20,8 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     if (!existedUser?.refreshToken) return next(CustomErrorClass.authError());
 
     req.user = {
-        phoneNumber: (data as JwtPayload).payload.phoneNumber
+        phoneNumber: (data as JwtPayload).payload.phoneNumber,
+        id: (data as JwtPayload).payload.id
     }
 
     next();

@@ -18,7 +18,8 @@ export default async (req, res, next) => {
     if (!existedUser?.refreshToken)
         return next(CustomErrorClass.authError());
     req.user = {
-        phoneNumber: data.payload.phoneNumber
+        phoneNumber: data.payload.phoneNumber,
+        id: data.payload.id
     };
     next();
 };
