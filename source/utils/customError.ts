@@ -16,7 +16,10 @@ export enum errorEnum {
     USER_NOT_FOUND = 107,
     ALREADY_REGISTERED = 108,
     WRONG_PASSWORD = 109,
-    EMAIL_REGISTERED_ALREADY = 110
+    EMAIL_REGISTERED_ALREADY = 110,
+    MONGO_DUPLICATE = 111,
+    PRODUCT_NOT_FOUND = 112,
+    PRODUCT_PHOTO_NOT_FOUND = 113
 }
 
 export class CustomErrorClass {
@@ -107,6 +110,30 @@ export class CustomErrorClass {
             name: "EMAIL_REGISTERED_ALREADY",
             code: errorEnum.EMAIL_REGISTERED_ALREADY,
             httpCode: 403
+        };
+    }
+
+    static mongoDuplicate(): errorType {
+        return {
+            name: "MONGO_DUPLICATE",
+            code: errorEnum.MONGO_DUPLICATE,
+            httpCode: 400
+        };
+    }
+
+    static productNotFound(): errorType {
+        return {
+            name: "PRODUCT_NOT_FOUND",
+            code: errorEnum.PRODUCT_NOT_FOUND,
+            httpCode: 404
+        };
+    }
+
+    static productPhotoNotFound(): errorType {
+        return {
+            name: "PRODUCT_PHOTO_NOT_FOUND",
+            code: errorEnum.PRODUCT_PHOTO_NOT_FOUND,
+            httpCode: 404
         };
     }
 }

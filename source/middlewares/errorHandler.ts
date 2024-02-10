@@ -1,14 +1,31 @@
 import { Request, Response, NextFunction } from "express";
-import { errorEnum, errorType } from "../utils/customError.js";
+import { CustomErrorClass, errorEnum, errorType } from "../utils/customError.js";
 import logger from "../utils/logger.js";
 
 function errorHandler(err: errorType | Error, req: Request, res: Response, next: NextFunction) {
     if (err instanceof Error) {
-        logger(err);
-        res.status(500).json({
-            name: "INTERNAL ERROR",
-            code: errorEnum.INTERNAL_ERROR
-        });
+        if (err.name === "MongoServerError") {
+            if (err.message.includes("E11000")) {
+                const cerr = CustomErrorClass.mongoDuplicate();
+                res.status(cerr.httpCode).json({
+                    name: cerr.name,
+                    code: cerr.code,
+                    message: cerr.message
+                });
+            } else {
+                logger(err);
+                res.status(500).json({
+                    name: "INTERNAL ERROR",
+                    code: errorEnum.INTERNAL_ERROR
+                });
+            }
+        } else {
+            logger(err);
+            res.status(500).json({
+                name: "INTERNAL ERROR",
+                code: errorEnum.INTERNAL_ERROR
+            });
+        }
     } else {
         if (err.httpCode === 500) {
             logger(err);

@@ -16,3 +16,9 @@ const addProductDto = Joi.object({
     addData: Joi.object()
 });
 export { addProductDto };
+//*deletePhoto
+const deletePhotoDto = Joi.object({
+    uuid: Joi.string().uuid().required(),
+    productId: Joi.string().min(18).required()
+});
+export { deletePhotoDto };

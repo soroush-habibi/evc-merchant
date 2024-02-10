@@ -11,6 +11,9 @@ export var errorEnum;
     errorEnum[errorEnum["ALREADY_REGISTERED"] = 108] = "ALREADY_REGISTERED";
     errorEnum[errorEnum["WRONG_PASSWORD"] = 109] = "WRONG_PASSWORD";
     errorEnum[errorEnum["EMAIL_REGISTERED_ALREADY"] = 110] = "EMAIL_REGISTERED_ALREADY";
+    errorEnum[errorEnum["MONGO_DUPLICATE"] = 111] = "MONGO_DUPLICATE";
+    errorEnum[errorEnum["PRODUCT_NOT_FOUND"] = 112] = "PRODUCT_NOT_FOUND";
+    errorEnum[errorEnum["PRODUCT_PHOTO_NOT_FOUND"] = 113] = "PRODUCT_PHOTO_NOT_FOUND";
 })(errorEnum = errorEnum || (errorEnum = {}));
 export class CustomErrorClass {
     static noEnv(varName) {
@@ -90,6 +93,27 @@ export class CustomErrorClass {
             name: "EMAIL_REGISTERED_ALREADY",
             code: errorEnum.EMAIL_REGISTERED_ALREADY,
             httpCode: 403
+        };
+    }
+    static mongoDuplicate() {
+        return {
+            name: "MONGO_DUPLICATE",
+            code: errorEnum.MONGO_DUPLICATE,
+            httpCode: 400
+        };
+    }
+    static productNotFound() {
+        return {
+            name: "PRODUCT_NOT_FOUND",
+            code: errorEnum.PRODUCT_NOT_FOUND,
+            httpCode: 404
+        };
+    }
+    static productPhotoNotFound() {
+        return {
+            name: "PRODUCT_PHOTO_NOT_FOUND",
+            code: errorEnum.PRODUCT_PHOTO_NOT_FOUND,
+            httpCode: 404
         };
     }
 }

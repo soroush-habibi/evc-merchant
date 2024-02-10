@@ -29,3 +29,16 @@ type addProductDtoType = {
 }
 
 export { addProductDto, addProductDtoType }
+
+//*deletePhoto
+const deletePhotoDto = Joi.object({
+    uuid: Joi.string().uuid().required(),
+    productId: Joi.string().min(18).required()
+});
+
+type deletePhotoDtoType = {
+    uuid: string,
+    productId: string
+}
+
+export { deletePhotoDto, deletePhotoDtoType }

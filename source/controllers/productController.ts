@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomErrorClass } from "../utils/customError.js";
-import { addProductDtoType } from "../dtos/product.dto.js";
+import { addProductDtoType, deletePhotoDtoType } from "../dtos/product.dto.js";
 import { Product } from "../models/product.model.js";
 import fsExtra from 'fs-extra';
 import path from 'path';
@@ -16,11 +16,12 @@ export default class productController {
             let photo: string[] = [];
             if (form.photo)
                 for (let p = 0; p < form.photo.length; p++) {
+                    const uuid = crypto.randomUUID();
                     if (!fsExtra.existsSync(String(process.env.PRODUCT_PHOTO_FOLDER))) {
                         fsExtra.mkdirSync(String(process.env.PRODUCT_PHOTO_FOLDER));
                     }
-                    fsExtra.copyFileSync((form.photo[p] as any).filepath, path.join(String(process.env.PRODUCT_PHOTO_FOLDER), crypto.randomUUID()));
-                    photo.push(path.join(String(process.env.PRODUCT_PHOTO_FOLDER), crypto.randomUUID()));
+                    fsExtra.copyFileSync((form.photo[p] as any).filepath, path.join(String(process.env.PRODUCT_PHOTO_FOLDER), uuid));
+                    photo.push(path.join(String(process.env.PRODUCT_PHOTO_FOLDER), uuid));
                 }
 
             const product = new Product({
@@ -45,6 +46,26 @@ export default class productController {
             })
         } catch (e) {
             return next(e);
+        }
+    }
+
+    static async deletePhoto(req: Request, res: Response, next: NextFunction) {
+        const body = req.body as deletePhotoDtoType;
+
+        try {
+            const product = await Product.findById(body.productId);
+            if (!product) return next(CustomErrorClass.productNotFound());
+
+            if (!product.photo?.includes(path.join(String(process.env.PRODUCT_PHOTO_FOLDER), body.uuid))) return next(CustomErrorClass.productPhotoNotFound());
+
+            await product.updateOne({ $pull: { photo: path.join(String(process.env.PRODUCT_PHOTO_FOLDER), body.uuid) } });
+            fsExtra.removeSync(path.join(String(process.env.PRODUCT_PHOTO_FOLDER), body.uuid));
+
+            res.status(201).json({
+                message: "photo removed!"
+            });
+        } catch (e) {
+            return next(e)
         }
     }
 }
