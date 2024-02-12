@@ -14,6 +14,7 @@ export var errorEnum;
     errorEnum[errorEnum["MONGO_DUPLICATE"] = 111] = "MONGO_DUPLICATE";
     errorEnum[errorEnum["PRODUCT_NOT_FOUND"] = 112] = "PRODUCT_NOT_FOUND";
     errorEnum[errorEnum["PRODUCT_PHOTO_NOT_FOUND"] = 113] = "PRODUCT_PHOTO_NOT_FOUND";
+    errorEnum[errorEnum["PRODUCT_MAX_PHOTO"] = 114] = "PRODUCT_MAX_PHOTO";
 })(errorEnum = errorEnum || (errorEnum = {}));
 export class CustomErrorClass {
     static noEnv(varName) {
@@ -114,6 +115,13 @@ export class CustomErrorClass {
             name: "PRODUCT_PHOTO_NOT_FOUND",
             code: errorEnum.PRODUCT_PHOTO_NOT_FOUND,
             httpCode: 404
+        };
+    }
+    static productMaxPhoto() {
+        return {
+            name: "PRODUCT_MAX_PHOTO",
+            code: errorEnum.PRODUCT_MAX_PHOTO,
+            httpCode: 400
         };
     }
 }

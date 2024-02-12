@@ -34,7 +34,8 @@ checkEnv(
     "REDIS_URL",
     "REDIS_PORT",
     "REDIS_PASSWORD",
-    "PRODUCT_PHOTO_FOLDER"
+    "PRODUCT_PHOTO_FOLDER",
+    "ADMIN_API_KEY"
 );
 
 let temp: string[] = path.dirname(fileURLToPath(import.meta.url)).split('');

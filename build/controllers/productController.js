@@ -65,6 +65,8 @@ export default class productController {
             const product = await Product.findById(body.productId);
             if (!product)
                 return next(CustomErrorClass.productNotFound());
+            if ((product.photo ? product.photo.length : 0) + body.photo.length > 20)
+                return next(CustomErrorClass.productMaxPhoto());
             for (let p = 0; p < body.photo.length; p++) {
                 const uuid = crypto.randomUUID();
                 if (!fsExtra.existsSync(String(process.env.PRODUCT_PHOTO_FOLDER))) {
@@ -75,6 +77,34 @@ export default class productController {
             }
             res.status(201).json({
                 message: "product updated!"
+            });
+        }
+        catch (e) {
+            return next(e);
+        }
+    }
+    static async getMerchantProducts(req, res, next) {
+        const query = req.query;
+        if (!query.mode)
+            query.mode = 1;
+        try {
+            const filter = {
+                title: {
+                    $regex: query.title ? new RegExp(query.title, "i") : ""
+                }, category: {
+                    $regex: query.category ? new RegExp(query.category, "i") : ""
+                }
+            };
+            if (query.mode == 1) {
+                filter.creator = req.user?.id;
+            }
+            else if (query.mode == 2) {
+                filter.verified = true;
+            }
+            const results = await Product.find(filter, {}, { limit: 20, skip: query.page ? (query.page - 1) * 20 : 0 });
+            res.status(200).json({
+                message: "user products list",
+                data: results
             });
         }
         catch (e) {

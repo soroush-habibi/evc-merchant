@@ -71,3 +71,20 @@ type addPhotoDtoType = {
 }
 
 export { addPhotoDto, addPhotoDtoType }
+
+//*getMerchantProducts
+const getMerchantProductsDto = Joi.object({
+    page: Joi.number().integer(),
+    title: Joi.string(),
+    category: Joi.string(),                                         //todo:add validation
+    mode: Joi.number().valid(1, 2)                                  //* 1=merchant products 2=all verified products
+});
+
+type getMerchantProductsDtoType = {
+    page?: number,
+    title?: string,
+    category?: string,
+    mode?: number
+}
+
+export { getMerchantProductsDto, getMerchantProductsDtoType }

@@ -73,6 +73,8 @@ const addressSchema = new Schema<IAddress, AddressModel, IAddressMethods>({
     },
 });
 
+addressSchema.index({ postCode: 1 }, { unique: true });
+
 const Address = model<IAddress, AddressModel>('Address', addressSchema);
 
 export { Address };

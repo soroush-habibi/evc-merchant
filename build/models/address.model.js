@@ -54,5 +54,6 @@ const addressSchema = new Schema({
         }
     },
 });
+addressSchema.index({ postCode: 1 }, { unique: true });
 const Address = model('Address', addressSchema);
 export { Address };

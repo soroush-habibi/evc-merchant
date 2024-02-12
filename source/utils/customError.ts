@@ -19,7 +19,8 @@ export enum errorEnum {
     EMAIL_REGISTERED_ALREADY = 110,
     MONGO_DUPLICATE = 111,
     PRODUCT_NOT_FOUND = 112,
-    PRODUCT_PHOTO_NOT_FOUND = 113
+    PRODUCT_PHOTO_NOT_FOUND = 113,
+    PRODUCT_MAX_PHOTO = 114
 }
 
 export class CustomErrorClass {
@@ -134,6 +135,14 @@ export class CustomErrorClass {
             name: "PRODUCT_PHOTO_NOT_FOUND",
             code: errorEnum.PRODUCT_PHOTO_NOT_FOUND,
             httpCode: 404
+        };
+    }
+
+    static productMaxPhoto(): errorType {
+        return {
+            name: "PRODUCT_MAX_PHOTO",
+            code: errorEnum.PRODUCT_MAX_PHOTO,
+            httpCode: 400
         };
     }
 }

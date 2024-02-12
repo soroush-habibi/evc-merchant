@@ -44,3 +44,11 @@ const addPhotoDto = Joi.object({
     }, "validate objectId").required()
 });
 export { addPhotoDto };
+//*getMerchantProducts
+const getMerchantProductsDto = Joi.object({
+    page: Joi.number().integer(),
+    title: Joi.string(),
+    category: Joi.string(),
+    mode: Joi.number().valid(1, 2) //* 1=merchant products 2=all verified products
+});
+export { getMerchantProductsDto };
