@@ -1,4 +1,5 @@
 import mongoose, { model, Schema } from 'mongoose';
+import { productStatusEnum } from '../enum/productStatus.enum.js';
 const productSchema = new Schema({
     creator: {
         type: mongoose.Schema.Types.ObjectId,
@@ -35,9 +36,10 @@ const productSchema = new Schema({
         type: [String],
         default: []
     },
-    verified: {
-        type: Boolean,
-        default: false
+    status: {
+        type: String,
+        enum: productStatusEnum,
+        default: productStatusEnum.UNVERIFIED
     },
     addData: {
         type: mongoose.Schema.Types.Mixed,

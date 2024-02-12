@@ -1,4 +1,5 @@
 import mongoose, { Model, model, Schema } from 'mongoose';
+import { productStatusEnum } from '../enum/productStatus.enum.js';
 import validator from 'validator';
 
 export interface IProduct {
@@ -9,7 +10,7 @@ export interface IProduct {
     weight: number,                 //*gram
     title: string,
     photo?: string[],               //*url
-    verified: boolean,
+    status: productStatusEnum,
     addData: string
 }
 
@@ -53,9 +54,10 @@ const productSchema = new Schema<IProduct, ProductModel, IProductMethods>({
         type: [String],
         default: []
     },
-    verified: {
-        type: Boolean,
-        default: false
+    status: {
+        type: String,
+        enum: productStatusEnum,
+        default: productStatusEnum.UNVERIFIED
     },
     addData: {
         type: mongoose.Schema.Types.Mixed,

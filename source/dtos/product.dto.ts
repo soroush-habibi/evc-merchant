@@ -36,7 +36,7 @@ const deletePhotoDto = Joi.object({
     uuid: Joi.string().uuid().required(),
     productId: Joi.string().custom((value, helpers) => {
         if (!Types.ObjectId.isValid(value)) {
-            return helpers.error('any.invalid');
+            return helpers.error('invalid objectId');
         }
         return value;
     }, "validate objectId").required()
@@ -59,7 +59,7 @@ const addPhotoDto = Joi.object({
     }).unknown(true)).required(),
     productId: Joi.string().custom((value, helpers) => {
         if (!Types.ObjectId.isValid(value)) {
-            return helpers.error('any.invalid');
+            return helpers.error('invalid objectId');
         }
         return value;
     }, "validate objectId").required()

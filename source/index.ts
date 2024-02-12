@@ -21,7 +21,7 @@ declare global {
                 id: string
             },
             redis: Redis,
-            form?: object
+            form?: object,
         }
     }
 }

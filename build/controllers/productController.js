@@ -3,6 +3,7 @@ import { Product } from "../models/product.model.js";
 import fsExtra from 'fs-extra';
 import path from 'path';
 import crypto from 'crypto';
+import { productStatusEnum } from "../enum/productStatus.enum.js";
 const ENV = process.env.PRODUCTION;
 export default class productController {
     static async addProduct(req, res, next) {
@@ -24,7 +25,6 @@ export default class productController {
                 original: form.original,
                 size: form.size,
                 title: form.title,
-                verified: false,
                 weight: form.weight,
                 addData: form.addData,
                 photo: form.photo ? [...photo] : undefined
@@ -99,7 +99,7 @@ export default class productController {
                 filter.creator = req.user?.id;
             }
             else if (query.mode == 2) {
-                filter.verified = true;
+                filter.status = productStatusEnum.VERIFIED;
             }
             const results = await Product.find(filter, {}, { limit: 20, skip: query.page ? (query.page - 1) * 20 : 0 });
             res.status(200).json({
