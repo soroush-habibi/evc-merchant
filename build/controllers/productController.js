@@ -59,4 +59,26 @@ export default class productController {
             return next(e);
         }
     }
+    static async addPhoto(req, res, next) {
+        const body = req.form;
+        try {
+            const product = await Product.findById(body.productId);
+            if (!product)
+                return next(CustomErrorClass.productNotFound());
+            for (let p = 0; p < body.photo.length; p++) {
+                const uuid = crypto.randomUUID();
+                if (!fsExtra.existsSync(String(process.env.PRODUCT_PHOTO_FOLDER))) {
+                    fsExtra.mkdirSync(String(process.env.PRODUCT_PHOTO_FOLDER));
+                }
+                fsExtra.copyFileSync(body.photo[p].filepath, path.join(String(process.env.PRODUCT_PHOTO_FOLDER), uuid));
+                await product.updateOne({ $push: { photo: path.join(String(process.env.PRODUCT_PHOTO_FOLDER), uuid) } });
+            }
+            res.status(201).json({
+                message: "product updated!"
+            });
+        }
+        catch (e) {
+            return next(e);
+        }
+    }
 }

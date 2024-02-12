@@ -1,4 +1,5 @@
 import Joi from "joi";
+import { Types } from "mongoose"
 
 const sizeRegex = /^\d+-\d+-\d+$/;
 
@@ -9,7 +10,7 @@ const addProductDto = Joi.object({
     size: Joi.string().pattern(sizeRegex).message("invalid size format. it should be d-d-d").required(),
     weight: Joi.number().required(),
     title: Joi.string().min(5).required(),
-    photo: Joi.array().items(Joi.object({
+    photo: Joi.array().max(20).items(Joi.object({
         originalFilename: Joi.string().required(),
         mimetype: Joi.string().required(),
         size: Joi.number().required(),
@@ -33,7 +34,12 @@ export { addProductDto, addProductDtoType }
 //*deletePhoto
 const deletePhotoDto = Joi.object({
     uuid: Joi.string().uuid().required(),
-    productId: Joi.string().min(18).required()
+    productId: Joi.string().custom((value, helpers) => {
+        if (!Types.ObjectId.isValid(value)) {
+            return helpers.error('any.invalid');
+        }
+        return value;
+    }, "validate objectId").required()
 });
 
 type deletePhotoDtoType = {
@@ -42,3 +48,26 @@ type deletePhotoDtoType = {
 }
 
 export { deletePhotoDto, deletePhotoDtoType }
+
+//*addPhoto
+const addPhotoDto = Joi.object({
+    photo: Joi.array().max(20).items(Joi.object({
+        originalFilename: Joi.string().required(),
+        mimetype: Joi.string().required(),
+        size: Joi.number().required(),
+        filepath: Joi.string().required(),
+    }).unknown(true)).required(),
+    productId: Joi.string().custom((value, helpers) => {
+        if (!Types.ObjectId.isValid(value)) {
+            return helpers.error('any.invalid');
+        }
+        return value;
+    }, "validate objectId").required()
+});
+
+type addPhotoDtoType = {
+    photo: object[],
+    productId: string
+}
+
+export { addPhotoDto, addPhotoDtoType }

@@ -8,13 +8,13 @@ import { PersistentFile } from "formidable";
 export enum FieldType {
     "QUERY" = "query",
     "BODY" = "body",
-    "form" = "FORM"
+    "FORM" = "form"
 }
 
 export const genericValidator = (templateObj: ObjectSchema<any>, fieldType: FieldType = FieldType.BODY) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         try {
-            if (fieldType === FieldType.form) {
+            if (fieldType === FieldType.FORM) {
                 const formidable = Formidable({ multiples: true, maxFileSize: 8 * 1024 * 1024 });
                 const [fields, files] = await formidable.parse(req);
                 const data = Object.assign(fields, files);

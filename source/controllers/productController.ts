@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomErrorClass } from "../utils/customError.js";
-import { addProductDtoType, deletePhotoDtoType } from "../dtos/product.dto.js";
+import { addPhotoDtoType, addProductDtoType, deletePhotoDtoType } from "../dtos/product.dto.js";
 import { Product } from "../models/product.model.js";
 import fsExtra from 'fs-extra';
 import path from 'path';
@@ -63,6 +63,30 @@ export default class productController {
 
             res.status(201).json({
                 message: "photo removed!"
+            });
+        } catch (e) {
+            return next(e)
+        }
+    }
+
+    static async addPhoto(req: Request, res: Response, next: NextFunction) {
+        const body = req.form as addPhotoDtoType;
+
+        try {
+            const product = await Product.findById(body.productId);
+            if (!product) return next(CustomErrorClass.productNotFound());
+
+            for (let p = 0; p < body.photo.length; p++) {
+                const uuid = crypto.randomUUID();
+                if (!fsExtra.existsSync(String(process.env.PRODUCT_PHOTO_FOLDER))) {
+                    fsExtra.mkdirSync(String(process.env.PRODUCT_PHOTO_FOLDER));
+                }
+                fsExtra.copyFileSync((body.photo[p] as any).filepath, path.join(String(process.env.PRODUCT_PHOTO_FOLDER), uuid));
+                await product.updateOne({ $push: { photo: path.join(String(process.env.PRODUCT_PHOTO_FOLDER), uuid) } });
+            }
+
+            res.status(201).json({
+                message: "product updated!"
             });
         } catch (e) {
             return next(e)

@@ -5,12 +5,12 @@ export var FieldType;
 (function (FieldType) {
     FieldType["QUERY"] = "query";
     FieldType["BODY"] = "body";
-    FieldType["form"] = "FORM";
+    FieldType["FORM"] = "form";
 })(FieldType = FieldType || (FieldType = {}));
 export const genericValidator = (templateObj, fieldType = FieldType.BODY) => {
     return async (req, res, next) => {
         try {
-            if (fieldType === FieldType.form) {
+            if (fieldType === FieldType.FORM) {
                 const formidable = Formidable({ multiples: true, maxFileSize: 8 * 1024 * 1024 });
                 const [fields, files] = await formidable.parse(req);
                 const data = Object.assign(fields, files);
