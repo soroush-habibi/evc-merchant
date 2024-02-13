@@ -38,3 +38,14 @@ type getProductInventoryDtoType = {
 }
 
 export { getProductInventoryDto, getProductInventoryDtoType }
+
+//*getMerchantInventory
+const getMerchantInventoryDto = Joi.object({
+    page: Joi.number().integer()
+});
+
+type getMerchantInventoryDtoType = {
+    page?: number,
+}
+
+export { getMerchantInventoryDto, getMerchantInventoryDtoType }

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomErrorClass } from "../utils/customError.js";
-import { addInventoryDtoType, getProductInventoryDtoType } from "../dtos/inventory.dto.js";
+import { addInventoryDtoType, getMerchantInventoryDtoType, getProductInventoryDtoType } from "../dtos/inventory.dto.js";
 import { Product } from "../models/product.model.js";
 import { Inventory } from "../models/inventory.model.js";
 import { inventoryStatusEnum } from "../enum/inventoryStatus.enum.js";
@@ -63,6 +63,26 @@ export default class inventoryController {
             });
         } catch (e) {
             return next(e)
+        }
+    }
+
+    static async getMerchantInventory(req: Request, res: Response, next: NextFunction) {        //*this will return all inventories of a merchant
+        const query = req.query as getMerchantInventoryDtoType;
+
+        try {
+            const result = await Inventory.find({
+                merchantId: req.user?.id
+            }, {}, {
+                limit: 20,
+                skip: query.page ? (query.page - 1) * 20 : 0
+            });
+
+            res.status(200).json({
+                message: "list of inventories",
+                data: result
+            });
+        } catch (e) {
+            return next(e);
         }
     }
 }

@@ -57,4 +57,22 @@ export default class inventoryController {
             return next(e);
         }
     }
+    static async getMerchantInventory(req, res, next) {
+        const query = req.query;
+        try {
+            const result = await Inventory.find({
+                merchantId: req.user?.id
+            }, {}, {
+                limit: 20,
+                skip: query.page ? (query.page - 1) * 20 : 0
+            });
+            res.status(200).json({
+                message: "list of inventories",
+                data: result
+            });
+        }
+        catch (e) {
+            return next(e);
+        }
+    }
 }

@@ -23,3 +23,8 @@ const getProductInventoryDto = Joi.object({
     }, "validate objectId").required(),
 });
 export { getProductInventoryDto };
+//*getMerchantInventory
+const getMerchantInventoryDto = Joi.object({
+    page: Joi.number().integer()
+});
+export { getMerchantInventoryDto };
