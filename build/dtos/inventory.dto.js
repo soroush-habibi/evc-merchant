@@ -12,3 +12,14 @@ const addInventoryDto = Joi.object({
     count: Joi.number().integer().min(1).required()
 });
 export { addInventoryDto };
+//*getProductInventory
+const getProductInventoryDto = Joi.object({
+    page: Joi.number().integer(),
+    productId: Joi.string().custom((value, helpers) => {
+        if (!Types.ObjectId.isValid(value)) {
+            return helpers.error('invalid objectId');
+        }
+        return value;
+    }, "validate objectId").required(),
+});
+export { getProductInventoryDto };

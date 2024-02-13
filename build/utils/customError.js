@@ -15,6 +15,7 @@ export var errorEnum;
     errorEnum[errorEnum["PRODUCT_NOT_FOUND"] = 112] = "PRODUCT_NOT_FOUND";
     errorEnum[errorEnum["PRODUCT_PHOTO_NOT_FOUND"] = 113] = "PRODUCT_PHOTO_NOT_FOUND";
     errorEnum[errorEnum["PRODUCT_MAX_PHOTO"] = 114] = "PRODUCT_MAX_PHOTO";
+    errorEnum[errorEnum["INVENTORY_SUSPENDED"] = 115] = "INVENTORY_SUSPENDED";
 })(errorEnum = errorEnum || (errorEnum = {}));
 export class CustomErrorClass {
     static noEnv(varName) {
@@ -122,6 +123,13 @@ export class CustomErrorClass {
             name: "PRODUCT_MAX_PHOTO",
             code: errorEnum.PRODUCT_MAX_PHOTO,
             httpCode: 400
+        };
+    }
+    static inventorySuspended() {
+        return {
+            name: "INVENTORY_SUSPENDED",
+            code: errorEnum.INVENTORY_SUSPENDED,
+            httpCode: 403
         };
     }
 }

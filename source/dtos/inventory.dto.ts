@@ -20,3 +20,21 @@ type addInventoryDtoType = {
 }
 
 export { addInventoryDto, addInventoryDtoType }
+
+//*getProductInventory
+const getProductInventoryDto = Joi.object({
+    page: Joi.number().integer(),
+    productId: Joi.string().custom((value, helpers) => {
+        if (!Types.ObjectId.isValid(value)) {
+            return helpers.error('invalid objectId');
+        }
+        return value;
+    }, "validate objectId").required(),
+});
+
+type getProductInventoryDtoType = {
+    productId?: string,
+    page?: number,
+}
+
+export { getProductInventoryDto, getProductInventoryDtoType }

@@ -1,4 +1,5 @@
 import mongoose, { Model, model, Schema } from 'mongoose';
+import { inventoryStatusEnum } from '../enum/inventoryStatus.enum.js';
 import validator from 'validator';
 
 export interface IInventory {
@@ -6,6 +7,7 @@ export interface IInventory {
     productId: mongoose.Schema.Types.ObjectId,
     price: number,
     count: number,
+    status: inventoryStatusEnum
 }
 
 export interface IInventoryMethods { }
@@ -32,6 +34,11 @@ const inventorySchema = new Schema<IInventory, InventoryModel, IInventoryMethods
         type: Number,
         required: true,
         min: 0
+    },
+    status: {
+        type: String,
+        enum: inventoryStatusEnum,
+        default: inventoryStatusEnum.ACTIVE
     }
 }, {
     toJSON: {

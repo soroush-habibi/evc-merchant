@@ -1,4 +1,5 @@
 import mongoose, { model, Schema } from 'mongoose';
+import { inventoryStatusEnum } from '../enum/inventoryStatus.enum.js';
 const inventorySchema = new Schema({
     merchantId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -19,6 +20,11 @@ const inventorySchema = new Schema({
         type: Number,
         required: true,
         min: 0
+    },
+    status: {
+        type: String,
+        enum: inventoryStatusEnum,
+        default: inventoryStatusEnum.ACTIVE
     }
 }, {
     toJSON: {

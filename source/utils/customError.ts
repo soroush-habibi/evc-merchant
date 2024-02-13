@@ -20,7 +20,8 @@ export enum errorEnum {
     MONGO_DUPLICATE = 111,
     PRODUCT_NOT_FOUND = 112,
     PRODUCT_PHOTO_NOT_FOUND = 113,
-    PRODUCT_MAX_PHOTO = 114
+    PRODUCT_MAX_PHOTO = 114,
+    INVENTORY_SUSPENDED = 115
 }
 
 export class CustomErrorClass {
@@ -143,6 +144,14 @@ export class CustomErrorClass {
             name: "PRODUCT_MAX_PHOTO",
             code: errorEnum.PRODUCT_MAX_PHOTO,
             httpCode: 400
+        };
+    }
+
+    static inventorySuspended(): errorType {
+        return {
+            name: "INVENTORY_SUSPENDED",
+            code: errorEnum.INVENTORY_SUSPENDED,
+            httpCode: 403
         };
     }
 }
