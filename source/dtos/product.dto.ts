@@ -13,7 +13,7 @@ const addProductDto = Joi.object({
     photo: Joi.array().max(20).items(Joi.object({
         originalFilename: Joi.string().required(),
         mimetype: Joi.string().required(),
-        size: Joi.number().required(),
+        size: Joi.number().max(1000 * 1000 * (Number(process.env.MAX_DOC_SIZE) || 20)).required(),
         filepath: Joi.string().required(),
     }).unknown(true)),
     addData: Joi.object()
@@ -54,7 +54,7 @@ const addPhotoDto = Joi.object({
     photo: Joi.array().max(20).items(Joi.object({
         originalFilename: Joi.string().required(),
         mimetype: Joi.string().required(),
-        size: Joi.number().required(),
+        size: Joi.number().max(1000 * 1000 * (Number(process.env.MAX_DOC_SIZE) || 20)).required(),
         filepath: Joi.string().required(),
     }).unknown(true)).required(),
     productId: Joi.string().custom((value, helpers) => {

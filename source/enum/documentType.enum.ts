@@ -1,0 +1,21 @@
+export enum documentTypeEnum {
+    NEWSPAPER = "آگهی آخرین تغییرات روزنامه رسمی",
+    NATIONAL_CARD = "کارت ملی",
+    NATIONAL_CARD_BACK = "تصویر پشت کارت ملی",
+    LAPTOP_LICENSE = "مدرک مجاز برای فروش لپ تاپ",
+    BOOK_LICENSE = "مدرک مجاز برای فروش کتاب",
+    MOTORCYCLE_LICENSE = "مدرک مجاز برای فروش موتورسیکلت",
+    LICENSE_LAST_CHANGE = "آخرین تغییرات گواهینامه ارزش افزوده",
+    ENTREPRENEURSHIP_LETTER = "معرفی نامه کارآفرینی",
+    DRUG_LICENSE = "مجوز فروش اینترنتی داروخانه",
+    ELEVATOR_LICENSE = "مدرک مجاز برای فروش قطعات جانبی آسانسور",
+    AGRI_LICENSE = "مدرک مجاز برای فروش سموم گیاهی و جانوری",
+    MOBILE_LICENSE = "مدرک مجاز برای فروش موبایل",
+    JEWELRY_LICENSE = "مدرک مجاز برای فروش طلا",
+    CHANGE_NAME_DOCUMENT = "مدارک تغییر نام, نام خانوادگی, نام شرکت",
+    HARDWARE_WALLET_LICENSE = "مدرک مجاز برای فروش کیف پول سخت افزاری",
+    TABLET_LICENSE = "مدرک مجاز برای فروش تبلت",
+    GOLD_COIN_LICENSE = "مدرک مجاز برای فروش سکه طلا",
+    PRINTER_LICENSE = "مدرک مجاز برای فروش پرینتر",
+    FREE_ZONE_LICENSE = "مجوز فعالیت اقتصادی در منطقه آزاد"
+}

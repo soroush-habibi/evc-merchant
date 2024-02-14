@@ -11,7 +11,7 @@ export const genericValidator = (templateObj, fieldType = FieldType.BODY) => {
     return async (req, res, next) => {
         try {
             if (fieldType === FieldType.FORM) {
-                const formidable = Formidable({ multiples: true, maxFileSize: 8 * 1024 * 1024 });
+                const formidable = Formidable({ multiples: true, maxFileSize: (Number(process.env.MAX_DOC_SIZE) || 20) * 1024 * 1024 });
                 const [fields, files] = await formidable.parse(req);
                 const data = Object.assign(fields, files);
                 for (const key in data) {
