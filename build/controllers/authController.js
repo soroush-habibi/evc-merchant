@@ -3,6 +3,7 @@ import { Address } from "../models/address.model.js";
 import { createTokens, generateRandomNumber } from "../utils/generators.js";
 import { CustomErrorClass } from "../utils/customError.js";
 import bcrypt from 'bcrypt';
+import { Store } from "../models/store.model.js";
 const ENV = process.env.PRODUCTION;
 export default class authController {
     static async preRegister(req, res, next) {
@@ -27,7 +28,7 @@ export default class authController {
         }
     }
     static async register(req, res, next) {
-        const { phoneNumber, otp, fullName, password, bankNumber, nationalCode, merchantName } = req.body;
+        const { phoneNumber, otp, fullName, password, bankNumber, nationalCode } = req.body;
         let accessToken, refreshToken;
         try {
             let user = await User.findOne({ phoneNumber });
@@ -51,7 +52,6 @@ export default class authController {
             user.refreshToken = refreshToken;
             user.bankNumber = bankNumber; //todo:bank number should be assigned with national code - bank api needed
             user.nationalCode = nationalCode;
-            user.merchantName = merchantName;
             await user.save();
             await req.redis.del(`OTP_${phoneNumber}`);
             res.status(201).json({
@@ -190,6 +190,62 @@ export default class authController {
         }
         catch (e) {
             next(e);
+        }
+    }
+    static async getUserInfo(req, res, next) {
+        try {
+            const user = await User.findById(req.user?.id);
+            if (!user)
+                return next(CustomErrorClass.userNotFound());
+            res.status(200).json({
+                message: "user info",
+                data: {
+                    id: user.id,
+                    phoneNumber: user.phoneNumber,
+                    fullName: user.fullName,
+                    email: user.email,
+                    bankNumber: user.bankNumber,
+                    nationalCode: user.nationalCode
+                }
+            });
+        }
+        catch (e) {
+            return next(e);
+        }
+    }
+    static async registerStore(req, res, next) {
+        const body = req.body;
+        try {
+            const user = await User.findById(req.user?.id);
+            if (!user)
+                return next(CustomErrorClass.userNotFound());
+            let store = await Store.findOne({ merchantId: req.user?.id });
+            if (!store) {
+                store = await Store.create({
+                    name: body.name,
+                    merchantId: req.user?.id,
+                    about: body.about,
+                    phoneNumber: body.phoneNumber,
+                    website: body.website
+                });
+            }
+            else {
+                store.name = body.name;
+                if (body.about)
+                    store.about = body.about;
+                if (body.phoneNumber)
+                    store.phoneNumber = body.phoneNumber;
+                if (body.website)
+                    store.website = body.website;
+                await store.save();
+            }
+            res.status(201).json({
+                message: "store saved!",
+                data: store
+            });
+        }
+        catch (e) {
+            return next(e);
         }
     }
 }

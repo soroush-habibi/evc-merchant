@@ -1,6 +1,7 @@
 import Joi from "joi";
 import { statesEnum } from "../enum/states.enum.js";
 const phoneRegex = /^09[0-9]{9}$/;
+const telephoneRegex = /^0\d{2,3}\d{8}$/;
 const latitudeRegex = /^-?([1-8]?[0-9](\.[0-9]+)?|90(\.0+)?)$/;
 const longitudeRegex = /^-?((1?[0-7]?|[1-9]?[0-9])(\.[0-9]+)?|180(\.0+)?)$/;
 const postcodeRegex = /^\d{10}$/;
@@ -18,7 +19,6 @@ const registerDto = Joi.object({
     bankNumber: Joi.string().required().min(16).max(16),
     nationalCode: Joi.string().required().pattern(new RegExp(nationalCodeRegex)).message("invalid national code"),
     password: Joi.string().required().min(4),
-    merchantName: Joi.string().min(2).required()
 });
 export { registerDto };
 //*login
@@ -55,3 +55,11 @@ const getUserAddressesDto = Joi.object({
     page: Joi.number()
 });
 export { getUserAddressesDto };
+//*registerStore
+const registerStoreDto = Joi.object({
+    name: Joi.string().min(2).required(),
+    about: Joi.string(),
+    phoneNumber: Joi.string().pattern(new RegExp(telephoneRegex)).message("invalid telephone number"),
+    website: Joi.string().uri()
+});
+export { registerStoreDto };

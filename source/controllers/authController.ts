@@ -3,8 +3,9 @@ import { User } from "../models/user.model.js";
 import { Address } from "../models/address.model.js";
 import { createTokens, generateRandomNumber } from "../utils/generators.js";
 import { CustomErrorClass } from "../utils/customError.js";
-import { registerDtoType, preRegisterDtoType, loginDtoType, preRegisterEmailDtoType, registerEmailDtoType, registerAddressDtoType, getUserAddressesDtoType } from "../dtos/auth.dto.js";
+import { registerDtoType, preRegisterDtoType, loginDtoType, preRegisterEmailDtoType, registerEmailDtoType, registerAddressDtoType, getUserAddressesDtoType, registerStoreDtoType } from "../dtos/auth.dto.js";
 import bcrypt from 'bcrypt';
+import { Store } from "../models/store.model.js";
 
 const ENV = process.env.PRODUCTION
 
@@ -34,7 +35,7 @@ export default class authController {
     }
 
     static async register(req: Request, res: Response, next: NextFunction) {
-        const { phoneNumber, otp, fullName, password, bankNumber, nationalCode, merchantName } = req.body as registerDtoType;
+        const { phoneNumber, otp, fullName, password, bankNumber, nationalCode } = req.body as registerDtoType;
         let accessToken, refreshToken;
 
         try {
@@ -60,7 +61,6 @@ export default class authController {
             user.refreshToken = refreshToken;
             user.bankNumber = bankNumber;                                   //todo:bank number should be assigned with national code - bank api needed
             user.nationalCode = nationalCode;
-            user.merchantName = merchantName;
             await user.save();
             await req.redis.del(`OTP_${phoneNumber as string}`);
 
@@ -213,6 +213,63 @@ export default class authController {
             });
         } catch (e) {
             next(e)
+        }
+    }
+
+    static async getUserInfo(req: Request, res: Response, next: NextFunction) {
+        try {
+            const user = await User.findById(req.user?.id);
+
+            if (!user) return next(CustomErrorClass.userNotFound());
+
+            res.status(200).json({
+                message: "user info",
+                data: {
+                    id: user.id,
+                    phoneNumber: user.phoneNumber,
+                    fullName: user.fullName,
+                    email: user.email,
+                    bankNumber: user.bankNumber,
+                    nationalCode: user.nationalCode
+                }
+            });
+        } catch (e) {
+            return next(e);
+        }
+    }
+
+    static async registerStore(req: Request, res: Response, next: NextFunction) {
+        const body = req.body as registerStoreDtoType;
+
+        try {
+            const user = await User.findById(req.user?.id);
+
+            if (!user) return next(CustomErrorClass.userNotFound());
+
+            let store = await Store.findOne({ merchantId: req.user?.id });
+
+            if (!store) {
+                store = await Store.create({
+                    name: body.name,
+                    merchantId: req.user?.id,
+                    about: body.about,
+                    phoneNumber: body.phoneNumber,
+                    website: body.website
+                });
+            } else {
+                store.name = body.name;
+                if (body.about) store.about = body.about;
+                if (body.phoneNumber) store.phoneNumber = body.phoneNumber;
+                if (body.website) store.website = body.website;
+                await store.save();
+            }
+
+            res.status(201).json({
+                message: "store saved!",
+                data: store
+            });
+        } catch (e) {
+            return next(e)
         }
     }
 }
