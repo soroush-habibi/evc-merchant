@@ -8,8 +8,8 @@ const addInventoryDto = Joi.object({
         }
         return value;
     }, "validate objectId").required(),
-    price: Joi.number().integer().min(10000).required(),
-    count: Joi.number().integer().min(1).required()
+    price: Joi.number().integer().min(10000),
+    count: Joi.number().integer().min(0).required()
 });
 export { addInventoryDto };
 //*getProductInventory

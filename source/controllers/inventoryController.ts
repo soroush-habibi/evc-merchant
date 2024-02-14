@@ -18,16 +18,18 @@ export default class inventoryController {
 
             let inventory = await Inventory.findOne({ productId: body.productId, merchantId: req.user?.id });
 
-            if (!inventory) {
+            if (!inventory && body.price) {
                 inventory = await Inventory.create({
                     merchantId: req.user?.id,
                     productId: body.productId,
                     count: body.count,
                     price: body.price
                 });
-            } else {
+            } else if (!inventory && !body.price) {
+                return next(CustomErrorClass.productNotFound());
+            } else if (inventory) {
                 if (inventory.status === inventoryStatusEnum.SUSPENDED) return next(CustomErrorClass.inventorySuspended());
-                inventory.price = body.price;
+                if (body.price) inventory.price = body.price;
                 inventory.count = body.count;
                 inventory.status = inventoryStatusEnum.ACTIVE
                 await inventory.save();
