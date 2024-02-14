@@ -4,6 +4,20 @@ const userSchema = new Schema({
     fullName: {
         type: String,
     },
+    bankNumber: {
+        type: String,
+        minlength: 16,
+        maxlength: 16
+    },
+    nationalCode: {
+        type: String,
+        validate: {
+            validator: (value) => {
+                return /^\d{3}\d{6}\d{1}$/.test(value);
+            },
+            message: "invalid national code"
+        }
+    },
     email: {
         type: String,
         validate: [validator.isEmail, 'not valid email address']

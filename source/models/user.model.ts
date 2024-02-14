@@ -14,6 +14,8 @@ import validator from 'validator';
 export interface IUser {
     phoneNumber: string,
     fullName?: string,
+    bankNumber?: string,
+    nationalCode?: string,
     email?: string,
     password?: string,
     refreshToken?: string
@@ -26,6 +28,20 @@ type UserModel = Model<IUser, {}, IUserMethods>;
 const userSchema = new Schema<IUser, UserModel, IUserMethods>({
     fullName: {
         type: String,
+    },
+    bankNumber: {                                       //todo:add validation
+        type: String,
+        minlength: 16,
+        maxlength: 16
+    },
+    nationalCode: {
+        type: String,
+        validate: {
+            validator: (value: any) => {
+                return /^\d{3}\d{6}\d{1}$/.test(value);
+            },
+            message: "invalid national code"
+        }
     },
     email: {
         type: String,

@@ -4,6 +4,7 @@ const phoneRegex = /^09[0-9]{9}$/;
 const latitudeRegex = /^-?([1-8]?[0-9](\.[0-9]+)?|90(\.0+)?)$/;
 const longitudeRegex = /^-?((1?[0-7]?|[1-9]?[0-9])(\.[0-9]+)?|180(\.0+)?)$/;
 const postcodeRegex = /^\d{10}$/;
+const nationalCodeRegex = /^\d{3}\d{6}\d{1}$/;
 //*preRegister
 const preRegisterDto = Joi.object({
     phoneNumber: Joi.string().pattern(new RegExp(phoneRegex)).message('invalid phone number').required(),
@@ -14,6 +15,8 @@ const registerDto = Joi.object({
     phoneNumber: Joi.string().pattern(new RegExp(phoneRegex)).message('invalid phone number').required(),
     otp: Joi.string().required().min(6).max(6),
     fullName: Joi.string().required().min(2),
+    bankNumber: Joi.string().required().min(16).max(16),
+    nationalCode: Joi.string().required().pattern(new RegExp(nationalCodeRegex)).message("invalid national code"),
     password: Joi.string().required().min(4)
 });
 export { registerDto };

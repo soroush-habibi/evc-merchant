@@ -34,7 +34,7 @@ export default class authController {
     }
 
     static async register(req: Request, res: Response, next: NextFunction) {
-        const { phoneNumber, otp, fullName, password } = req.body as registerDtoType;
+        const { phoneNumber, otp, fullName, password, bankNumber, nationalCode } = req.body as registerDtoType;
         let accessToken, refreshToken;
 
         try {
@@ -58,6 +58,8 @@ export default class authController {
                 id: user.id
             });
             user.refreshToken = refreshToken;
+            user.bankNumber = bankNumber;                                   //todo:bank number should be assigned with national code - bank api needed
+            user.nationalCode = nationalCode;
             await user.save();
             await req.redis.del(`OTP_${phoneNumber as string}`);
 
