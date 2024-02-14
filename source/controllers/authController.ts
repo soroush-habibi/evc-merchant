@@ -272,4 +272,21 @@ export default class authController {
             return next(e)
         }
     }
+
+    static async getStoreInfo(req: Request, res: Response, next: NextFunction) {
+        try {
+            const store = await Store.findOne({
+                merchantId: req.user?.id
+            });
+
+            if (!store) return next(CustomErrorClass.storeNotFound());
+
+            res.status(200).json({
+                message: "store info",
+                data: store
+            });
+        } catch (e) {
+            return next(e)
+        }
+    }
 }

@@ -21,7 +21,8 @@ export enum errorEnum {
     PRODUCT_NOT_FOUND = 112,
     PRODUCT_PHOTO_NOT_FOUND = 113,
     PRODUCT_MAX_PHOTO = 114,
-    INVENTORY_SUSPENDED = 115
+    INVENTORY_SUSPENDED = 115,
+    STORE_NOT_FOUND = 116
 }
 
 export class CustomErrorClass {
@@ -152,6 +153,14 @@ export class CustomErrorClass {
             name: "INVENTORY_SUSPENDED",
             code: errorEnum.INVENTORY_SUSPENDED,
             httpCode: 403
+        };
+    }
+
+    static storeNotFound(): errorType {
+        return {
+            name: "STORE_NOT_FOUND",
+            code: errorEnum.STORE_NOT_FOUND,
+            httpCode: 404
         };
     }
 }

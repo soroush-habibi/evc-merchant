@@ -24,4 +24,6 @@ authRouter.get("/profile", userJwt, authController.getUserInfo);
 
 authRouter.post("/store", userJwt, genericValidator(registerStoreDto), authController.registerStore);
 
+authRouter.get("/store", userJwt, authController.getStoreInfo);
+
 export default authRouter;
