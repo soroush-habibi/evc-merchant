@@ -1,5 +1,6 @@
 import { CustomErrorClass } from "../utils/customError.js";
 import { Product } from "../models/product.model.js";
+import { User } from "../models/user.model.js";
 const ENV = process.env.PRODUCTION;
 export default class adminController {
     static async getAdminProducts(req, res, next) {
@@ -33,6 +34,31 @@ export default class adminController {
             await product.updateOne({ status: query.newStatus });
             res.status(201).json({
                 message: "status updated"
+            });
+        }
+        catch (e) {
+            return next(e);
+        }
+    }
+    static async getUsers(req, res, next) {
+        const query = req.query;
+        try {
+            const filter = {
+                phoneNumber: {
+                    $regex: query.phoneNumber ? new RegExp(query.phoneNumber, "i") : ""
+                }, fullName: {
+                    $regex: query.fullName ? new RegExp(query.fullName, "i") : ""
+                }, nationalCode: {
+                    $regex: query.nationalCode ? new RegExp(query.nationalCode, "i") : ""
+                }
+            };
+            const users = await User.find(filter, {}, {
+                limit: 10,
+                skip: query.page ? (query.page - 1) * 10 : 0
+            });
+            res.status(200).json({
+                message: "users list",
+                data: users
             });
         }
         catch (e) {

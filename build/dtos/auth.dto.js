@@ -52,7 +52,7 @@ const registerAddressDto = Joi.object({
 export { registerAddressDto };
 //*getUserAddresses
 const getUserAddressesDto = Joi.object({
-    page: Joi.number()
+    page: Joi.number().min(1)
 });
 export { getUserAddressesDto };
 //*registerStore

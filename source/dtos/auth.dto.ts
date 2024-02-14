@@ -106,7 +106,7 @@ export { registerAddressDto, registerAddressDtoType }
 
 //*getUserAddresses
 const getUserAddressesDto = Joi.object({
-    page: Joi.number()
+    page: Joi.number().min(1)
 });
 
 type getUserAddressesDtoType = {

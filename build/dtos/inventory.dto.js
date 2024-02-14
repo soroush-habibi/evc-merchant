@@ -14,7 +14,7 @@ const addInventoryDto = Joi.object({
 export { addInventoryDto };
 //*getProductInventory
 const getProductInventoryDto = Joi.object({
-    page: Joi.number().integer(),
+    page: Joi.number().integer().min(1),
     productId: Joi.string().custom((value, helpers) => {
         if (!Types.ObjectId.isValid(value)) {
             return helpers.error('invalid objectId');
@@ -25,6 +25,6 @@ const getProductInventoryDto = Joi.object({
 export { getProductInventoryDto };
 //*getMerchantInventory
 const getMerchantInventoryDto = Joi.object({
-    page: Joi.number().integer()
+    page: Joi.number().integer().min(1)
 });
 export { getMerchantInventoryDto };

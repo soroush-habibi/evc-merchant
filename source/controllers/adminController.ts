@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomErrorClass } from "../utils/customError.js";
-import { getAdminProductsDtoType, updateProductStatusDtoType } from "../dtos/admin.dto.js";
+import { getAdminProductsDtoType, getUsersDtoType, updateProductStatusDtoType } from "../dtos/admin.dto.js";
 import { Product } from "../models/product.model.js";
+import { User } from "../models/user.model.js";
 
 const ENV = process.env.PRODUCTION
 
@@ -43,6 +44,34 @@ export default class adminController {
 
             res.status(201).json({
                 message: "status updated"
+            });
+        } catch (e) {
+            return next(e);
+        }
+    }
+
+    static async getUsers(req: Request, res: Response, next: NextFunction) {
+        const query = req.query as getUsersDtoType;
+
+        try {
+            const filter: any = {
+                phoneNumber: {
+                    $regex: query.phoneNumber ? new RegExp(query.phoneNumber, "i") : ""
+                }, fullName: {
+                    $regex: query.fullName ? new RegExp(query.fullName, "i") : ""
+                }, nationalCode: {
+                    $regex: query.nationalCode ? new RegExp(query.nationalCode, "i") : ""
+                }
+            }
+
+            const users = await User.find(filter, {}, {
+                limit: 10,
+                skip: query.page ? (query.page - 1) * 10 : 0
+            });
+
+            res.status(200).json({
+                message: "users list",
+                data: users
             });
         } catch (e) {
             return next(e);

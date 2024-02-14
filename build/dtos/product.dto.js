@@ -46,7 +46,7 @@ const addPhotoDto = Joi.object({
 export { addPhotoDto };
 //*getMerchantProducts
 const getMerchantProductsDto = Joi.object({
-    page: Joi.number().integer(),
+    page: Joi.number().integer().min(1),
     title: Joi.string(),
     category: Joi.string(),
     mode: Joi.number().valid(1, 2) //* 1=merchant products 2=all verified products
