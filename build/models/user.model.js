@@ -34,6 +34,10 @@ const userSchema = new Schema({
     },
     refreshToken: {
         type: String,
+    },
+    merchantName: {
+        type: String,
+        minlength: 2
     }
 }, {
     toJSON: {
@@ -49,7 +53,7 @@ const userSchema = new Schema({
         }
     },
 });
-// searches are based on national-code and mobile-number
 userSchema.index({ phoneNumber: 1 }, { unique: true });
+userSchema.index({ merchantName: 1 }, { unique: true });
 const User = model('User', userSchema);
 export { User };

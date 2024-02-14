@@ -27,7 +27,7 @@ export default class authController {
         }
     }
     static async register(req, res, next) {
-        const { phoneNumber, otp, fullName, password, bankNumber, nationalCode } = req.body;
+        const { phoneNumber, otp, fullName, password, bankNumber, nationalCode, merchantName } = req.body;
         let accessToken, refreshToken;
         try {
             let user = await User.findOne({ phoneNumber });
@@ -51,6 +51,7 @@ export default class authController {
             user.refreshToken = refreshToken;
             user.bankNumber = bankNumber; //todo:bank number should be assigned with national code - bank api needed
             user.nationalCode = nationalCode;
+            user.merchantName = merchantName;
             await user.save();
             await req.redis.del(`OTP_${phoneNumber}`);
             res.status(201).json({

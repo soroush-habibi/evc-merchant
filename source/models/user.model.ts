@@ -18,7 +18,8 @@ export interface IUser {
     nationalCode?: string,
     email?: string,
     password?: string,
-    refreshToken?: string
+    refreshToken?: string,
+    merchantName?: string
 }
 
 export interface IUserMethods { }
@@ -59,6 +60,10 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>({
     },
     refreshToken: {
         type: String,
+    },
+    merchantName: {
+        type: String,
+        minlength: 2
     }
 }, {
     toJSON: {
@@ -75,8 +80,8 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>({
     },
 });
 
-// searches are based on national-code and mobile-number
 userSchema.index({ phoneNumber: 1 }, { unique: true });
+userSchema.index({ merchantName: 1 }, { unique: true });
 
 const User = model<IUser, UserModel>('User', userSchema);
 

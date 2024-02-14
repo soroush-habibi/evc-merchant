@@ -26,7 +26,8 @@ const registerDto = Joi.object({
     fullName: Joi.string().required().min(2),
     bankNumber: Joi.string().required().min(16).max(16),                        //todo:add validation
     nationalCode: Joi.string().required().pattern(new RegExp(nationalCodeRegex)).message("invalid national code"),
-    password: Joi.string().required().min(4)
+    password: Joi.string().required().min(4),
+    merchantName: Joi.string().min(2).required()
 });
 
 type registerDtoType = {
@@ -35,7 +36,8 @@ type registerDtoType = {
     fullName: string,
     bankNumber: string,
     nationalCode: string,
-    password: string
+    password: string,
+    merchantName: string
 }
 
 export { registerDto, registerDtoType }
