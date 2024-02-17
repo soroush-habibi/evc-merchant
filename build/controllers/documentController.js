@@ -35,4 +35,26 @@ export default class documentController {
             return next(e);
         }
     }
+    static async getDocuments(req, res, next) {
+        const query = req.query;
+        try {
+            const filter = {
+                merchantId: req.user?.id,
+                status: query.status ? query.status : documentStatusEnum.PENDING
+            };
+            if (query.type)
+                filter.type = query.type;
+            const documents = await Document.find(filter, {}, {
+                limit: 10,
+                skip: query.page ? (query.page - 1) * 10 : 0
+            });
+            res.status(200).json({
+                message: "list of documents!",
+                data: documents
+            });
+        }
+        catch (e) {
+            return next(e);
+        }
+    }
 }
