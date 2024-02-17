@@ -3,7 +3,7 @@ import { User } from "../models/user.model.js";
 import { Address } from "../models/address.model.js";
 import { createTokens, generateRandomNumber } from "../utils/generators.js";
 import { CustomErrorClass } from "../utils/customError.js";
-import { registerDtoType, preRegisterDtoType, loginDtoType, preRegisterEmailDtoType, registerEmailDtoType, registerAddressDtoType, getUserAddressesDtoType, registerStoreDtoType } from "../dtos/auth.dto.js";
+import { registerDtoType, preRegisterDtoType, loginDtoType, preRegisterEmailDtoType, registerEmailDtoType, registerAddressDtoType, getUserAddressesDtoType, registerStoreDtoType, preRegisterNotifPhoneDtoType, registerNotifPhoneDtoType } from "../dtos/auth.dto.js";
 import bcrypt from 'bcrypt';
 import { Store } from "../models/store.model.js";
 
@@ -287,6 +287,60 @@ export default class authController {
             });
         } catch (e) {
             return next(e)
+        }
+    }
+
+    static async preRegisterNotifPhone(req: Request, res: Response, next: NextFunction) {
+        const body = req.body as preRegisterNotifPhoneDtoType;
+
+        try {
+            const user = await User.findById(req.user?.id);
+
+            if (!user) return next(CustomErrorClass.userNotFound());
+
+            if (body.phoneNumber === user.phoneNumber) return next(CustomErrorClass.duplicateNotifPhone());
+
+            const existedOtp = await req.redis.get(`NOTP_${body.phoneNumber}`);
+            if (existedOtp) return next(CustomErrorClass.activeOtp());
+
+            const newOtp = ENV === "production" ? generateRandomNumber(6) : '123456';
+            //todo:where is sendSMS service?
+            // const sms = ENV === "production" ? await sendSms(phoneNumber as string, newOtp) : { code: 200, msg: "testing" };
+
+            await req.redis.set(`NOTP_${body.phoneNumber}`, newOtp, 'EX', process.env.REDIS_TTL || "60");
+
+            res.status(201).json({
+                message: "otp sent!"
+            });
+        } catch (e) {
+            return next(e);
+        }
+    }
+
+    static async registerNotifPhone(req: Request, res: Response, next: NextFunction) {
+        const body = req.body as registerNotifPhoneDtoType;
+
+        try {
+            let user = await User.findById(req.user?.id)
+            if (!user) return next(CustomErrorClass.userNotFound());
+
+            const existedOtp = await req.redis.get(`NOTP_${body.phoneNumber as string}`);
+            if (!existedOtp) return next(CustomErrorClass.noOtp());
+
+            if (existedOtp !== body.otp) {
+                await req.redis.del(`NOTP_${body.phoneNumber as string}`);
+                return next(CustomErrorClass.wrongOtp());
+            }
+
+            user.notifPhone = body.phoneNumber;
+            await user.save();
+            await req.redis.del(`NOTP_${body.phoneNumber as string}`);
+
+            res.status(201).json({
+                message: "saved!"
+            });
+        } catch (e) {
+            return next(e);
         }
     }
 }

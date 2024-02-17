@@ -66,12 +66,14 @@ const checkDocumentDto = Joi.object({
         }
         return value;
     }, "validate objectId").required(),
-    newStatus: Joi.string().valid(...Object.values(documentStatusEnum)).required()
+    newStatus: Joi.string().valid(...Object.values(documentStatusEnum)).required(),
+    message: Joi.string()
 });
 
 type checkDocumentDtoType = {
     documentId: string,
-    newStatus: string
+    newStatus: documentStatusEnum,
+    message?: string
 }
 
 export { checkDocumentDto, checkDocumentDtoType }

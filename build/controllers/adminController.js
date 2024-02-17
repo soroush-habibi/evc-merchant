@@ -2,6 +2,7 @@ import { CustomErrorClass } from "../utils/customError.js";
 import { Product } from "../models/product.model.js";
 import { User } from "../models/user.model.js";
 import { Document } from "../models/document.model.js";
+import { documentStatusEnum } from "../enum/documentStatus.enum.js";
 const ENV = process.env.PRODUCTION;
 export default class adminController {
     static async getAdminProducts(req, res, next) {
@@ -47,7 +48,16 @@ export default class adminController {
             const document = await Document.findById(query.documentId);
             if (!document)
                 return next(CustomErrorClass.documentNotFound());
-            await document.updateOne({ $set: { status: query.newStatus } });
+            const newDoc = { status: query.newStatus };
+            if (query.message) {
+                newDoc.message = query.message;
+            }
+            else {
+                if (query.newStatus === documentStatusEnum.VERIFIED) {
+                    newDoc.message = "مدرک شما تایید شد!";
+                }
+            }
+            await document.updateOne({ $set: newDoc });
             res.status(201).json({
                 message: "status changed"
             });

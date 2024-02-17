@@ -19,6 +19,7 @@ export var errorEnum;
     errorEnum[errorEnum["STORE_NOT_FOUND"] = 116] = "STORE_NOT_FOUND";
     errorEnum[errorEnum["PENDING_DOCUMENT"] = 117] = "PENDING_DOCUMENT";
     errorEnum[errorEnum["DOCUMENT_NOT_FOUND"] = 118] = "DOCUMENT_NOT_FOUND";
+    errorEnum[errorEnum["DUPLICATE_NOTIF_PHONE"] = 119] = "DUPLICATE_NOTIF_PHONE";
 })(errorEnum = errorEnum || (errorEnum = {}));
 export class CustomErrorClass {
     static noEnv(varName) {
@@ -154,6 +155,13 @@ export class CustomErrorClass {
             name: "DOCUMENT_NOT_FOUND",
             code: errorEnum.DOCUMENT_NOT_FOUND,
             httpCode: 404
+        };
+    }
+    static duplicateNotifPhone() {
+        return {
+            name: "DUPLICATE_NOTIF_PHONE",
+            code: errorEnum.DUPLICATE_NOTIF_PHONE,
+            httpCode: 400
         };
     }
 }

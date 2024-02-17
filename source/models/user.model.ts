@@ -19,6 +19,7 @@ export interface IUser {
     email?: string,
     password?: string,
     refreshToken?: string,
+    notifPhone?: string
 }
 
 export interface IUserMethods { }
@@ -59,6 +60,12 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>({
     },
     refreshToken: {
         type: String,
+    },
+    notifPhone: {
+        type: String,
+        maxlength: 11,
+        minlength: 11,
+        validate: [validator.isMobilePhone, 'not valid phone number']
     }
 }, {
     toJSON: {

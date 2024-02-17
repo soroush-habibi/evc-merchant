@@ -63,3 +63,14 @@ const registerStoreDto = Joi.object({
     website: Joi.string().uri()
 });
 export { registerStoreDto };
+//*preRegisterNotifPhone
+const preRegisterNotifPhoneDto = Joi.object({
+    phoneNumber: Joi.string().pattern(new RegExp(phoneRegex)).message('invalid phone number').required(),
+});
+export { preRegisterNotifPhoneDto };
+//*registerNotifPhone
+const registerNotifPhoneDto = Joi.object({
+    phoneNumber: Joi.string().pattern(new RegExp(phoneRegex)).message('invalid phone number').required(),
+    otp: Joi.string().required().min(6).max(6)
+});
+export { registerNotifPhoneDto };

@@ -24,7 +24,8 @@ export enum errorEnum {
     INVENTORY_SUSPENDED = 115,
     STORE_NOT_FOUND = 116,
     PENDING_DOCUMENT = 117,
-    DOCUMENT_NOT_FOUND = 118
+    DOCUMENT_NOT_FOUND = 118,
+    DUPLICATE_NOTIF_PHONE = 119
 }
 
 export class CustomErrorClass {
@@ -179,6 +180,14 @@ export class CustomErrorClass {
             name: "DOCUMENT_NOT_FOUND",
             code: errorEnum.DOCUMENT_NOT_FOUND,
             httpCode: 404
+        };
+    }
+
+    static duplicateNotifPhone(): errorType {
+        return {
+            name: "DUPLICATE_NOTIF_PHONE",
+            code: errorEnum.DUPLICATE_NOTIF_PHONE,
+            httpCode: 400
         };
     }
 }

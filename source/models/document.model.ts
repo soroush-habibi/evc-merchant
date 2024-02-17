@@ -7,7 +7,8 @@ export interface IDocument {
     merchantId: mongoose.Schema.Types.ObjectId,
     type: documentTypeEnum,
     doc: string,
-    status: documentStatusEnum
+    status: documentStatusEnum,
+    message: string
 }
 
 export interface IDocumentMethods { }
@@ -33,6 +34,9 @@ const documentSchema = new Schema<IDocument, DocumentModel, IDocumentMethods>({
         type: String,
         enum: documentStatusEnum,
         default: documentStatusEnum.PENDING
+    },
+    message: {
+        type: String
     }
 }, {
     toJSON: {

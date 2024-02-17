@@ -264,4 +264,51 @@ export default class authController {
             return next(e);
         }
     }
+    static async preRegisterNotifPhone(req, res, next) {
+        const body = req.body;
+        try {
+            const user = await User.findById(req.user?.id);
+            if (!user)
+                return next(CustomErrorClass.userNotFound());
+            if (body.phoneNumber === user.phoneNumber)
+                return next(CustomErrorClass.duplicateNotifPhone());
+            const existedOtp = await req.redis.get(`NOTP_${body.phoneNumber}`);
+            if (existedOtp)
+                return next(CustomErrorClass.activeOtp());
+            const newOtp = ENV === "production" ? generateRandomNumber(6) : '123456';
+            //todo:where is sendSMS service?
+            // const sms = ENV === "production" ? await sendSms(phoneNumber as string, newOtp) : { code: 200, msg: "testing" };
+            await req.redis.set(`NOTP_${body.phoneNumber}`, newOtp, 'EX', process.env.REDIS_TTL || "60");
+            res.status(201).json({
+                message: "otp sent!"
+            });
+        }
+        catch (e) {
+            return next(e);
+        }
+    }
+    static async registerNotifPhone(req, res, next) {
+        const body = req.body;
+        try {
+            let user = await User.findById(req.user?.id);
+            if (!user)
+                return next(CustomErrorClass.userNotFound());
+            const existedOtp = await req.redis.get(`NOTP_${body.phoneNumber}`);
+            if (!existedOtp)
+                return next(CustomErrorClass.noOtp());
+            if (existedOtp !== body.otp) {
+                await req.redis.del(`NOTP_${body.phoneNumber}`);
+                return next(CustomErrorClass.wrongOtp());
+            }
+            user.notifPhone = body.phoneNumber;
+            await user.save();
+            await req.redis.del(`NOTP_${body.phoneNumber}`);
+            res.status(201).json({
+                message: "saved!"
+            });
+        }
+        catch (e) {
+            return next(e);
+        }
+    }
 }

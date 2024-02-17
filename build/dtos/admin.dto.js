@@ -39,6 +39,7 @@ const checkDocumentDto = Joi.object({
         }
         return value;
     }, "validate objectId").required(),
-    newStatus: Joi.string().valid(...Object.values(documentStatusEnum)).required()
+    newStatus: Joi.string().valid(...Object.values(documentStatusEnum)).required(),
+    message: Joi.string()
 });
 export { checkDocumentDto };

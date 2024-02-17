@@ -20,6 +20,9 @@ const documentSchema = new Schema({
         type: String,
         enum: documentStatusEnum,
         default: documentStatusEnum.PENDING
+    },
+    message: {
+        type: String
     }
 }, {
     toJSON: {
