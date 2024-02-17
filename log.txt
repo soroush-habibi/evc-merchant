@@ -31,3 +31,8 @@ Tue Feb 13 2024 13:14:02 GMT+0330 (Iran Standard Time): {"expose":true,"statusCo
 Wed Feb 14 2024 13:23:51 GMT+0330 (Iran Standard Time): {"errors":{"phoneNumber":{"name":"ValidatorError","message":"Path `phoneNumber` (`061-52826964`) is longer than the maximum allowed length (11).","properties":{"message":"Path `phoneNumber` (`061-52826964`) is longer than the maximum allowed length (11).","type":"maxlength","maxlength":11,"path":"phoneNumber","value":"061-52826964"},"kind":"maxlength","path":"phoneNumber","value":"061-52826964"}},"_message":"Store validation failed","name":"ValidationError","message":"Store validation failed: phoneNumber: Path `phoneNumber` (`061-52826964`) is longer than the maximum allowed length (11)."}
 Wed Feb 14 2024 13:24:32 GMT+0330 (Iran Standard Time): {"errors":{"phoneNumber":{"name":"ValidatorError","message":"not valid phone number","properties":{"message":"not valid phone number","type":"user defined","path":"phoneNumber","value":"061-52826964"},"kind":"user defined","path":"phoneNumber","value":"061-52826964"}},"_message":"Store validation failed","name":"ValidationError","message":"Store validation failed: phoneNumber: not valid phone number"}
 Wed Feb 14 2024 16:54:47 GMT+0330 (Iran Standard Time): {"name":"INTERNAL_ERROR","code":9999,"httpCode":500}
+Sat Feb 17 2024 12:41:26 GMT+0330 (Iran Standard Time): {"code":"ERR_INVALID_ARG_TYPE"}
+Sat Feb 17 2024 12:42:57 GMT+0330 (Iran Standard Time): {"code":"ERR_INVALID_ARG_TYPE"}
+Sat Feb 17 2024 12:43:14 GMT+0330 (Iran Standard Time): {"code":"ERR_INVALID_ARG_TYPE"}
+Sat Feb 17 2024 12:43:32 GMT+0330 (Iran Standard Time): {"code":"ERR_INVALID_ARG_TYPE"}
+Sat Feb 17 2024 12:43:51 GMT+0330 (Iran Standard Time): {"code":"ERR_INVALID_ARG_TYPE"}

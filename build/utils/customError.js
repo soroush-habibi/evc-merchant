@@ -17,6 +17,7 @@ export var errorEnum;
     errorEnum[errorEnum["PRODUCT_MAX_PHOTO"] = 114] = "PRODUCT_MAX_PHOTO";
     errorEnum[errorEnum["INVENTORY_SUSPENDED"] = 115] = "INVENTORY_SUSPENDED";
     errorEnum[errorEnum["STORE_NOT_FOUND"] = 116] = "STORE_NOT_FOUND";
+    errorEnum[errorEnum["PENDING_DOCUMENT"] = 117] = "PENDING_DOCUMENT";
 })(errorEnum = errorEnum || (errorEnum = {}));
 export class CustomErrorClass {
     static noEnv(varName) {
@@ -138,6 +139,13 @@ export class CustomErrorClass {
             name: "STORE_NOT_FOUND",
             code: errorEnum.STORE_NOT_FOUND,
             httpCode: 404
+        };
+    }
+    static pendingDocument() {
+        return {
+            name: "PENDING_DOCUMENT",
+            code: errorEnum.PENDING_DOCUMENT,
+            httpCode: 400
         };
     }
 }

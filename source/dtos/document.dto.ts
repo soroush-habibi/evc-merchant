@@ -7,7 +7,7 @@ const sendDocumentDto = Joi.object({
     doc: Joi.array().min(1).max(1).items(Joi.object({
         originalFilename: Joi.string().required(),
         mimetype: Joi.string().required(),
-        size: Joi.number().max(1000 * 1000 * 10).required(),
+        size: Joi.number().max(1000 * 1000 * (Number(process.env.MAX_DOC_SIZE) || 20)).required(),
         filepath: Joi.string().required(),
     }).unknown(true)).required()
 });

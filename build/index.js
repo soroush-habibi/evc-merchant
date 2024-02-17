@@ -11,7 +11,7 @@ import errorHandler from './middlewares/errorHandler.js';
 import indexRouter from './routers/indexRouter.js';
 import mongoose from 'mongoose';
 import { redis } from './utils/redis.js';
-checkEnv("APP_PORT", "JWT_SECRET", "JWT_REFRESH_SECRET", "DB_URL", "REDIS_URL", "REDIS_PORT", "REDIS_PASSWORD", "PRODUCT_PHOTO_FOLDER", "ADMIN_API_KEY");
+checkEnv("APP_PORT", "JWT_SECRET", "JWT_REFRESH_SECRET", "DB_URL", "REDIS_URL", "REDIS_PORT", "REDIS_PASSWORD", "PRODUCT_PHOTO_FOLDER", "DOCUMENT_FOLDER", "ADMIN_API_KEY");
 let temp = path.dirname(fileURLToPath(import.meta.url)).split('');
 temp.splice(temp.length - 6);
 const ROOT = temp.join('');

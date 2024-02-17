@@ -22,7 +22,8 @@ export enum errorEnum {
     PRODUCT_PHOTO_NOT_FOUND = 113,
     PRODUCT_MAX_PHOTO = 114,
     INVENTORY_SUSPENDED = 115,
-    STORE_NOT_FOUND = 116
+    STORE_NOT_FOUND = 116,
+    PENDING_DOCUMENT = 117
 }
 
 export class CustomErrorClass {
@@ -161,6 +162,14 @@ export class CustomErrorClass {
             name: "STORE_NOT_FOUND",
             code: errorEnum.STORE_NOT_FOUND,
             httpCode: 404
+        };
+    }
+
+    static pendingDocument(): errorType {
+        return {
+            name: "PENDING_DOCUMENT",
+            code: errorEnum.PENDING_DOCUMENT,
+            httpCode: 400
         };
     }
 }

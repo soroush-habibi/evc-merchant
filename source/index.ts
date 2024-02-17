@@ -35,6 +35,7 @@ checkEnv(
     "REDIS_PORT",
     "REDIS_PASSWORD",
     "PRODUCT_PHOTO_FOLDER",
+    "DOCUMENT_FOLDER",
     "ADMIN_API_KEY"
 );
 
