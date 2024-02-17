@@ -1,6 +1,6 @@
 import express from "express";
 import adminController from "../controllers/adminController.js";
-import { getAdminProductsDto, getUsersDto, updateProductStatusDto } from "../dtos/admin.dto.js";
+import { getAdminProductsDto, getUsersDto, updateProductStatusDto, checkDocumentDto } from "../dtos/admin.dto.js";
 import adminCheck from "../middlewares/adminCheck.js";
 import { FieldType, genericValidator } from "../utils/requestChecker.js";
 
@@ -11,5 +11,7 @@ adminRouter.get("/product", adminCheck, genericValidator(getAdminProductsDto, Fi
 adminRouter.patch("/product", adminCheck, genericValidator(updateProductStatusDto, FieldType.QUERY), adminController.updateProductStatus);
 
 adminRouter.get("/user", adminCheck, genericValidator(getUsersDto, FieldType.QUERY), adminController.getUsers);
+
+adminRouter.put("/document", adminCheck, genericValidator(checkDocumentDto, FieldType.QUERY), adminController.checkDocument);
 
 export default adminRouter;

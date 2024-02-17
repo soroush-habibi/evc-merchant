@@ -1,6 +1,7 @@
 import { CustomErrorClass } from "../utils/customError.js";
 import { Product } from "../models/product.model.js";
 import { User } from "../models/user.model.js";
+import { Document } from "../models/document.model.js";
 const ENV = process.env.PRODUCTION;
 export default class adminController {
     static async getAdminProducts(req, res, next) {
@@ -34,6 +35,21 @@ export default class adminController {
             await product.updateOne({ status: query.newStatus });
             res.status(201).json({
                 message: "status updated"
+            });
+        }
+        catch (e) {
+            return next(e);
+        }
+    }
+    static async checkDocument(req, res, next) {
+        const query = req.query;
+        try {
+            const document = await Document.findById(query.documentId);
+            if (!document)
+                return next(CustomErrorClass.documentNotFound());
+            await document.updateOne({ $set: { status: query.newStatus } });
+            res.status(201).json({
+                message: "status changed"
             });
         }
         catch (e) {

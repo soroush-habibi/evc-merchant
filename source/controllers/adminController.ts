@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomErrorClass } from "../utils/customError.js";
-import { getAdminProductsDtoType, getUsersDtoType, updateProductStatusDtoType } from "../dtos/admin.dto.js";
+import { checkDocumentDtoType, getAdminProductsDtoType, getUsersDtoType, updateProductStatusDtoType } from "../dtos/admin.dto.js";
 import { Product } from "../models/product.model.js";
 import { User } from "../models/user.model.js";
+import { Document } from "../models/document.model.js";
 
 const ENV = process.env.PRODUCTION
 
@@ -44,6 +45,24 @@ export default class adminController {
 
             res.status(201).json({
                 message: "status updated"
+            });
+        } catch (e) {
+            return next(e);
+        }
+    }
+
+    static async checkDocument(req: Request, res: Response, next: NextFunction) {
+        const query = req.query as checkDocumentDtoType;
+
+        try {
+            const document = await Document.findById(query.documentId);
+
+            if (!document) return next(CustomErrorClass.documentNotFound());
+
+            await document.updateOne({ $set: { status: query.newStatus } });
+
+            res.status(201).json({
+                message: "status changed"
             });
         } catch (e) {
             return next(e);
