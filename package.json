@@ -5,7 +5,7 @@
   "main": "./build/index.js",
   "type": "module",
   "scripts": {
-    "start": "sudo node ./build/index.js"
+    "start": "node ./build/index.js"
   },
   "author": "Soroush Habibi",
   "license": "ISC",

@@ -4,6 +4,7 @@ interface ICache {
     host: string;
     port: number;
     password: string;
+    db: number;
 }
 
 class CacheRedis extends Redis {
@@ -27,7 +28,8 @@ class CacheRedis extends Redis {
 const redis = CacheRedis.getInstance({
     host: process.env.REDIS_URL,
     port: +process.env.REDIS_PORT!,
-    password: process.env.REDIS_PASSWORD
+    password: process.env.REDIS_PASSWORD,
+    db: Number(process.env.REDIS_INDEX) || 0
 });
 
 export { redis };

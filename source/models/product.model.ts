@@ -1,16 +1,18 @@
 import mongoose, { Model, model, Schema } from 'mongoose';
 import { productStatusEnum } from '../enum/productStatus.enum.js';
 import validator from 'validator';
+import { productCategoryEnum } from '../enum/productCategory.enum.js';
 
 export interface IProduct {
     creator: mongoose.Schema.Types.ObjectId,
-    category: string,
+    category: productCategoryEnum,
     original: boolean,
     size: string,                   //*length-width-height
     weight: number,                 //*gram
     title: string,
     photo?: string[],               //*url
     status: productStatusEnum,
+    createdAt: Date,
     addData: string
 }
 
@@ -24,15 +26,16 @@ const productSchema = new Schema<IProduct, ProductModel, IProductMethods>({
         ref: "User",
         required: true
     },
-    category: {                                             //todo:validating category by another database collection
+    category: {
         type: String,
+        enum: productCategoryEnum,
         required: true
     },
     original: {
         type: Boolean,
         required: true
     },
-    size: {                                                //todo:validation in mongoose
+    size: {
         type: String,
         required: true,
         validate: {
@@ -59,6 +62,10 @@ const productSchema = new Schema<IProduct, ProductModel, IProductMethods>({
         enum: productStatusEnum,
         default: productStatusEnum.UNVERIFIED
     },
+    createdAt: {
+        type: Date,
+        default: Date.now()
+    },
     addData: {
         type: mongoose.Schema.Types.Mixed,
         default: {}
@@ -78,8 +85,8 @@ const productSchema = new Schema<IProduct, ProductModel, IProductMethods>({
 });
 
 productSchema.index({ category: 1 });
-
 productSchema.index({ title: 1 }, { unique: true });
+productSchema.index({ title: "text" });
 
 const Product = model<IProduct, ProductModel>('Product', productSchema);
 

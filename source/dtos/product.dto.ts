@@ -1,11 +1,12 @@
 import Joi from "joi";
 import { Types } from "mongoose"
+import { productCategoryEnum } from "../enum/productCategory.enum.js";
 
 const sizeRegex = /^\d+-\d+-\d+$/;
 
 //*addProduct
 const addProductDto = Joi.object({
-    category: Joi.string().required(),          //todo:validation?
+    category: Joi.string().valid(...Object.values(productCategoryEnum)).required(),
     original: Joi.boolean().required(),
     size: Joi.string().pattern(sizeRegex).message("invalid size format. it should be d-d-d").required(),
     weight: Joi.number().required(),
@@ -20,7 +21,7 @@ const addProductDto = Joi.object({
 });
 
 type addProductDtoType = {
-    category: string,
+    category: productCategoryEnum,
     original: boolean,
     size: string,
     weight: number,
@@ -76,14 +77,14 @@ export { addPhotoDto, addPhotoDtoType }
 const getMerchantProductsDto = Joi.object({
     page: Joi.number().integer().min(1),
     title: Joi.string(),
-    category: Joi.string(),                                         //todo:add validation
+    category: Joi.string().valid(...Object.values(productCategoryEnum)),
     mode: Joi.number().valid(1, 2)                                  //* 1=merchant products 2=all verified products
 });
 
 type getMerchantProductsDtoType = {
     page?: number,
     title?: string,
-    category?: string,
+    category?: productCategoryEnum,
     mode?: number
 }
 

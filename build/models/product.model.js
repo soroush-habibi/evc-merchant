@@ -1,5 +1,6 @@
 import mongoose, { model, Schema } from 'mongoose';
 import { productStatusEnum } from '../enum/productStatus.enum.js';
+import { productCategoryEnum } from '../enum/productCategory.enum.js';
 const productSchema = new Schema({
     creator: {
         type: mongoose.Schema.Types.ObjectId,
@@ -8,6 +9,7 @@ const productSchema = new Schema({
     },
     category: {
         type: String,
+        enum: productCategoryEnum,
         required: true
     },
     original: {
@@ -41,6 +43,10 @@ const productSchema = new Schema({
         enum: productStatusEnum,
         default: productStatusEnum.UNVERIFIED
     },
+    createdAt: {
+        type: Date,
+        default: Date.now()
+    },
     addData: {
         type: mongoose.Schema.Types.Mixed,
         default: {}
@@ -60,5 +66,6 @@ const productSchema = new Schema({
 });
 productSchema.index({ category: 1 });
 productSchema.index({ title: 1 }, { unique: true });
+productSchema.index({ title: "text" });
 const Product = model('Product', productSchema);
 export { Product };

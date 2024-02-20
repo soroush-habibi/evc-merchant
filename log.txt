@@ -1,38 +1,22 @@
 
-Mon Feb 05 2024 10:32:23 GMT+0330 (Iran Standard Time): {}
-Wed Feb 07 2024 17:03:14 GMT+0330 (Iran Standard Time): {"expose":true,"statusCode":400,"status":400,"body":"{\n    \"longitude\": \"550\",\n    \"latitude\": \"50\",\n    \"state\": statesEnum,\n    \"city\": string,\n    \"address\": string,\n    \"number\": number,\n    \"postCode\": string\n}","type":"entity.parse.failed"}
-Wed Feb 07 2024 17:03:40 GMT+0330 (Iran Standard Time): {"expose":true,"statusCode":400,"status":400,"body":"{\n    \"longitude\": \"50\",\n    \"latitude\": \"50\",\n}","type":"entity.parse.failed"}
-Wed Feb 07 2024 17:21:26 GMT+0330 (Iran Standard Time): {"ok":0,"code":51024,"codeName":"Location51024"}
-Wed Feb 07 2024 17:22:02 GMT+0330 (Iran Standard Time): {"ok":0,"code":51024,"codeName":"Location51024"}
-Wed Feb 07 2024 17:22:15 GMT+0330 (Iran Standard Time): {"ok":0,"code":51024,"codeName":"Location51024"}
-Wed Feb 07 2024 17:23:53 GMT+0330 (Iran Standard Time): {"ok":0,"code":51024,"codeName":"Location51024"}
-Sat Feb 10 2024 11:41:42 GMT+0330 (Iran Standard Time): {"name":"INTERNAL_ERROR","code":9999,"httpCode":500}
-Sat Feb 10 2024 12:51:58 GMT+0330 (Iran Standard Time): {"errno":-18,"syscall":"rename","code":"EXDEV","path":"/tmp/df42716b5757c949f506b2200","dest":"/media/galaxy/New Volume/Projects/Paklean/evc_merchant/product-photos/undefinedprod0"}
-Sat Feb 10 2024 12:53:02 GMT+0330 (Iran Standard Time): {"errno":-18,"syscall":"rename","code":"EXDEV","path":"/tmp/64f254ce3d5c3f78fcdaeb000","dest":"/media/galaxy/New Volume/Projects/Paklean/evc_merchant/product-photos/undefinedprod0"}
-Sat Feb 10 2024 12:57:40 GMT+0330 (Iran Standard Time): {"errno":-18,"syscall":"rename","code":"EXDEV","path":"/tmp/3292bc1a8bdaa3202862cb900","dest":"/media/galaxy/New Volume/Projects/Paklean/evc_merchant/product-photos/undefinedprod0"}
-Sat Feb 10 2024 12:58:06 GMT+0330 (Iran Standard Time): {"errno":-18,"syscall":"rename","code":"EXDEV","path":"/tmp/fc611ab2f77489e76e9f30d00","dest":"/media/galaxy/New Volume/Projects/Paklean/evc_merchant/product-photos/undefinedprod0"}
-Sat Feb 10 2024 12:58:50 GMT+0330 (Iran Standard Time): {"errno":-18,"syscall":"rename","code":"EXDEV","path":"/tmp/ab03f56e7534111e2c7240d00","dest":"/media/galaxy/New Volume/Projects/Paklean/evc_merchant/product-photos/undefinedprod0"}
-Sat Feb 10 2024 12:59:58 GMT+0330 (Iran Standard Time): {"errno":-18,"syscall":"rename","code":"EXDEV","path":"/tmp/69cb95d0d6e132641f156cb00","dest":"/media/galaxy/New Volume/Projects/Paklean/evc_merchant/product-photos/65c3720fcd9650783a19a869prod0"}
-Sat Feb 10 2024 13:01:34 GMT+0330 (Iran Standard Time): {"errno":-18,"syscall":"rename","code":"EXDEV","path":"/tmp/712fd728c32ae4370b72a4500","dest":"/media/galaxy/New Volume/Projects/Paklean/evc_merchant/product-photos/49bec1c8-b882-4d06-afe0-83c96723061f"}
-Sat Feb 10 2024 13:01:38 GMT+0330 (Iran Standard Time): {"errno":-18,"syscall":"rename","code":"EXDEV","path":"/tmp/712fd728c32ae4370b72a4501","dest":"/media/galaxy/New Volume/Projects/Paklean/evc_merchant/product-photos/c152a18c-1354-4ef0-a96e-f5e5dee56ce8"}
-Sat Feb 10 2024 13:01:51 GMT+0330 (Iran Standard Time): {"errno":-18,"syscall":"rename","code":"EXDEV","path":"/tmp/fbac2740df11b312c30651400","dest":"/media/galaxy/New Volume/Projects/Paklean/evc_merchant/product-photos/61fa907f-1a36-41db-a7d2-b3b99e9d8e55"}
-Sat Feb 10 2024 13:07:47 GMT+0330 (Iran Standard Time): {"errno":-18,"syscall":"rename","code":"EXDEV","path":"/tmp/f4efc1f10db247d1e5925ae00","dest":"/media/galaxy/New Volume/Projects/Paklean/evc_merchant/product-photos/3e5815e0-2e85-4e70-9a8c-dd51d40ccf61"}
-Sat Feb 10 2024 13:08:37 GMT+0330 (Iran Standard Time): {"errno":-21,"syscall":"copyfile","code":"EISDIR","path":"/tmp/1b99acb6b03b9bb69ec661900","dest":"/media/galaxy/New Volume/Projects/Paklean/evc_merchant/product-photos"}
-Sat Feb 10 2024 13:08:48 GMT+0330 (Iran Standard Time): {"errno":-21,"syscall":"copyfile","code":"EISDIR","path":"/tmp/1a12a5b3808ecd909fc7de900","dest":"/media/galaxy/New Volume/Projects/Paklean/evc_merchant/product-photos"}
-Sat Feb 10 2024 13:09:10 GMT+0330 (Iran Standard Time): {"errno":-13,"syscall":"copyfile","code":"EACCES","path":"/tmp/6ac8eb66a24dee01ecd4f5600","dest":"/media/galaxy/New Volume/Projects/Paklean/evc_merchant/product-photos/5a163b0a-773e-4216-a2d6-7aefd3c06cd6"}
-Sat Feb 10 2024 13:09:24 GMT+0330 (Iran Standard Time): {}
-Sat Feb 10 2024 13:10:05 GMT+0330 (Iran Standard Time): {"errno":-13,"syscall":"copyfile","code":"EACCES","path":"/tmp/d0502a29aada5c90ab552a500","dest":"/media/galaxy/New Volume/Projects/Paklean/evc_merchant/product-photos/909dea46-4cf4-4ff3-9717-e810ffa70e36"}
-Sat Feb 10 2024 14:14:09 GMT+0330 (Iran Standard Time): {"index":0,"code":11000,"keyPattern":{"title":1},"keyValue":{"title":"hello"}}
-Sat Feb 10 2024 14:14:47 GMT+0330 (Iran Standard Time): {"index":0,"code":11000,"keyPattern":{"title":1},"keyValue":{"title":"hello"}}
-Sat Feb 10 2024 14:15:51 GMT+0330 (Iran Standard Time): {"index":0,"code":11000,"keyPattern":{"title":1},"keyValue":{"title":"hello"}}
-Sat Feb 10 2024 14:39:06 GMT+0330 (Iran Standard Time): {"stringValue":"\"1234\"","valueType":"string","kind":"ObjectId","value":"1234","path":"_id","reason":{},"name":"CastError","message":"Cast to ObjectId failed for value \"1234\" (type string) at path \"_id\" for model \"Product\""}
-Mon Feb 12 2024 12:53:12 GMT+0330 (Iran Standard Time): {"stringValue":"\"\"","valueType":"string","kind":"Boolean","value":"","path":"verified","reason":{"stringValue":"\"\"","valueType":"string","kind":"boolean","value":"","name":"CastError","message":"Cast to boolean failed for value \"\" (type string) at path \"undefined\""},"name":"CastError","message":"Cast to Boolean failed for value \"\" (type string) at path \"verified\" for model \"Product\""}
-Tue Feb 13 2024 13:14:02 GMT+0330 (Iran Standard Time): {"expose":true,"statusCode":400,"status":400,"body":"{\n    \"productId\":\"65c9fb32fabb16ed76fcf37a\",\n    \"price\":\"100000\",\n    \"count\"\n}","type":"entity.parse.failed"}
-Wed Feb 14 2024 13:23:51 GMT+0330 (Iran Standard Time): {"errors":{"phoneNumber":{"name":"ValidatorError","message":"Path `phoneNumber` (`061-52826964`) is longer than the maximum allowed length (11).","properties":{"message":"Path `phoneNumber` (`061-52826964`) is longer than the maximum allowed length (11).","type":"maxlength","maxlength":11,"path":"phoneNumber","value":"061-52826964"},"kind":"maxlength","path":"phoneNumber","value":"061-52826964"}},"_message":"Store validation failed","name":"ValidationError","message":"Store validation failed: phoneNumber: Path `phoneNumber` (`061-52826964`) is longer than the maximum allowed length (11)."}
-Wed Feb 14 2024 13:24:32 GMT+0330 (Iran Standard Time): {"errors":{"phoneNumber":{"name":"ValidatorError","message":"not valid phone number","properties":{"message":"not valid phone number","type":"user defined","path":"phoneNumber","value":"061-52826964"},"kind":"user defined","path":"phoneNumber","value":"061-52826964"}},"_message":"Store validation failed","name":"ValidationError","message":"Store validation failed: phoneNumber: not valid phone number"}
-Wed Feb 14 2024 16:54:47 GMT+0330 (Iran Standard Time): {"name":"INTERNAL_ERROR","code":9999,"httpCode":500}
-Sat Feb 17 2024 12:41:26 GMT+0330 (Iran Standard Time): {"code":"ERR_INVALID_ARG_TYPE"}
-Sat Feb 17 2024 12:42:57 GMT+0330 (Iran Standard Time): {"code":"ERR_INVALID_ARG_TYPE"}
-Sat Feb 17 2024 12:43:14 GMT+0330 (Iran Standard Time): {"code":"ERR_INVALID_ARG_TYPE"}
-Sat Feb 17 2024 12:43:32 GMT+0330 (Iran Standard Time): {"code":"ERR_INVALID_ARG_TYPE"}
-Sat Feb 17 2024 12:43:51 GMT+0330 (Iran Standard Time): {"code":"ERR_INVALID_ARG_TYPE"}
+Mon Feb 19 2024 14:24:59 GMT+0330 (Iran Standard Time): {"ok":0,"code":40218,"codeName":"Location40218"}
+Mon Feb 19 2024 14:26:06 GMT+0330 (Iran Standard Time): {"ok":0,"code":40218,"codeName":"Location40218"}
+Mon Feb 19 2024 14:26:17 GMT+0330 (Iran Standard Time): {"ok":0,"code":40218,"codeName":"Location40218"}
+Mon Feb 19 2024 14:31:33 GMT+0330 (Iran Standard Time): {"ok":0,"code":40218,"codeName":"Location40218"}
+Mon Feb 19 2024 14:34:34 GMT+0330 (Iran Standard Time): {"ok":0,"code":40218,"codeName":"Location40218"}
+Mon Feb 19 2024 14:34:41 GMT+0330 (Iran Standard Time): {"ok":0,"code":40218,"codeName":"Location40218"}
+Mon Feb 19 2024 14:35:09 GMT+0330 (Iran Standard Time): {"ok":0,"code":40218,"codeName":"Location40218"}
+Mon Feb 19 2024 14:35:48 GMT+0330 (Iran Standard Time): {"ok":0,"code":2,"codeName":"BadValue"}
+Mon Feb 19 2024 14:36:00 GMT+0330 (Iran Standard Time): {}
+Mon Feb 19 2024 14:41:39 GMT+0330 (Iran Standard Time): {"ok":0,"code":2,"codeName":"BadValue"}
+Mon Feb 19 2024 14:41:55 GMT+0330 (Iran Standard Time): {}
+Mon Feb 19 2024 15:06:56 GMT+0330 (Iran Standard Time): {"ok":0,"code":40218,"codeName":"Location40218"}
+Mon Feb 19 2024 15:07:07 GMT+0330 (Iran Standard Time): {"ok":0,"code":40218,"codeName":"Location40218"}
+Mon Feb 19 2024 15:36:04 GMT+0330 (Iran Standard Time): {"ok":0,"code":17313,"codeName":"Location17313"}
+Mon Feb 19 2024 15:36:16 GMT+0330 (Iran Standard Time): {"ok":0,"code":17313,"codeName":"Location17313"}
+Mon Feb 19 2024 15:37:15 GMT+0330 (Iran Standard Time): {"ok":0,"code":17313,"codeName":"Location17313"}
+Mon Feb 19 2024 15:43:16 GMT+0330 (Iran Standard Time): {"ok":0,"code":17313,"codeName":"Location17313"}
+Mon Feb 19 2024 15:43:28 GMT+0330 (Iran Standard Time): {"ok":0,"code":17313,"codeName":"Location17313"}
+Mon Feb 19 2024 15:49:00 GMT+0330 (Iran Standard Time): {"ok":0,"code":17313,"codeName":"Location17313"}
+Mon Feb 19 2024 15:49:46 GMT+0330 (Iran Standard Time): {"ok":0,"code":17313,"codeName":"Location17313"}
+Mon Feb 19 2024 16:14:12 GMT+0330 (Iran Standard Time): {"ok":0,"code":17313,"codeName":"Location17313"}
