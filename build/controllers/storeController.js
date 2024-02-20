@@ -126,10 +126,22 @@ export default class storeController {
             const product = await Product.findById(params.productId);
             if (!product || product.status !== productStatusEnum.VERIFIED)
                 return next(CustomErrorClass.productNotFound());
-            const inventory = await Inventory.find({
-                productId: product._id,
-                status: inventoryStatusEnum.ACTIVE
-            });
+            const inventory = await Inventory.aggregate([
+                {
+                    $match: {
+                        productId: product._id,
+                        status: inventoryStatusEnum.ACTIVE
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "stores",
+                        localField: "merchantId",
+                        foreignField: "merchantId",
+                        as: "store"
+                    }
+                }
+            ]);
             res.status(200).json({
                 message: "product",
                 data: { product, inventory }

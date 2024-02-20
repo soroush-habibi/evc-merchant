@@ -6,6 +6,7 @@ import { CustomErrorClass } from "../utils/customError.js";
 import { productStatusEnum } from "../enum/productStatus.enum.js";
 import { Inventory } from "../models/inventory.model.js";
 import { inventoryStatusEnum } from "../enum/inventoryStatus.enum.js";
+import { User } from "../models/user.model.js";
 
 export default class storeController {
     static async searchProduct(req: Request, res: Response, next: NextFunction) {
@@ -133,10 +134,22 @@ export default class storeController {
 
             if (!product || product.status !== productStatusEnum.VERIFIED) return next(CustomErrorClass.productNotFound());
 
-            const inventory = await Inventory.find({
-                productId: product._id,
-                status: inventoryStatusEnum.ACTIVE
-            });
+            const inventory = await Inventory.aggregate([
+                {
+                    $match: {
+                        productId: product._id,
+                        status: inventoryStatusEnum.ACTIVE
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "stores",
+                        localField: "merchantId",
+                        foreignField: "merchantId",
+                        as: "store"
+                    }
+                }
+            ])
 
             res.status(200).json({
                 message: "product",
