@@ -8,7 +8,8 @@ import { PersistentFile } from "formidable";
 export enum FieldType {
     "QUERY" = "query",
     "BODY" = "body",
-    "FORM" = "form"
+    "FORM" = "form",
+    "PARAMS" = "params"
 }
 
 export const genericValidator = (templateObj: ObjectSchema<any>, fieldType: FieldType = FieldType.BODY) => {

@@ -1,5 +1,9 @@
 import { Product } from "../models/product.model.js";
 import { productOrderEnum } from "../enum/productOrder.enum.js";
+import { CustomErrorClass } from "../utils/customError.js";
+import { productStatusEnum } from "../enum/productStatus.enum.js";
+import { Inventory } from "../models/inventory.model.js";
+import { inventoryStatusEnum } from "../enum/inventoryStatus.enum.js";
 export default class storeController {
     static async searchProduct(req, res, next) {
         const query = req.query;
@@ -45,6 +49,12 @@ export default class storeController {
                     },
                     {
                         $sort: { minPrice: 1 }
+                    },
+                    {
+                        $limit: 50
+                    },
+                    {
+                        $skip: query.page ? (query.page - 1) * 50 : 0
                     }
                 ]);
                 return res.status(200).json({
@@ -80,7 +90,13 @@ export default class storeController {
                         }
                     },
                     {
-                        $sort: { minPrice: -1 }
+                        $sort: { minPrice: 1 }
+                    },
+                    {
+                        $limit: 50
+                    },
+                    {
+                        $skip: query.page ? (query.page - 1) * 50 : 0
                     }
                 ]);
                 return res.status(200).json({
@@ -94,10 +110,29 @@ export default class storeController {
             else if (query.order === productOrderEnum.POPULAR) {
                 sort = { score: { $meta: "textScore" } }; //todo:change needed
             }
-            const products = await Product.find(filter, { score: { $meta: "textScore" } }, { sort: sort });
+            const products = await Product.find(filter, { score: { $meta: "textScore" } }, { sort: sort, limit: 50, skip: query.page ? (query.page - 1) * 50 : 0 });
             res.status(200).json({
                 message: "products list",
                 data: products
+            });
+        }
+        catch (e) {
+            return next(e);
+        }
+    }
+    static async getProduct(req, res, next) {
+        const params = req.params;
+        try {
+            const product = await Product.findById(params.productId);
+            if (!product || product.status !== productStatusEnum.VERIFIED)
+                return next(CustomErrorClass.productNotFound());
+            const inventory = await Inventory.find({
+                productId: product._id,
+                status: inventoryStatusEnum.ACTIVE
+            });
+            res.status(200).json({
+                message: "product",
+                data: { product, inventory }
             });
         }
         catch (e) {
