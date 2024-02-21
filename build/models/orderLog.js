@@ -1,19 +1,24 @@
 import mongoose, { model, Schema } from 'mongoose';
 import { orderStatusEnum } from "../enum/orderStatus.enum.js";
-const orderSchema = new Schema({
-    userId: {
+const orderLogSchema = new Schema({
+    orderId: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true
+        required: true,
+        ref: "Order"
     },
-    inventoryIds: {
-        type: [mongoose.Schema.Types.ObjectId],
-        default: [],
-        ref: "Inventory"
-    },
-    status: {
+    from: {
         type: String,
-        enum: orderStatusEnum,
-        default: orderStatusEnum.CART
+        required: true,
+        enum: orderStatusEnum
+    },
+    to: {
+        type: String,
+        required: true,
+        enum: orderStatusEnum
+    },
+    date: {
+        type: Date,
+        default: new Date()
     }
 }, {
     toJSON: {
@@ -28,5 +33,5 @@ const orderSchema = new Schema({
         }
     },
 });
-const Order = model('Order', orderSchema);
-export { Order };
+const OrderLog = model('OrderLog', orderLogSchema);
+export { OrderLog };

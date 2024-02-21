@@ -151,9 +151,8 @@ export default class storeController {
                 }
             ]);
 
-            await product.updateOne({
-                views: product.views + 1
-            });
+            product.views += 1;
+            await product.save();
 
             res.status(200).json({
                 message: "product",
