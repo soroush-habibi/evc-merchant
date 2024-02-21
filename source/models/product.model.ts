@@ -13,6 +13,7 @@ export interface IProduct {
     photo?: string[],               //*url
     status: productStatusEnum,
     createdAt: Date,
+    views: number,
     addData: string
 }
 
@@ -66,6 +67,10 @@ const productSchema = new Schema<IProduct, ProductModel, IProductMethods>({
         type: Date,
         default: Date.now()
     },
+    views: {
+        type: Number,
+        default: 0
+    },
     addData: {
         type: mongoose.Schema.Types.Mixed,
         default: {}
@@ -85,6 +90,7 @@ const productSchema = new Schema<IProduct, ProductModel, IProductMethods>({
 });
 
 productSchema.index({ category: 1 });
+productSchema.index({ views: 1 });
 productSchema.index({ title: 1 }, { unique: true });
 productSchema.index({ title: "text" });
 

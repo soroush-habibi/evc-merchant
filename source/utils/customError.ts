@@ -7,6 +7,7 @@ export interface errorType {
 
 export enum errorEnum {
     INTERNAL_ERROR = 9999,
+    BAD_REQUEST = 400,
     ENV = 101,
     JOI_ERROR = 102,
     AUTH_ERROR = 103,
@@ -187,6 +188,14 @@ export class CustomErrorClass {
         return {
             name: "DUPLICATE_NOTIF_PHONE",
             code: errorEnum.DUPLICATE_NOTIF_PHONE,
+            httpCode: 400
+        };
+    }
+
+    static badRequest(): errorType {
+        return {
+            name: "BAD_REQUEST",
+            code: errorEnum.BAD_REQUEST,
             httpCode: 400
         };
     }

@@ -1,6 +1,7 @@
 export var errorEnum;
 (function (errorEnum) {
     errorEnum[errorEnum["INTERNAL_ERROR"] = 9999] = "INTERNAL_ERROR";
+    errorEnum[errorEnum["BAD_REQUEST"] = 400] = "BAD_REQUEST";
     errorEnum[errorEnum["ENV"] = 101] = "ENV";
     errorEnum[errorEnum["JOI_ERROR"] = 102] = "JOI_ERROR";
     errorEnum[errorEnum["AUTH_ERROR"] = 103] = "AUTH_ERROR";
@@ -161,6 +162,13 @@ export class CustomErrorClass {
         return {
             name: "DUPLICATE_NOTIF_PHONE",
             code: errorEnum.DUPLICATE_NOTIF_PHONE,
+            httpCode: 400
+        };
+    }
+    static badRequest() {
+        return {
+            name: "BAD_REQUEST",
+            code: errorEnum.BAD_REQUEST,
             httpCode: 400
         };
     }

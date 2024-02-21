@@ -6,7 +6,6 @@ import { CustomErrorClass } from "../utils/customError.js";
 import { productStatusEnum } from "../enum/productStatus.enum.js";
 import { Inventory } from "../models/inventory.model.js";
 import { inventoryStatusEnum } from "../enum/inventoryStatus.enum.js";
-import { User } from "../models/user.model.js";
 
 export default class storeController {
     static async searchProduct(req: Request, res: Response, next: NextFunction) {
@@ -22,6 +21,7 @@ export default class storeController {
             if (query.text) filter.$text = { $search: query.text }
 
             if (query.order === productOrderEnum.RELATED) {
+                if (!query.text) return next(CustomErrorClass.badRequest());
                 sort = { score: { $meta: "textScore" } }
             } else if (query.order === productOrderEnum.BEST_SELLER) {
                 sort = { score: { $meta: "textScore" } }                //todo:change needed
@@ -112,10 +112,10 @@ export default class storeController {
             } else if (query.order === productOrderEnum.NEW) {
                 sort = { createdAt: -1 }
             } else if (query.order === productOrderEnum.POPULAR) {
-                sort = { score: { $meta: "textScore" } }                //todo:change needed
+                sort = { views: -1 }
             }
 
-            const products = await Product.find(filter, { score: { $meta: "textScore" } }, { sort: sort, limit: 50, skip: query.page ? (query.page - 1) * 50 : 0 });
+            const products = await Product.find(filter, {}, { sort: sort, limit: 50, skip: query.page ? (query.page - 1) * 50 : 0 });
 
             res.status(200).json({
                 message: "products list",
@@ -149,7 +149,11 @@ export default class storeController {
                         as: "store"
                     }
                 }
-            ])
+            ]);
+
+            await product.updateOne({
+                views: product.views + 1
+            });
 
             res.status(200).json({
                 message: "product",

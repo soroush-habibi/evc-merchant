@@ -47,6 +47,10 @@ const productSchema = new Schema({
         type: Date,
         default: Date.now()
     },
+    views: {
+        type: Number,
+        default: 0
+    },
     addData: {
         type: mongoose.Schema.Types.Mixed,
         default: {}
@@ -65,6 +69,7 @@ const productSchema = new Schema({
     },
 });
 productSchema.index({ category: 1 });
+productSchema.index({ views: 1 });
 productSchema.index({ title: 1 }, { unique: true });
 productSchema.index({ title: "text" });
 const Product = model('Product', productSchema);

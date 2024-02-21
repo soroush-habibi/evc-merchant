@@ -15,6 +15,8 @@ export default class storeController {
             if (query.text)
                 filter.$text = { $search: query.text };
             if (query.order === productOrderEnum.RELATED) {
+                if (!query.text)
+                    return next(CustomErrorClass.badRequest());
                 sort = { score: { $meta: "textScore" } };
             }
             else if (query.order === productOrderEnum.BEST_SELLER) {
@@ -108,9 +110,9 @@ export default class storeController {
                 sort = { createdAt: -1 };
             }
             else if (query.order === productOrderEnum.POPULAR) {
-                sort = { score: { $meta: "textScore" } }; //todo:change needed
+                sort = { views: -1 };
             }
-            const products = await Product.find(filter, { score: { $meta: "textScore" } }, { sort: sort, limit: 50, skip: query.page ? (query.page - 1) * 50 : 0 });
+            const products = await Product.find(filter, {}, { sort: sort, limit: 50, skip: query.page ? (query.page - 1) * 50 : 0 });
             res.status(200).json({
                 message: "products list",
                 data: products
@@ -142,6 +144,9 @@ export default class storeController {
                     }
                 }
             ]);
+            await product.updateOne({
+                views: product.views + 1
+            });
             res.status(200).json({
                 message: "product",
                 data: { product, inventory }
