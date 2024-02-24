@@ -4,6 +4,7 @@ import validator from 'validator';
 
 export interface IOrder {
     userId: mongoose.Schema.Types.ObjectId,
+    merchantId: mongoose.Schema.Types.ObjectId,
     items: { inventoryId: mongoose.Schema.Types.ObjectId, count: number }[],
     status: orderStatusEnum
 }
@@ -15,6 +16,11 @@ type OrderModel = Model<IOrder, {}, IOrderMethods>;
 const orderSchema = new Schema<IOrder, OrderModel, IOrderMethods>({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
+        required: true
+    },
+    merchantId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
         required: true
     },
     items: [{

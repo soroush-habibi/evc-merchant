@@ -5,6 +5,11 @@ const orderSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true
     },
+    merchantId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
+    },
     items: [{
             inventoryId: {
                 type: mongoose.Schema.Types.ObjectId,

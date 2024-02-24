@@ -26,8 +26,8 @@ type addToCartDtoType = {
 
 export { addToCartDto, addToCartDtoType }
 
-//*getCart
-const getCartDto = Joi.object({
+//*getCarts
+const getCartsDto = Joi.object({
     userId: Joi.string().custom((value, helpers) => {
         if (!Types.ObjectId.isValid(value)) {
             return helpers.error('invalid objectId');
@@ -36,8 +36,24 @@ const getCartDto = Joi.object({
     }, "validate objectId").required()
 });
 
-type getCartDtoType = {
+type getCartsDtoType = {
     userId: string
 }
 
-export { getCartDto, getCartDtoType }
+export { getCartsDto, getCartsDtoType }
+
+//*confirmOrder
+const confirmOrderDto = Joi.object({
+    userId: Joi.string().custom((value, helpers) => {
+        if (!Types.ObjectId.isValid(value)) {
+            return helpers.error('invalid objectId');
+        }
+        return value;
+    }, "validate objectId").required()
+});
+
+type confirmOrderDtoType = {
+    userId: string
+}
+
+export { confirmOrderDto, confirmOrderDtoType }

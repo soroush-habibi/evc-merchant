@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomErrorClass } from "../utils/customError.js";
-import { addToCartDtoType, getCartDtoType } from "../dtos/order.dto.js";
+import { addToCartDtoType, confirmOrderDtoType, getCartsDtoType } from "../dtos/order.dto.js";
 import { Inventory } from "../models/inventory.model.js";
 import { Order } from "../models/order.model.js";
 import { orderStatusEnum } from "../enum/orderStatus.enum.js";
@@ -21,6 +21,7 @@ export default class orderController {
 
             const existingCart = await Order.findOne({
                 userId: body.userId,
+                merchantId: inventory.merchantId,
                 status: orderStatusEnum.CART
             });
 
@@ -61,6 +62,7 @@ export default class orderController {
             } else if (!existingCart && body.count > 0) {
                 await Order.create({
                     userId: body.userId,
+                    merchantId: inventory.merchantId,
                     items: [{
                         inventoryId: body.inventoryId,
                         count: body.count
@@ -78,37 +80,52 @@ export default class orderController {
         }
     }
 
-
-    static async getCart(req: Request, res: Response, next: NextFunction) {
-        const query = req.query as getCartDtoType;
+    static async getCarts(req: Request, res: Response, next: NextFunction) {
+        const query = req.query as getCartsDtoType;
 
         try {
-            const cart = await Order.findOne({
+            const carts = await Order.find({
                 userId: query.userId,
                 status: orderStatusEnum.CART
             });
 
-            if (!cart) return res.status(200).json({
+            if (!carts) return res.status(200).json({
                 message: "cart:",
                 data: []
             });
 
-            for (let i = 0; i < cart.items.length; i++) {
-                const inventory = await Inventory.findById(cart.items[i].inventoryId);
+            for (let cart of carts) {
+                for (let i = 0; i < cart.items.length; i++) {
+                    const inventory = await Inventory.findById(cart.items[i].inventoryId);
 
-                if (!inventory || inventory.status !== inventoryStatusEnum.ACTIVE) {
-                    cart.items.splice(i, 1);
-                } else if (inventory.count < cart.items[i].count) {
-                    cart.items[i].count = inventory.count;
+                    if (!inventory || inventory.status !== inventoryStatusEnum.ACTIVE) {
+                        cart.items.splice(i, 1);
+                    } else if (inventory.count < cart.items[i].count) {
+                        cart.items[i].count = inventory.count;
+                    }
                 }
+
+                await cart.save()
             }
 
-            await cart.save();
-
             res.status(200).json({
-                message: "cart:",
-                data: cart.items
+                message: "carts:",
+                data: carts
             });
+        } catch (e) {
+            return next(e);
+        }
+    }
+
+    static async confirmOrder(req: Request, res: Response, next: NextFunction) {
+        const body = req.body as confirmOrderDtoType;
+
+        try {
+            if (ENV) {
+
+            } else {
+
+            }
         } catch (e) {
             return next(e);
         }

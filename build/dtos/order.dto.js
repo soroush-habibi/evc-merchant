@@ -17,8 +17,8 @@ const addToCartDto = Joi.object({
     count: Joi.number().integer().min(0).required()
 });
 export { addToCartDto };
-//*getCart
-const getCartDto = Joi.object({
+//*getCarts
+const getCartsDto = Joi.object({
     userId: Joi.string().custom((value, helpers) => {
         if (!Types.ObjectId.isValid(value)) {
             return helpers.error('invalid objectId');
@@ -26,4 +26,14 @@ const getCartDto = Joi.object({
         return value;
     }, "validate objectId").required()
 });
-export { getCartDto };
+export { getCartsDto };
+//*confirmOrder
+const confirmOrderDto = Joi.object({
+    userId: Joi.string().custom((value, helpers) => {
+        if (!Types.ObjectId.isValid(value)) {
+            return helpers.error('invalid objectId');
+        }
+        return value;
+    }, "validate objectId").required()
+});
+export { confirmOrderDto };

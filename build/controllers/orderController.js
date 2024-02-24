@@ -15,6 +15,7 @@ export default class orderController {
                 return next(CustomErrorClass.insufficientInventory());
             const existingCart = await Order.findOne({
                 userId: body.userId,
+                merchantId: inventory.merchantId,
                 status: orderStatusEnum.CART
             });
             if (existingCart) {
@@ -55,6 +56,7 @@ export default class orderController {
             else if (!existingCart && body.count > 0) {
                 await Order.create({
                     userId: body.userId,
+                    merchantId: inventory.merchantId,
                     items: [{
                             inventoryId: body.inventoryId,
                             count: body.count
@@ -72,32 +74,46 @@ export default class orderController {
             return next(e);
         }
     }
-    static async getCart(req, res, next) {
+    static async getCarts(req, res, next) {
         const query = req.query;
         try {
-            const cart = await Order.findOne({
+            const carts = await Order.find({
                 userId: query.userId,
                 status: orderStatusEnum.CART
             });
-            if (!cart)
+            if (!carts)
                 return res.status(200).json({
                     message: "cart:",
                     data: []
                 });
-            for (let i = 0; i < cart.items.length; i++) {
-                const inventory = await Inventory.findById(cart.items[i].inventoryId);
-                if (!inventory || inventory.status !== inventoryStatusEnum.ACTIVE) {
-                    cart.items.splice(i, 1);
+            for (let cart of carts) {
+                for (let i = 0; i < cart.items.length; i++) {
+                    const inventory = await Inventory.findById(cart.items[i].inventoryId);
+                    if (!inventory || inventory.status !== inventoryStatusEnum.ACTIVE) {
+                        cart.items.splice(i, 1);
+                    }
+                    else if (inventory.count < cart.items[i].count) {
+                        cart.items[i].count = inventory.count;
+                    }
                 }
-                else if (inventory.count < cart.items[i].count) {
-                    cart.items[i].count = inventory.count;
-                }
+                await cart.save();
             }
-            await cart.save();
             res.status(200).json({
-                message: "cart:",
-                data: cart.items
+                message: "carts:",
+                data: carts
             });
+        }
+        catch (e) {
+            return next(e);
+        }
+    }
+    static async confirmOrder(req, res, next) {
+        const body = req.body;
+        try {
+            if (ENV) {
+            }
+            else {
+            }
         }
         catch (e) {
             return next(e);
