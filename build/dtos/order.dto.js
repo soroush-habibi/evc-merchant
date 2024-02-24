@@ -34,6 +34,12 @@ const confirmOrderDto = Joi.object({
             return helpers.error('invalid objectId');
         }
         return value;
+    }, "validate objectId").required(),
+    orderId: Joi.string().custom((value, helpers) => {
+        if (!Types.ObjectId.isValid(value)) {
+            return helpers.error('invalid objectId');
+        }
+        return value;
     }, "validate objectId").required()
 });
 export { confirmOrderDto };

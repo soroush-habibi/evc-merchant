@@ -5,6 +5,8 @@ import { Inventory } from "../models/inventory.model.js";
 import { Order } from "../models/order.model.js";
 import { orderStatusEnum } from "../enum/orderStatus.enum.js";
 import { inventoryStatusEnum } from "../enum/inventoryStatus.enum.js";
+import { Payment } from "../models/payment.model.js";
+import { paymentTypeEnum } from "../enum/payment.enum.js";
 
 const ENV = process.env.PRODUCTION
 
@@ -121,10 +123,34 @@ export default class orderController {
         const body = req.body as confirmOrderDtoType;
 
         try {
-            if (ENV) {
+            if (!ENV) {
+                //todo:these queries should be ACID transaction
+                const transData = {
+                    timestamp: Date.now(),
+                    token: crypto.randomUUID()
+                }
+                const payment = await Payment.create({
+                    userId: body.userId,
+                    type: paymentTypeEnum.ORDER,
+                    exId: body.orderId,
+                    timestamp: transData.timestamp,
+                    token: transData.token
+                });
 
+                await Order.updateOne({
+                    _id: body.orderId
+                }, {
+                    $set: {
+                        status: orderStatusEnum.PAYMENT
+                    }
+                });
+
+                res.status(201).json({
+                    message: "payment created!",
+                    data: transData
+                });
             } else {
-
+                //todo:i need payment api
             }
         } catch (e) {
             return next(e);
