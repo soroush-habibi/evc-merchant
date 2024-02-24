@@ -5,11 +5,17 @@ const orderSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true
     },
-    inventoryIds: {
-        type: [mongoose.Schema.Types.ObjectId],
-        default: [],
-        ref: "Inventory"
-    },
+    items: [{
+            inventoryId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Inventory",
+                required: true
+            },
+            count: {
+                type: Number,
+                required: true
+            }
+        }],
     status: {
         type: String,
         enum: orderStatusEnum,
@@ -28,5 +34,6 @@ const orderSchema = new Schema({
         }
     },
 });
+orderSchema.index({ userId: 1 });
 const Order = model('Order', orderSchema);
 export { Order };

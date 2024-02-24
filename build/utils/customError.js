@@ -21,6 +21,8 @@ export var errorEnum;
     errorEnum[errorEnum["PENDING_DOCUMENT"] = 117] = "PENDING_DOCUMENT";
     errorEnum[errorEnum["DOCUMENT_NOT_FOUND"] = 118] = "DOCUMENT_NOT_FOUND";
     errorEnum[errorEnum["DUPLICATE_NOTIF_PHONE"] = 119] = "DUPLICATE_NOTIF_PHONE";
+    errorEnum[errorEnum["INVENTORY_NOT_FOUND"] = 120] = "INVENTORY_NOT_FOUND";
+    errorEnum[errorEnum["INSUFFICIENT_INVENTORY"] = 121] = "INSUFFICIENT_INVENTORY";
 })(errorEnum = errorEnum || (errorEnum = {}));
 export class CustomErrorClass {
     static noEnv(varName) {
@@ -169,6 +171,20 @@ export class CustomErrorClass {
         return {
             name: "BAD_REQUEST",
             code: errorEnum.BAD_REQUEST,
+            httpCode: 400
+        };
+    }
+    static inventoryNotFound() {
+        return {
+            name: "INVENTORY_NOT_FOUND",
+            code: errorEnum.INVENTORY_NOT_FOUND,
+            httpCode: 404
+        };
+    }
+    static insufficientInventory() {
+        return {
+            name: "INSUFFICIENT_INVENTORY",
+            code: errorEnum.INSUFFICIENT_INVENTORY,
             httpCode: 400
         };
     }

@@ -26,7 +26,9 @@ export enum errorEnum {
     STORE_NOT_FOUND = 116,
     PENDING_DOCUMENT = 117,
     DOCUMENT_NOT_FOUND = 118,
-    DUPLICATE_NOTIF_PHONE = 119
+    DUPLICATE_NOTIF_PHONE = 119,
+    INVENTORY_NOT_FOUND = 120,
+    INSUFFICIENT_INVENTORY = 121
 }
 
 export class CustomErrorClass {
@@ -196,6 +198,22 @@ export class CustomErrorClass {
         return {
             name: "BAD_REQUEST",
             code: errorEnum.BAD_REQUEST,
+            httpCode: 400
+        };
+    }
+
+    static inventoryNotFound(): errorType {
+        return {
+            name: "INVENTORY_NOT_FOUND",
+            code: errorEnum.INVENTORY_NOT_FOUND,
+            httpCode: 404
+        };
+    }
+
+    static insufficientInventory(): errorType {
+        return {
+            name: "INSUFFICIENT_INVENTORY",
+            code: errorEnum.INSUFFICIENT_INVENTORY,
             httpCode: 400
         };
     }
