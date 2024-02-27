@@ -3,9 +3,12 @@ import { User } from "../models/user.model.js";
 import { Address } from "../models/address.model.js";
 import { createTokens, generateRandomNumber } from "../utils/generators.js";
 import { CustomErrorClass } from "../utils/customError.js";
-import { registerDtoType, preRegisterDtoType, loginDtoType, preRegisterEmailDtoType, registerEmailDtoType, registerAddressDtoType, getUserAddressesDtoType, registerStoreDtoType, preRegisterNotifPhoneDtoType, registerNotifPhoneDtoType } from "../dtos/auth.dto.js";
+import { registerDtoType, preRegisterDtoType, loginDtoType, preRegisterEmailDtoType, registerEmailDtoType, registerAddressDtoType, getUserAddressesDtoType, registerStoreDtoType, preRegisterNotifPhoneDtoType, registerNotifPhoneDtoType, registerStoreLogoDtoType } from "../dtos/auth.dto.js";
 import bcrypt from 'bcrypt';
 import { Store } from "../models/store.model.js";
+import crypto from "crypto";
+import fsExtra from 'fs-extra';
+import path from 'path';
 
 const ENV = process.env.PRODUCTION
 
@@ -287,6 +290,29 @@ export default class authController {
             });
         } catch (e) {
             return next(e)
+        }
+    }
+
+    static async registerStoreLogo(req: Request, res: Response, next: NextFunction) {
+        const form = req.form as registerStoreLogoDtoType;
+
+        try {
+            const uuid = crypto.randomUUID();
+            if (!fsExtra.existsSync(String(process.env.PRODUCT_PHOTO_FOLDER))) {
+                fsExtra.mkdirSync(String(process.env.PRODUCT_PHOTO_FOLDER));
+            }
+            fsExtra.copyFileSync((form.logo[0] as any).filepath, path.join(String(process.env.PRODUCT_PHOTO_FOLDER), uuid));
+            await Store.updateOne({
+                phoneNumber: form.phoneNumber
+            }, {
+                logo: path.join(String(process.env.PRODUCT_PHOTO_FOLDER), uuid)
+            });
+
+            res.status(201).json({
+                message: "logo saved!"
+            })
+        } catch (e) {
+            return next(e);
         }
     }
 

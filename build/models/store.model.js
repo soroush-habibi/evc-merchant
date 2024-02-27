@@ -23,6 +23,9 @@ const storeSchema = new Schema({
             message: "not valid telephone number"
         }
     },
+    logo: {
+        type: String
+    },
     website: {
         type: String,
         validate: [validator.isURL, "not valid url"]

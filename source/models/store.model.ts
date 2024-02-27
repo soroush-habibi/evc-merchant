@@ -6,6 +6,7 @@ export interface IStore {
     name: string,
     about: string,
     phoneNumber: string,
+    logo: string,
     website: string
 }
 
@@ -35,6 +36,9 @@ const storeSchema = new Schema<IStore, StoreModel, IStoreMethods>({
             },
             message: "not valid telephone number"
         }
+    },
+    logo: {
+        type: String
     },
     website: {
         type: String,

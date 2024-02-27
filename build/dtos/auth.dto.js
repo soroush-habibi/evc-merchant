@@ -74,3 +74,14 @@ const registerNotifPhoneDto = Joi.object({
     otp: Joi.string().required().min(6).max(6)
 });
 export { registerNotifPhoneDto };
+//*registerStoreLogo
+const registerStoreLogoDto = Joi.object({
+    phoneNumber: Joi.string().pattern(new RegExp(phoneRegex)).message('invalid phone number').required(),
+    logo: Joi.array().max(1).items(Joi.object({
+        originalFilename: Joi.string().required(),
+        mimetype: Joi.string().required(),
+        size: Joi.number().max(1000 * 1000 * (Number(process.env.MAX_DOC_SIZE) || 20)).required(),
+        filepath: Joi.string().required(),
+    }).unknown(true)).required()
+});
+export { registerStoreLogoDto };

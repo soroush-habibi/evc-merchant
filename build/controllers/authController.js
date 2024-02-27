@@ -4,6 +4,9 @@ import { createTokens, generateRandomNumber } from "../utils/generators.js";
 import { CustomErrorClass } from "../utils/customError.js";
 import bcrypt from 'bcrypt';
 import { Store } from "../models/store.model.js";
+import crypto from "crypto";
+import fsExtra from 'fs-extra';
+import path from 'path';
 const ENV = process.env.PRODUCTION;
 export default class authController {
     static async preRegister(req, res, next) {
@@ -258,6 +261,27 @@ export default class authController {
             res.status(200).json({
                 message: "store info",
                 data: store
+            });
+        }
+        catch (e) {
+            return next(e);
+        }
+    }
+    static async registerStoreLogo(req, res, next) {
+        const form = req.form;
+        try {
+            const uuid = crypto.randomUUID();
+            if (!fsExtra.existsSync(String(process.env.PRODUCT_PHOTO_FOLDER))) {
+                fsExtra.mkdirSync(String(process.env.PRODUCT_PHOTO_FOLDER));
+            }
+            fsExtra.copyFileSync(form.logo[0].filepath, path.join(String(process.env.PRODUCT_PHOTO_FOLDER), uuid));
+            await Store.updateOne({
+                phoneNumber: form.phoneNumber
+            }, {
+                logo: path.join(String(process.env.PRODUCT_PHOTO_FOLDER), uuid)
+            });
+            res.status(201).json({
+                message: "logo saved!"
             });
         }
         catch (e) {
