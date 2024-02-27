@@ -8,6 +8,8 @@ import { inventoryStatusEnum } from "../enum/inventoryStatus.enum.js";
 import { Payment } from "../models/payment.model.js";
 import { paymentTypeEnum } from "../enum/payment.enum.js";
 import crypto from "crypto";
+import { Wallet } from "../models/wallet.model.js";
+import mongoose from "mongoose";
 
 const ENV = process.env.PRODUCTION
 
@@ -126,15 +128,59 @@ export default class orderController {
         try {
             if (!ENV) {
                 //todo:these queries should be ACID transaction
+                const ordersAggregate = await Order.aggregate([
+                    {
+                        $match: {
+                            _id: new mongoose.Types.ObjectId(body.orderId),
+                            status: orderStatusEnum.CART,
+                            userId: new mongoose.Types.ObjectId(body.userId)
+                        }
+                    },
+                    {
+                        $unwind: '$items'
+                    },
+                    {
+                        $lookup: {
+                            from: 'inventories',
+                            localField: 'items.inventoryId',
+                            foreignField: '_id',
+                            as: 'inventory'
+                        }
+                    },
+                    {
+                        $unwind: '$inventory'
+                    },
+                    {
+                        $set: {
+                            totalPrice: {
+                                $multiply: ['$inventory.price', '$items.count']
+                            }
+                        }
+                    }
+                ]);
+                if (ordersAggregate.length === 0) return next(CustomErrorClass.orderNotFound());
+                let amount = 0;
+                for (let o of ordersAggregate) {
+                    amount += o.totalPrice
+                    await Inventory.updateOne({
+                        _id: o.items.inventoryId
+                    }, {
+                        $inc: {
+                            count: -(o.items.count)
+                        }
+                    });
+                }
                 const transData = {
                     timestamp: Date.now(),
-                    token: crypto.randomUUID()
+                    token: crypto.randomUUID(),
+                    amount: amount
                 }
                 const payment = await Payment.create({
                     userId: body.userId,
                     type: paymentTypeEnum.ORDER,
                     exId: body.orderId,
                     timestamp: transData.timestamp,
+                    amount: amount,
                     token: transData.token
                 });
 
@@ -162,6 +208,7 @@ export default class orderController {
         const query = req.query as confirmCallbackDtoType;
 
         try {
+            //todo:what if user cancel the payment?
             const payment = await Payment.findOne({
                 timestamp: Number(query.timestamp)
             });
@@ -173,7 +220,22 @@ export default class orderController {
             //todo:ACID transaction
             payment.done = true;
             await payment.save();
-            await Order.updateOne({ _id: payment.exId }, { status: orderStatusEnum.PROCESSING });
+            const order = await Order.findOne({ _id: payment.exId });
+            if (!order) return next(CustomErrorClass.badRequest());
+            order.status = orderStatusEnum.PROCESSING;
+            await order.save();
+            let wallet = await Wallet.findOne({
+                userId: order.merchantId
+            });
+
+            if (!wallet) {
+                wallet = await Wallet.create({
+                    userId: order.merchantId
+                });
+            }
+
+            wallet.pending = payment.amount;
+            await wallet.save();
 
             res.status(201).json({
                 message: "payment saved!",

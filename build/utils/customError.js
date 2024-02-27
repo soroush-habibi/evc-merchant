@@ -24,6 +24,7 @@ export var errorEnum;
     errorEnum[errorEnum["INVENTORY_NOT_FOUND"] = 120] = "INVENTORY_NOT_FOUND";
     errorEnum[errorEnum["INSUFFICIENT_INVENTORY"] = 121] = "INSUFFICIENT_INVENTORY";
     errorEnum[errorEnum["PAYMENT_NOT_FOUND"] = 122] = "PAYMENT_NOT_FOUND";
+    errorEnum[errorEnum["ORDER_NOT_FOUND"] = 123] = "ORDER_NOT_FOUND";
 })(errorEnum = errorEnum || (errorEnum = {}));
 export class CustomErrorClass {
     static noEnv(varName) {
@@ -193,6 +194,13 @@ export class CustomErrorClass {
         return {
             name: "PAYMENT_NOT_FOUND",
             code: errorEnum.PAYMENT_NOT_FOUND,
+            httpCode: 404
+        };
+    }
+    static orderNotFound() {
+        return {
+            name: "ORDER_NOT_FOUND",
+            code: errorEnum.ORDER_NOT_FOUND,
             httpCode: 404
         };
     }

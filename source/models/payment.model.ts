@@ -8,6 +8,7 @@ export interface IPayment {
     exId: mongoose.Schema.Types.ObjectId,
     timestamp: number,
     token: string,
+    amount: number,
     done: boolean
 }
 
@@ -42,6 +43,10 @@ const paymentSchema = new Schema<IPayment, PaymentModel, IPaymentMethods>({
     },
     token: {                                                    //todo:add validation
         type: String,
+        required: true
+    },
+    amount: {
+        type: Number,
         required: true
     },
     done: {

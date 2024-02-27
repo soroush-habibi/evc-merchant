@@ -29,7 +29,8 @@ export enum errorEnum {
     DUPLICATE_NOTIF_PHONE = 119,
     INVENTORY_NOT_FOUND = 120,
     INSUFFICIENT_INVENTORY = 121,
-    PAYMENT_NOT_FOUND = 122
+    PAYMENT_NOT_FOUND = 122,
+    ORDER_NOT_FOUND = 123
 }
 
 export class CustomErrorClass {
@@ -223,6 +224,14 @@ export class CustomErrorClass {
         return {
             name: "PAYMENT_NOT_FOUND",
             code: errorEnum.PAYMENT_NOT_FOUND,
+            httpCode: 404
+        };
+    }
+
+    static orderNotFound(): errorType {
+        return {
+            name: "ORDER_NOT_FOUND",
+            code: errorEnum.ORDER_NOT_FOUND,
             httpCode: 404
         };
     }

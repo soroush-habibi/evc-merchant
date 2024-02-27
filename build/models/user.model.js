@@ -40,10 +40,6 @@ const userSchema = new Schema({
         maxlength: 11,
         minlength: 11,
         validate: [validator.isMobilePhone, 'not valid phone number']
-    },
-    wallet: {
-        type: Number,
-        default: 0
     }
 }, {
     toJSON: {

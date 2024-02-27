@@ -29,6 +29,10 @@ const paymentSchema = new Schema({
         type: String,
         required: true
     },
+    amount: {
+        type: Number,
+        required: true
+    },
     done: {
         type: Boolean,
         default: false
