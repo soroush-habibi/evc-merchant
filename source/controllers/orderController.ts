@@ -1,12 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomErrorClass } from "../utils/customError.js";
-import { addToCartDtoType, confirmOrderDtoType, getCartsDtoType } from "../dtos/order.dto.js";
+import { addToCartDtoType, confirmCallbackDtoType, confirmOrderDtoType, getCartsDtoType } from "../dtos/order.dto.js";
 import { Inventory } from "../models/inventory.model.js";
 import { Order } from "../models/order.model.js";
 import { orderStatusEnum } from "../enum/orderStatus.enum.js";
 import { inventoryStatusEnum } from "../enum/inventoryStatus.enum.js";
 import { Payment } from "../models/payment.model.js";
 import { paymentTypeEnum } from "../enum/payment.enum.js";
+import crypto from "crypto";
 
 const ENV = process.env.PRODUCTION
 
@@ -152,6 +153,34 @@ export default class orderController {
             } else {
                 //todo:i need payment api
             }
+        } catch (e) {
+            return next(e);
+        }
+    }
+
+    static async confirmCallback(req: Request, res: Response, next: NextFunction) {
+        const query = req.query as confirmCallbackDtoType;
+
+        try {
+            const payment = await Payment.findOne({
+                timestamp: Number(query.timestamp)
+            });
+
+            if (!payment) return next(CustomErrorClass.paymentNotFound());
+
+            if (payment.token !== query.token || payment.done || payment.type !== paymentTypeEnum.ORDER) return next(CustomErrorClass.badRequest());
+
+            //todo:ACID transaction
+            payment.done = true;
+            await payment.save();
+            await Order.updateOne({ _id: payment.exId }, { status: orderStatusEnum.PROCESSING });
+
+            res.status(201).json({
+                message: "payment saved!",
+                data: {
+                    orderId: payment.exId
+                }
+            });
         } catch (e) {
             return next(e);
         }

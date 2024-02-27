@@ -31,6 +31,7 @@ const paymentSchema = new Schema<IPayment, PaymentModel, IPaymentMethods>({
     },
     timestamp: {
         type: Number,
+        unique: true,
         validate: {
             validator: (value: number) => {
                 return /^\d{10,13}$/.test(String(value));
@@ -62,6 +63,7 @@ const paymentSchema = new Schema<IPayment, PaymentModel, IPaymentMethods>({
 });
 
 paymentSchema.index({ userId: 1 });
+paymentSchema.index({ timestamp: 1 });
 
 const Payment = model<IPayment, PaymentModel>('Payment', paymentSchema);
 

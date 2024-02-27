@@ -1,5 +1,6 @@
 import Joi from "joi";
 import { Types } from "mongoose";
+const timestampRegex = /^\d{10,13}$/;
 //*addToCart
 const addToCartDto = Joi.object({
     userId: Joi.string().custom((value, helpers) => {
@@ -43,3 +44,9 @@ const confirmOrderDto = Joi.object({
     }, "validate objectId").required()
 });
 export { confirmOrderDto };
+//*confirmCallback
+const confirmCallbackDto = Joi.object({
+    timestamp: Joi.string().pattern(new RegExp(timestampRegex)).message("invalid timestamp").required(),
+    token: Joi.string().uuid().required()
+});
+export { confirmCallbackDto };

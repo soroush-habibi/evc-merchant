@@ -5,6 +5,7 @@ import { orderStatusEnum } from "../enum/orderStatus.enum.js";
 import { inventoryStatusEnum } from "../enum/inventoryStatus.enum.js";
 import { Payment } from "../models/payment.model.js";
 import { paymentTypeEnum } from "../enum/payment.enum.js";
+import crypto from "crypto";
 const ENV = process.env.PRODUCTION;
 export default class orderController {
     static async addToCart(req, res, next) {
@@ -140,6 +141,31 @@ export default class orderController {
             else {
                 //todo:i need payment api
             }
+        }
+        catch (e) {
+            return next(e);
+        }
+    }
+    static async confirmCallback(req, res, next) {
+        const query = req.query;
+        try {
+            const payment = await Payment.findOne({
+                timestamp: Number(query.timestamp)
+            });
+            if (!payment)
+                return next(CustomErrorClass.paymentNotFound());
+            if (payment.token !== query.token || payment.done || payment.type !== paymentTypeEnum.ORDER)
+                return next(CustomErrorClass.badRequest());
+            //todo:ACID transaction
+            payment.done = true;
+            await payment.save();
+            await Order.updateOne({ _id: payment.exId }, { status: orderStatusEnum.PROCESSING });
+            res.status(201).json({
+                message: "payment saved!",
+                data: {
+                    orderId: payment.exId
+                }
+            });
         }
         catch (e) {
             return next(e);

@@ -16,6 +16,7 @@ const paymentSchema = new Schema({
     },
     timestamp: {
         type: Number,
+        unique: true,
         validate: {
             validator: (value) => {
                 return /^\d{10,13}$/.test(String(value));
@@ -46,5 +47,6 @@ const paymentSchema = new Schema({
     },
 });
 paymentSchema.index({ userId: 1 });
+paymentSchema.index({ timestamp: 1 });
 const Payment = model('Payment', paymentSchema);
 export { Payment };
