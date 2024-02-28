@@ -3,4 +3,4 @@ export var documentStatusEnum;
     documentStatusEnum["PENDING"] = "pending";
     documentStatusEnum["VERIFIED"] = "verified";
     documentStatusEnum["REJECTED"] = "rejected";
-})(documentStatusEnum = documentStatusEnum || (documentStatusEnum = {}));
+})(documentStatusEnum || (documentStatusEnum = {}));

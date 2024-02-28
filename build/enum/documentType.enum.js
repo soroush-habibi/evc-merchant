@@ -19,4 +19,4 @@ export var documentTypeEnum;
     documentTypeEnum["GOLD_COIN_LICENSE"] = "\u0645\u062F\u0631\u06A9 \u0645\u062C\u0627\u0632 \u0628\u0631\u0627\u06CC \u0641\u0631\u0648\u0634 \u0633\u06A9\u0647 \u0637\u0644\u0627";
     documentTypeEnum["PRINTER_LICENSE"] = "\u0645\u062F\u0631\u06A9 \u0645\u062C\u0627\u0632 \u0628\u0631\u0627\u06CC \u0641\u0631\u0648\u0634 \u067E\u0631\u06CC\u0646\u062A\u0631";
     documentTypeEnum["FREE_ZONE_LICENSE"] = "\u0645\u062C\u0648\u0632 \u0641\u0639\u0627\u0644\u06CC\u062A \u0627\u0642\u062A\u0635\u0627\u062F\u06CC \u062F\u0631 \u0645\u0646\u0637\u0642\u0647 \u0622\u0632\u0627\u062F";
-})(documentTypeEnum = documentTypeEnum || (documentTypeEnum = {}));
+})(documentTypeEnum || (documentTypeEnum = {}));

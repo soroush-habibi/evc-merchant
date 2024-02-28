@@ -31,4 +31,4 @@ export var statesEnum;
     statesEnum["HORMOZGAN"] = "\u0647\u0631\u0645\u0632\u06AF\u0627\u0646";
     statesEnum["HAMEDAN"] = "\u0647\u0645\u062F\u0627\u0646";
     statesEnum["YAZD"] = "\u06CC\u0632\u062F";
-})(statesEnum = statesEnum || (statesEnum = {}));
+})(statesEnum || (statesEnum = {}));

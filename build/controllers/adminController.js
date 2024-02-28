@@ -69,15 +69,13 @@ export default class adminController {
     static async getUsers(req, res, next) {
         const query = req.query;
         try {
-            const filter = {
-                phoneNumber: {
-                    $regex: query.phoneNumber ? new RegExp(query.phoneNumber, "i") : ""
-                }, fullName: {
-                    $regex: query.fullName ? new RegExp(query.fullName, "i") : ""
-                }, nationalCode: {
-                    $regex: query.nationalCode ? new RegExp(query.nationalCode, "i") : ""
-                }
-            };
+            const filter = {};
+            if (query.phoneNumber)
+                filter.phoneNumber = { $regex: new RegExp(query.phoneNumber, "i") };
+            if (query.fullName)
+                filter.fullName = { $regex: new RegExp(query.fullName, "i") };
+            if (query.nationalCode)
+                filter.nationalCode = { $regex: new RegExp(query.nationalCode, "i") };
             const users = await User.find(filter, {}, {
                 limit: 10,
                 skip: query.page ? (query.page - 1) * 10 : 0
@@ -85,6 +83,28 @@ export default class adminController {
             res.status(200).json({
                 message: "users list",
                 data: users
+            });
+        }
+        catch (e) {
+            return next(e);
+        }
+    }
+    static async verifyUser(req, res, next) {
+        const body = req.body;
+        try {
+            const user = await User.findOne({ phoneNumber: body.phoneNumber });
+            if (!user)
+                return next(CustomErrorClass.userNotFound());
+            user.status = body.newStatus;
+            if (body.message) {
+                user.message = body.message;
+            }
+            else {
+                user.message = undefined;
+            }
+            await user.save();
+            res.status(201).json({
+                message: "user updated!"
             });
         }
         catch (e) {

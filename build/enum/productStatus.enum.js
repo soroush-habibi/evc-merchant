@@ -3,4 +3,4 @@ export var productStatusEnum;
     //todo:list of status??
     productStatusEnum["UNVERIFIED"] = "unverified";
     productStatusEnum["VERIFIED"] = "verified";
-})(productStatusEnum = productStatusEnum || (productStatusEnum = {}));
+})(productStatusEnum || (productStatusEnum = {}));

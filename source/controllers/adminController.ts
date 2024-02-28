@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomErrorClass } from "../utils/customError.js";
-import { checkDocumentDtoType, getAdminProductsDtoType, getUsersDtoType, updateProductStatusDtoType } from "../dtos/admin.dto.js";
+import { checkDocumentDtoType, getAdminProductsDtoType, getUsersDtoType, updateProductStatusDtoType, verifyUserDtoType } from "../dtos/admin.dto.js";
 import { Product } from "../models/product.model.js";
 import { User } from "../models/user.model.js";
 import { Document } from "../models/document.model.js";
@@ -84,15 +84,11 @@ export default class adminController {
         const query = req.query as getUsersDtoType;
 
         try {
-            const filter: any = {
-                phoneNumber: {
-                    $regex: query.phoneNumber ? new RegExp(query.phoneNumber, "i") : ""
-                }, fullName: {
-                    $regex: query.fullName ? new RegExp(query.fullName, "i") : ""
-                }, nationalCode: {
-                    $regex: query.nationalCode ? new RegExp(query.nationalCode, "i") : ""
-                }
-            }
+            const filter: any = {}
+
+            if (query.phoneNumber) filter.phoneNumber = { $regex: new RegExp(query.phoneNumber, "i") }
+            if (query.fullName) filter.fullName = { $regex: new RegExp(query.fullName, "i") }
+            if (query.nationalCode) filter.nationalCode = { $regex: new RegExp(query.nationalCode, "i") }
 
             const users = await User.find(filter, {}, {
                 limit: 10,
@@ -102,6 +98,29 @@ export default class adminController {
             res.status(200).json({
                 message: "users list",
                 data: users
+            });
+        } catch (e) {
+            return next(e);
+        }
+    }
+
+    static async verifyUser(req: Request, res: Response, next: NextFunction) {
+        const body = req.body as verifyUserDtoType;
+
+        try {
+            const user = await User.findOne({ phoneNumber: body.phoneNumber });
+            if (!user) return next(CustomErrorClass.userNotFound());
+
+            user.status = body.newStatus;
+            if (body.message) {
+                user.message = body.message;
+            } else {
+                user.message = undefined;
+            }
+            await user.save();
+
+            res.status(201).json({
+                message: "user updated!"
             });
         } catch (e) {
             return next(e);

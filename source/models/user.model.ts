@@ -21,7 +21,8 @@ export interface IUser {
     password?: string,
     refreshToken?: string,
     notifPhone?: string,
-    status: userStatusEnum
+    status: userStatusEnum,
+    message?: string
 }
 
 export interface IUserMethods { }
@@ -73,6 +74,9 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>({
         type: String,
         enum: userStatusEnum,
         default: userStatusEnum.UNVERIFIED
+    },
+    message: {
+        type: String
     }
 }, {
     toJSON: {

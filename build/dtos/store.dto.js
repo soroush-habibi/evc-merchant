@@ -4,7 +4,7 @@ import { Types } from "mongoose";
 //*searchProduct
 const searchProductDto = Joi.object({
     text: Joi.string().min(1),
-    category: Joi.string().required(),
+    category: Joi.string().required(), //todo:i need category enum
     order: Joi.string().valid(...Object.values(productOrderEnum)).required(),
     page: Joi.number()
 });

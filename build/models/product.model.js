@@ -31,7 +31,7 @@ const productSchema = new Schema({
         required: true
     },
     title: {
-        type: String,
+        type: String, //*gram
         required: true
     },
     photo: {

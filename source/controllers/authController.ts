@@ -264,20 +264,16 @@ export default class authController {
 
     static async getUserInfo(req: Request, res: Response, next: NextFunction) {
         try {
-            const user = await User.findById(req.user?.id);
+            const user = await User.findById(req.user?.id, {
+                password: 0,
+                refreshToken: 0
+            });
 
             if (!user) return next(CustomErrorClass.userNotFound());
 
             res.status(200).json({
                 message: "user info",
-                data: {
-                    id: user.id,
-                    phoneNumber: user.phoneNumber,
-                    fullName: user.fullName,
-                    email: user.email,
-                    bankNumber: user.bankNumber,
-                    nationalCode: user.nationalCode
-                }
+                data: user
             });
         } catch (e) {
             return next(e);

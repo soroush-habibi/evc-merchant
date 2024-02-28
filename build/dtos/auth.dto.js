@@ -21,7 +21,7 @@ export { registerDto };
 //*editProfile
 const editProfileDto = Joi.object({
     fullName: Joi.string().min(2),
-    bankNumber: Joi.string().min(16).max(16),
+    bankNumber: Joi.string().min(16).max(16), //todo:add validation
     nationalCode: Joi.string().pattern(new RegExp(nationalCodeRegex)).message("invalid national code"),
 });
 export { editProfileDto };
@@ -48,7 +48,7 @@ const registerAddressDto = Joi.object({
     longitude: Joi.string().pattern(new RegExp(longitudeRegex)).message("invalid longitude"),
     latitude: Joi.string().pattern(new RegExp(latitudeRegex)).message("invalid latitude"),
     state: Joi.string().valid(...Object.values(statesEnum)).required(),
-    city: Joi.string().required(),
+    city: Joi.string().required(), //todo:add validation
     address: Joi.string().required(),
     number: Joi.number().min(0),
     postCode: Joi.string().pattern(new RegExp(postcodeRegex)).message("invalid post code").required(),

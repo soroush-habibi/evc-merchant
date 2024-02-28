@@ -2,6 +2,7 @@ import Joi from "joi";
 import { Types } from "mongoose";
 import { productStatusEnum } from "../enum/productStatus.enum.js";
 import { documentStatusEnum } from "../enum/documentStatus.enum.js";
+import { userStatusEnum } from "../enum/userStatus.enum.js";
 
 const phoneRegex = /^09[0-9]{9}$/;
 const nationalCodeRegex = /^\d{3}\d{6}\d{1}$/;
@@ -57,6 +58,21 @@ type getUsersDtoType = {
 }
 
 export { getUsersDto, getUsersDtoType }
+
+//*verifyUser
+const verifyUserDto = Joi.object({
+    phoneNumber: Joi.string().required(),
+    newStatus: Joi.string().valid(...Object.values(userStatusEnum)).required(),
+    message: Joi.string()
+});
+
+type verifyUserDtoType = {
+    phoneNumber: string,
+    newStatus: userStatusEnum,
+    message?: string
+}
+
+export { verifyUserDto, verifyUserDtoType }
 
 //*checkDocument
 const checkDocumentDto = Joi.object({

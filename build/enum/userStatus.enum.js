@@ -3,4 +3,4 @@ export var userStatusEnum;
     userStatusEnum["UNVERIFIED"] = "unverified";
     userStatusEnum["VERIFIED"] = "verified";
     userStatusEnum["SUSPENDED"] = "suspended";
-})(userStatusEnum = userStatusEnum || (userStatusEnum = {}));
+})(userStatusEnum || (userStatusEnum = {}));

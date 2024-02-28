@@ -46,6 +46,9 @@ const userSchema = new Schema({
         type: String,
         enum: userStatusEnum,
         default: userStatusEnum.UNVERIFIED
+    },
+    message: {
+        type: String
     }
 }, {
     toJSON: {

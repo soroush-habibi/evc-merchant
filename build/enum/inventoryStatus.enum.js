@@ -3,4 +3,4 @@ export var inventoryStatusEnum;
     inventoryStatusEnum["ACTIVE"] = "active";
     inventoryStatusEnum["DEACTIVE"] = "deactive";
     inventoryStatusEnum["SUSPENDED"] = "suspended";
-})(inventoryStatusEnum = inventoryStatusEnum || (inventoryStatusEnum = {}));
+})(inventoryStatusEnum || (inventoryStatusEnum = {}));

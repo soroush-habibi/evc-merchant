@@ -6,4 +6,4 @@ export var productOrderEnum;
     productOrderEnum["BEST_SELLER"] = "best seller";
     productOrderEnum["CHEAP"] = "cheap";
     productOrderEnum["EXPENSIVE"] = "expensive";
-})(productOrderEnum = productOrderEnum || (productOrderEnum = {}));
+})(productOrderEnum || (productOrderEnum = {}));

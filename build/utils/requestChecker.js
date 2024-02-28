@@ -7,7 +7,7 @@ export var FieldType;
     FieldType["BODY"] = "body";
     FieldType["FORM"] = "form";
     FieldType["PARAMS"] = "params";
-})(FieldType = FieldType || (FieldType = {}));
+})(FieldType || (FieldType = {}));
 export const genericValidator = (templateObj, fieldType = FieldType.BODY) => {
     return async (req, res, next) => {
         try {

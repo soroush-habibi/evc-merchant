@@ -7,4 +7,4 @@ export var orderStatusEnum;
     orderStatusEnum["RECEIVED"] = "received";
     orderStatusEnum["REFUND_PENDING"] = "refund_pending";
     orderStatusEnum["CANCELED"] = "canceled";
-})(orderStatusEnum = orderStatusEnum || (orderStatusEnum = {}));
+})(orderStatusEnum || (orderStatusEnum = {}));

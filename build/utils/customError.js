@@ -27,7 +27,7 @@ export var errorEnum;
     errorEnum[errorEnum["ORDER_NOT_FOUND"] = 123] = "ORDER_NOT_FOUND";
     errorEnum[errorEnum["ADDRESS_NOT_FOUND"] = 124] = "ADDRESS_NOT_FOUND";
     errorEnum[errorEnum["USER_NOT_VERIFIED"] = 125] = "USER_NOT_VERIFIED";
-})(errorEnum = errorEnum || (errorEnum = {}));
+})(errorEnum || (errorEnum = {}));
 export class CustomErrorClass {
     static noEnv(varName) {
         return {
