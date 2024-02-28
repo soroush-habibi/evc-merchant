@@ -10,6 +10,7 @@ import { paymentTypeEnum } from "../enum/payment.enum.js";
 import crypto from "crypto";
 import { Wallet } from "../models/wallet.model.js";
 import mongoose from "mongoose";
+import { OrderLog } from "../models/orderLog.model.js";
 
 const ENV = process.env.PRODUCTION
 
@@ -125,9 +126,17 @@ export default class orderController {
     static async confirmOrder(req: Request, res: Response, next: NextFunction) {
         const body = req.body as confirmOrderDtoType;
 
+        let session;
+
+        try {
+            session = await mongoose.startSession();
+            session.startTransaction();
+        } catch (e) {
+            return next(e);
+        }
+
         try {
             if (!ENV) {
-                //todo:these queries should be ACID transaction
                 const ordersAggregate = await Order.aggregate([
                     {
                         $match: {
@@ -157,7 +166,7 @@ export default class orderController {
                             }
                         }
                     }
-                ]);
+                ], { session });
                 if (ordersAggregate.length === 0) return next(CustomErrorClass.orderNotFound());
                 let amount = 0;
                 for (let o of ordersAggregate) {
@@ -168,13 +177,22 @@ export default class orderController {
                         $inc: {
                             count: -(o.items.count)
                         }
-                    });
+                    }, { session });
                 }
                 const transData = {
                     timestamp: Date.now(),
                     token: crypto.randomUUID(),
                     amount: amount
                 }
+
+                await Order.updateOne({
+                    _id: body.orderId
+                }, {
+                    $set: {
+                        status: orderStatusEnum.PAYMENT
+                    }
+                }, { session });
+
                 const payment = await Payment.create({
                     userId: body.userId,
                     type: paymentTypeEnum.ORDER,
@@ -184,12 +202,10 @@ export default class orderController {
                     token: transData.token
                 });
 
-                await Order.updateOne({
-                    _id: body.orderId
-                }, {
-                    $set: {
-                        status: orderStatusEnum.PAYMENT
-                    }
+                await OrderLog.create({
+                    orderId: body.orderId,
+                    from: orderStatusEnum.CART,
+                    to: orderStatusEnum.PAYMENT
                 });
 
                 res.status(201).json({
@@ -207,8 +223,16 @@ export default class orderController {
     static async confirmCallback(req: Request, res: Response, next: NextFunction) {
         const query = req.query as confirmCallbackDtoType;
 
+        let session;
+
         try {
-            //todo:what if user cancel the payment?
+            session = await mongoose.startSession();
+            session.startTransaction();
+        } catch (e) {
+            return next(e);
+        }
+
+        try {
             const payment = await Payment.findOne({
                 timestamp: Number(query.timestamp)
             });
@@ -219,11 +243,11 @@ export default class orderController {
 
             //todo:ACID transaction
             payment.done = true;
-            await payment.save();
+            await payment.save({ session });
             const order = await Order.findOne({ _id: payment.exId });
             if (!order) return next(CustomErrorClass.badRequest());
             order.status = orderStatusEnum.PROCESSING;
-            await order.save();
+            await order.save({ session });
             let wallet = await Wallet.findOne({
                 userId: order.merchantId
             });
@@ -236,6 +260,12 @@ export default class orderController {
 
             wallet.pending = payment.amount;
             await wallet.save();
+
+            await OrderLog.create({
+                orderId: payment.exId,
+                from: orderStatusEnum.PAYMENT,
+                to: orderStatusEnum.PROCESSING
+            });
 
             res.status(201).json({
                 message: "payment saved!",

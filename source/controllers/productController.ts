@@ -8,6 +8,7 @@ import crypto from 'crypto';
 import { productStatusEnum } from "../enum/productStatus.enum.js";
 import { User } from "../models/user.model.js";
 import { userStatusEnum } from "../enum/userStatus.enum.js";
+import { Store } from "../models/store.model.js";
 
 const ENV = process.env.PRODUCTION
 
@@ -19,6 +20,9 @@ export default class productController {
             const user = await User.findOne({ phoneNumber: req.user?.phoneNumber });
             if (!user) return next(CustomErrorClass.userNotFound());
             if (user.status !== userStatusEnum.VERIFIED) return next(CustomErrorClass.userNotVerified());
+            const store = await Store.findOne({ merchantId: user.id });
+            if (!store) return next(CustomErrorClass.storeNotFound());
+            //todo:check store status
             let photo: string[] = [];
             if (form.photo)
                 for (let p = 0; p < form.photo.length; p++) {

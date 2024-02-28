@@ -6,6 +6,8 @@ import { Inventory } from "../models/inventory.model.js";
 import { inventoryStatusEnum } from "../enum/inventoryStatus.enum.js";
 import { User } from "../models/user.model.js";
 import { userStatusEnum } from "../enum/userStatus.enum.js";
+import { Store } from "../models/store.model.js";
+import { productStatusEnum } from "../enum/productStatus.enum.js";
 
 const ENV = process.env.PRODUCTION
 
@@ -17,8 +19,10 @@ export default class inventoryController {
             const user = await User.findOne({ phoneNumber: req.user?.phoneNumber });
             if (!user) return next(CustomErrorClass.userNotFound());
             if (user.status !== userStatusEnum.VERIFIED) return next(CustomErrorClass.userNotVerified());
-            const product = await Product.findById(body.productId);
-
+            const store = await Store.findOne({ merchantId: user.id });
+            if (!store) return next(CustomErrorClass.storeNotFound());
+            //todo:check store status
+            const product = await Product.findOne({ _id: body.productId, status: productStatusEnum.VERIFIED });
             if (!product) return next(CustomErrorClass.productNotFound());
 
             let inventory = await Inventory.findOne({ productId: body.productId, merchantId: req.user?.id });
@@ -31,7 +35,7 @@ export default class inventoryController {
                     price: body.price
                 });
             } else if (!inventory && !body.price) {
-                return next(CustomErrorClass.productNotFound());
+                return next(CustomErrorClass.badRequest());
             } else if (inventory) {
                 if (inventory.status === inventoryStatusEnum.SUSPENDED) return next(CustomErrorClass.inventorySuspended());
                 if (body.price) inventory.price = body.price;
