@@ -66,6 +66,21 @@ type loginDtoType = {
 
 export { loginDto, loginDtoType }
 
+//*changePassword
+const changePasswordDto = Joi.object({
+    phoneNumber: Joi.string().pattern(new RegExp(phoneRegex)).message('invalid phone number').required(),
+    otp: Joi.string().min(6).max(6).required(),
+    password: Joi.string().min(4).required(),
+});
+
+type changePasswordDtoType = {
+    phoneNumber: string,
+    otp: string,
+    password: string
+}
+
+export { changePasswordDto, changePasswordDtoType }
+
 //*preRegisterEmail
 const preRegisterEmailDto = Joi.object({
     email: Joi.string().email().required()

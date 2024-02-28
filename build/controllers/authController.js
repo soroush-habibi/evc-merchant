@@ -133,6 +133,32 @@ export default class authController {
             return next(e);
         }
     }
+    static async changePassword(req, res, next) {
+        const body = req.body;
+        try {
+            const user = await User.findOne({ phoneNumber: body.phoneNumber });
+            if (!user || !user.password)
+                return next(CustomErrorClass.userNotFound());
+            const existedOtp = await req.redis.get(`OTP_${body.phoneNumber}`);
+            if (!existedOtp)
+                return next(CustomErrorClass.noOtp());
+            if (existedOtp !== body.otp) {
+                await req.redis.del(`OTP_${body.phoneNumber}`);
+                return next(CustomErrorClass.wrongOtp());
+            }
+            user.password = user.password = bcrypt.hashSync(body.password, 10);
+            ;
+            user.refreshToken = undefined;
+            await user.save();
+            await req.redis.del(`OTP_${body.phoneNumber}`);
+            res.status(201).json({
+                message: "password changed!"
+            });
+        }
+        catch (e) {
+            return next(e);
+        }
+    }
     static async preRegisterEmail(req, res, next) {
         const { email } = req.body;
         try {

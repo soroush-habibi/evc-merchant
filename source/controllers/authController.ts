@@ -3,7 +3,7 @@ import { User } from "../models/user.model.js";
 import { Address } from "../models/address.model.js";
 import { createTokens, generateRandomNumber } from "../utils/generators.js";
 import { CustomErrorClass } from "../utils/customError.js";
-import { registerDtoType, preRegisterDtoType, loginDtoType, preRegisterEmailDtoType, registerEmailDtoType, registerAddressDtoType, getUserAddressesDtoType, registerStoreDtoType, preRegisterNotifPhoneDtoType, registerNotifPhoneDtoType, registerStoreLogoDtoType, deleteAddressDtoType, editProfileDtoType } from "../dtos/auth.dto.js";
+import { registerDtoType, preRegisterDtoType, loginDtoType, preRegisterEmailDtoType, registerEmailDtoType, registerAddressDtoType, getUserAddressesDtoType, registerStoreDtoType, preRegisterNotifPhoneDtoType, registerNotifPhoneDtoType, registerStoreLogoDtoType, deleteAddressDtoType, editProfileDtoType, changePasswordDtoType } from "../dtos/auth.dto.js";
 import bcrypt from 'bcrypt';
 import { Store } from "../models/store.model.js";
 import crypto from "crypto";
@@ -142,6 +142,34 @@ export default class authController {
                     data: { accessToken, refreshToken }
                 });
             }
+        } catch (e) {
+            return next(e);
+        }
+    }
+
+    static async changePassword(req: Request, res: Response, next: NextFunction) {
+        const body = req.body as changePasswordDtoType;
+
+        try {
+            const user = await User.findOne({ phoneNumber: body.phoneNumber });
+            if (!user || !user.password) return next(CustomErrorClass.userNotFound());
+
+            const existedOtp = await req.redis.get(`OTP_${body.phoneNumber as string}`);
+            if (!existedOtp) return next(CustomErrorClass.noOtp());
+
+            if (existedOtp !== body.otp) {
+                await req.redis.del(`OTP_${body.phoneNumber as string}`);
+                return next(CustomErrorClass.wrongOtp());
+            }
+
+            user.password = user.password = bcrypt.hashSync(body.password, 10);;
+            user.refreshToken = undefined;
+            await user.save();
+            await req.redis.del(`OTP_${body.phoneNumber as string}`);
+
+            res.status(201).json({
+                message: "password changed!"
+            });
         } catch (e) {
             return next(e);
         }
