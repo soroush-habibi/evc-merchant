@@ -4,6 +4,8 @@ import { addInventoryDtoType, getMerchantInventoryDtoType, getProductInventoryDt
 import { Product } from "../models/product.model.js";
 import { Inventory } from "../models/inventory.model.js";
 import { inventoryStatusEnum } from "../enum/inventoryStatus.enum.js";
+import { User } from "../models/user.model.js";
+import { userStatusEnum } from "../enum/userStatus.enum.js";
 
 const ENV = process.env.PRODUCTION
 
@@ -12,6 +14,9 @@ export default class inventoryController {
         const body = req.body as addInventoryDtoType;
 
         try {
+            const user = await User.findOne({ phoneNumber: req.user?.phoneNumber });
+            if (!user) return next(CustomErrorClass.userNotFound());
+            if (user.status !== userStatusEnum.VERIFIED) return next(CustomErrorClass.userNotVerified());
             const product = await Product.findById(body.productId);
 
             if (!product) return next(CustomErrorClass.productNotFound());

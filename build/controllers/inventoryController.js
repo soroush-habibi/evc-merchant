@@ -2,11 +2,18 @@ import { CustomErrorClass } from "../utils/customError.js";
 import { Product } from "../models/product.model.js";
 import { Inventory } from "../models/inventory.model.js";
 import { inventoryStatusEnum } from "../enum/inventoryStatus.enum.js";
+import { User } from "../models/user.model.js";
+import { userStatusEnum } from "../enum/userStatus.enum.js";
 const ENV = process.env.PRODUCTION;
 export default class inventoryController {
     static async addInventory(req, res, next) {
         const body = req.body;
         try {
+            const user = await User.findOne({ phoneNumber: req.user?.phoneNumber });
+            if (!user)
+                return next(CustomErrorClass.userNotFound());
+            if (user.status !== userStatusEnum.VERIFIED)
+                return next(CustomErrorClass.userNotVerified());
             const product = await Product.findById(body.productId);
             if (!product)
                 return next(CustomErrorClass.productNotFound());

@@ -31,7 +31,8 @@ export enum errorEnum {
     INSUFFICIENT_INVENTORY = 121,
     PAYMENT_NOT_FOUND = 122,
     ORDER_NOT_FOUND = 123,
-    ADDRESS_NOT_FOUND = 124
+    ADDRESS_NOT_FOUND = 124,
+    USER_NOT_VERIFIED = 125
 }
 
 export class CustomErrorClass {
@@ -242,6 +243,14 @@ export class CustomErrorClass {
             name: "ADDRESS_NOT_FOUND",
             code: errorEnum.ADDRESS_NOT_FOUND,
             httpCode: 404
+        };
+    }
+
+    static userNotVerified(): errorType {
+        return {
+            name: "USER_NOT_VERIFIED",
+            code: errorEnum.USER_NOT_VERIFIED,
+            httpCode: 403
         };
     }
 }

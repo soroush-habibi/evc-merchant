@@ -6,6 +6,8 @@ import fsExtra from 'fs-extra';
 import path from 'path';
 import crypto from 'crypto';
 import { productStatusEnum } from "../enum/productStatus.enum.js";
+import { User } from "../models/user.model.js";
+import { userStatusEnum } from "../enum/userStatus.enum.js";
 
 const ENV = process.env.PRODUCTION
 
@@ -14,6 +16,9 @@ export default class productController {
         const form = req.form as addProductDtoType;
 
         try {
+            const user = await User.findOne({ phoneNumber: req.user?.phoneNumber });
+            if (!user) return next(CustomErrorClass.userNotFound());
+            if (user.status !== userStatusEnum.VERIFIED) return next(CustomErrorClass.userNotVerified());
             let photo: string[] = [];
             if (form.photo)
                 for (let p = 0; p < form.photo.length; p++) {
@@ -53,7 +58,7 @@ export default class productController {
         const body = req.body as deletePhotoDtoType;
 
         try {
-            const product = await Product.findById(body.productId);
+            const product = await Product.findOne({ _id: body.productId, creator: req.user?.id });
             if (!product) return next(CustomErrorClass.productNotFound());
 
             if (!product.photo?.includes(path.join(String(process.env.PRODUCT_PHOTO_FOLDER), body.uuid))) return next(CustomErrorClass.productPhotoNotFound());
@@ -73,7 +78,7 @@ export default class productController {
         const body = req.form as addPhotoDtoType;
 
         try {
-            const product = await Product.findById(body.productId);
+            const product = await Product.findOne({ _id: body.productId, creator: req.user?.id });
             if (!product) return next(CustomErrorClass.productNotFound());
 
             if ((product.photo ? product.photo.length : 0) + body.photo.length > 20) return next(CustomErrorClass.productMaxPhoto());

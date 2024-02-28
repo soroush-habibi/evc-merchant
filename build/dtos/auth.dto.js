@@ -70,7 +70,8 @@ const deleteAddressDto = Joi.object({
 export { deleteAddressDto };
 //*getUserAddresses
 const getUserAddressesDto = Joi.object({
-    page: Joi.number().min(1)
+    page: Joi.number().min(1),
+    postCode: Joi.string().pattern(new RegExp(postcodeRegex)).message("invalid post code"),
 });
 export { getUserAddressesDto };
 //*registerStore

@@ -225,11 +225,16 @@ export default class authController {
         }
     }
     static async getUserAddresses(req, res, next) {
-        let { page } = req.query;
+        let { page, postCode } = req.query;
         if (!page)
             page = String(0);
         try {
-            const addresses = await Address.find({ phoneNumber: req.user?.phoneNumber }, undefined, { limit: 5, skip: (Number(page) - 1) * 5 });
+            const filter = {
+                phoneNumber: req.user?.phoneNumber
+            };
+            if (postCode)
+                filter.postCode = postCode;
+            const addresses = await Address.find(filter, undefined, { limit: 5, skip: (Number(page) - 1) * 5 });
             res.status(200).json({
                 message: "ok",
                 data: addresses

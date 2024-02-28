@@ -1,4 +1,5 @@
 import { model, Schema } from 'mongoose';
+import { userStatusEnum } from '../enum/userStatus.enum.js';
 import validator from 'validator';
 const userSchema = new Schema({
     fullName: {
@@ -40,6 +41,11 @@ const userSchema = new Schema({
         maxlength: 11,
         minlength: 11,
         validate: [validator.isMobilePhone, 'not valid phone number']
+    },
+    status: {
+        type: String,
+        enum: userStatusEnum,
+        default: userStatusEnum.UNVERIFIED
     }
 }, {
     toJSON: {
