@@ -41,14 +41,22 @@ const registerEmailDto = Joi.object({
 export { registerEmailDto };
 //*registerAddress
 const registerAddressDto = Joi.object({
-    longitude: Joi.string().pattern(new RegExp(longitudeRegex)).message("invalid longitude").required(),
-    latitude: Joi.string().pattern(new RegExp(latitudeRegex)).message("invalid latitude").required(),
+    longitude: Joi.string().pattern(new RegExp(longitudeRegex)).message("invalid longitude"),
+    latitude: Joi.string().pattern(new RegExp(latitudeRegex)).message("invalid latitude"),
     state: Joi.string().valid(...Object.values(statesEnum)).required(),
     city: Joi.string().required(),
     address: Joi.string().required(),
     number: Joi.number().min(0),
     postCode: Joi.string().pattern(new RegExp(postcodeRegex)).message("invalid post code").required()
-});
+}).custom((value, helpers) => {
+    const { longitude, latitude } = value;
+    if ((longitude && latitude) || (!longitude && !latitude)) {
+        return value;
+    }
+    else {
+        return helpers.error('enter both longitude and latitude or neither of them');
+    }
+}, 'properties consistency');
 export { registerAddressDto };
 //*getUserAddresses
 const getUserAddressesDto = Joi.object({

@@ -9,8 +9,8 @@ const phoneRegex = /^09[0-9]{9}$/;
 
 export interface IAddress {
     phoneNumber: String,
-    longitude: string,
-    latitude: string,
+    longitude?: string,
+    latitude?: string,
     state: statesEnum,
     city: string,
     address: string,
@@ -30,12 +30,10 @@ const addressSchema = new Schema<IAddress, AddressModel, IAddressMethods>({
     },
     longitude: {
         type: String,
-        required: true,
         match: [longitudeRegex, "invalid longitude"]
     },
     latitude: {
         type: String,
-        required: true,
         match: [latitudeRegex, "invalid latitude"]
     },
     state: {
@@ -73,7 +71,7 @@ const addressSchema = new Schema<IAddress, AddressModel, IAddressMethods>({
     },
 });
 
-addressSchema.index({ postCode: 1 }, { unique: true });
+addressSchema.index({ postCode: 1, phoneNumber: 1 }, { unique: true });
 
 const Address = model<IAddress, AddressModel>('Address', addressSchema);
 

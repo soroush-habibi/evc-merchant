@@ -181,16 +181,17 @@ export default class authController {
         const { address, city, longitude, latitude, postCode, state, number } = req.body as registerAddressDtoType;
 
         try {
-            const addressDoc = new Address({
-                phoneNumber: req.user?.phoneNumber,
-                longitude,
-                latitude,
-                city,
-                state,
-                postCode,
-                number,
-                address
-            });
+            if (!req.user) return next(CustomErrorClass.internalError());
+            let addressDoc = await Address.findOne({ postCode: postCode, phoneNumber: req.user.phoneNumber });
+            if (!addressDoc) addressDoc = new Address();
+            addressDoc.phoneNumber = req.user.phoneNumber;
+            addressDoc.city = city;
+            addressDoc.state = state;
+            addressDoc.postCode = postCode;
+            addressDoc.number = number;
+            addressDoc.address = address;
+            if (longitude) addressDoc.longitude = longitude;
+            if (latitude) addressDoc.latitude = latitude;
 
             await addressDoc.save();
 

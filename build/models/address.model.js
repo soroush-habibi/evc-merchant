@@ -12,12 +12,10 @@ const addressSchema = new Schema({
     },
     longitude: {
         type: String,
-        required: true,
         match: [longitudeRegex, "invalid longitude"]
     },
     latitude: {
         type: String,
-        required: true,
         match: [latitudeRegex, "invalid latitude"]
     },
     state: {
@@ -54,6 +52,6 @@ const addressSchema = new Schema({
         }
     },
 });
-addressSchema.index({ postCode: 1 }, { unique: true });
+addressSchema.index({ postCode: 1, phoneNumber: 1 }, { unique: true });
 const Address = model('Address', addressSchema);
 export { Address };
