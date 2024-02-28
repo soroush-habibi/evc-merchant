@@ -14,6 +14,7 @@ authRouter.delete("/profile/address", userJwt, genericValidator(deleteAddressDto
 authRouter.get("/profile/address", userJwt, genericValidator(getUserAddressesDto, FieldType.QUERY), authController.getUserAddresses);
 authRouter.post("/profile/notifphone/otp", userJwt, genericValidator(preRegisterNotifPhoneDto), authController.preRegisterNotifPhone);
 authRouter.put("/profile/notifphone", userJwt, genericValidator(registerNotifPhoneDto), authController.registerNotifPhone);
+authRouter.get("/profile/wallet", userJwt, authController.getWallet);
 authRouter.get("/profile", userJwt, authController.getUserInfo);
 authRouter.put("/profile", userJwt, genericValidator(editProfileDto), authController.editProfile);
 authRouter.post("/store", userJwt, genericValidator(registerStoreDto), authController.registerStore);

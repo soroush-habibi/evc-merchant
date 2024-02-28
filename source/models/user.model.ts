@@ -14,6 +14,7 @@ import validator from 'validator';
 
 export interface IUser {
     phoneNumber: string,
+    createdAt: Date,
     fullName?: string,
     bankNumber?: string,
     nationalCode?: string,
@@ -32,6 +33,10 @@ type UserModel = Model<IUser, {}, IUserMethods>;
 const userSchema = new Schema<IUser, UserModel, IUserMethods>({
     fullName: {
         type: String,
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now()
     },
     bankNumber: {                                       //todo:add validation
         type: String,

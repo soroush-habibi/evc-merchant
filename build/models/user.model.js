@@ -5,6 +5,10 @@ const userSchema = new Schema({
     fullName: {
         type: String,
     },
+    createdAt: {
+        type: Date,
+        default: Date.now()
+    },
     bankNumber: {
         type: String,
         minlength: 16,

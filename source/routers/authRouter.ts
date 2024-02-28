@@ -26,6 +26,8 @@ authRouter.post("/profile/notifphone/otp", userJwt, genericValidator(preRegister
 
 authRouter.put("/profile/notifphone", userJwt, genericValidator(registerNotifPhoneDto), authController.registerNotifPhone);
 
+authRouter.get("/profile/wallet", userJwt, authController.getWallet);
+
 authRouter.get("/profile", userJwt, authController.getUserInfo);
 
 authRouter.put("/profile", userJwt, genericValidator(editProfileDto), authController.editProfile);

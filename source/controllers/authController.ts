@@ -9,6 +9,7 @@ import { Store } from "../models/store.model.js";
 import crypto from "crypto";
 import fsExtra from 'fs-extra';
 import path from 'path';
+import { Wallet } from "../models/wallet.model.js";
 
 const ENV = process.env.PRODUCTION
 
@@ -403,6 +404,25 @@ export default class authController {
 
             res.status(201).json({
                 message: "saved!"
+            });
+        } catch (e) {
+            return next(e);
+        }
+    }
+
+    static async getWallet(req: Request, res: Response, next: NextFunction) {
+        try {
+            let wallet = await Wallet.findOne({ userId: req.user?.id });
+
+            if (!wallet) {
+                wallet = await Wallet.create({
+                    userId: req.user?.id
+                });
+            }
+
+            res.status(200).json({
+                message: "wallet info",
+                data: wallet
             });
         } catch (e) {
             return next(e);
