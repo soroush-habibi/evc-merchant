@@ -178,7 +178,7 @@ export default class authController {
     }
 
     static async registerAddress(req: Request, res: Response, next: NextFunction) {
-        const { address, city, longitude, latitude, postCode, state, number } = req.body as registerAddressDtoType;
+        const { address, city, longitude, latitude, postCode, state, number, publicMode } = req.body as registerAddressDtoType;
 
         try {
             if (!req.user) return next(CustomErrorClass.internalError());
@@ -192,6 +192,7 @@ export default class authController {
             addressDoc.address = address;
             if (longitude) addressDoc.longitude = longitude;
             if (latitude) addressDoc.latitude = latitude;
+            if (publicMode !== undefined) addressDoc.public = publicMode;
 
             await addressDoc.save();
 

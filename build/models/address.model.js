@@ -38,6 +38,10 @@ const addressSchema = new Schema({
         type: String,
         match: [postcodeRegex, "invalid post code"],
         required: true
+    },
+    public: {
+        type: Boolean,
+        default: true
     }
 }, {
     toJSON: {

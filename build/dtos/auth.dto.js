@@ -47,7 +47,8 @@ const registerAddressDto = Joi.object({
     city: Joi.string().required(),
     address: Joi.string().required(),
     number: Joi.number().min(0),
-    postCode: Joi.string().pattern(new RegExp(postcodeRegex)).message("invalid post code").required()
+    postCode: Joi.string().pattern(new RegExp(postcodeRegex)).message("invalid post code").required(),
+    publicMode: Joi.boolean()
 }).custom((value, helpers) => {
     const { longitude, latitude } = value;
     if ((longitude && latitude) || (!longitude && !latitude)) {

@@ -159,7 +159,7 @@ export default class authController {
         }
     }
     static async registerAddress(req, res, next) {
-        const { address, city, longitude, latitude, postCode, state, number } = req.body;
+        const { address, city, longitude, latitude, postCode, state, number, publicMode } = req.body;
         try {
             if (!req.user)
                 return next(CustomErrorClass.internalError());
@@ -176,6 +176,8 @@ export default class authController {
                 addressDoc.longitude = longitude;
             if (latitude)
                 addressDoc.latitude = latitude;
+            if (publicMode !== undefined)
+                addressDoc.public = publicMode;
             await addressDoc.save();
             res.status(201).json({
                 message: "address saved!"

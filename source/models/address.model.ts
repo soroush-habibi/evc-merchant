@@ -15,7 +15,8 @@ export interface IAddress {
     city: string,
     address: string,
     number?: number,
-    postCode: string
+    postCode: string,
+    public: boolean
 }
 
 export interface IAddressMethods { }
@@ -56,6 +57,10 @@ const addressSchema = new Schema<IAddress, AddressModel, IAddressMethods>({
         type: String,
         match: [postcodeRegex, "invalid post code"],
         required: true
+    },
+    public: {
+        type: Boolean,
+        default: true
     }
 }, {
     toJSON: {
