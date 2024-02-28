@@ -30,7 +30,8 @@ export enum errorEnum {
     INVENTORY_NOT_FOUND = 120,
     INSUFFICIENT_INVENTORY = 121,
     PAYMENT_NOT_FOUND = 122,
-    ORDER_NOT_FOUND = 123
+    ORDER_NOT_FOUND = 123,
+    ADDRESS_NOT_FOUND = 124
 }
 
 export class CustomErrorClass {
@@ -232,6 +233,14 @@ export class CustomErrorClass {
         return {
             name: "ORDER_NOT_FOUND",
             code: errorEnum.ORDER_NOT_FOUND,
+            httpCode: 404
+        };
+    }
+
+    static addressNotFound(): errorType {
+        return {
+            name: "ADDRESS_NOT_FOUND",
+            code: errorEnum.ADDRESS_NOT_FOUND,
             httpCode: 404
         };
     }

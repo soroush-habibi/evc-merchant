@@ -162,7 +162,7 @@ export default class authController {
         const { address, city, longitude, latitude, postCode, state, number, publicMode } = req.body;
         try {
             if (!req.user)
-                return next(CustomErrorClass.internalError());
+                return next(CustomErrorClass.userNotFound());
             let addressDoc = await Address.findOne({ postCode: postCode, phoneNumber: req.user.phoneNumber });
             if (!addressDoc)
                 addressDoc = new Address();
@@ -185,6 +185,25 @@ export default class authController {
         }
         catch (e) {
             next(e);
+        }
+    }
+    static async deleteAddress(req, res, next) {
+        const query = req.query;
+        try {
+            if (!req.user)
+                return next(CustomErrorClass.userNotFound());
+            let addressDoc = await Address.findOne({ postCode: query.postCode, phoneNumber: req.user.phoneNumber });
+            if (!addressDoc)
+                return next(CustomErrorClass.addressNotFound());
+            const result = await addressDoc.deleteOne();
+            if (!result.acknowledged)
+                return next(CustomErrorClass.internalError());
+            res.status(200).json({
+                message: "address removed!"
+            });
+        }
+        catch (e) {
+            return next(e);
         }
     }
     static async getUserAddresses(req, res, next) {

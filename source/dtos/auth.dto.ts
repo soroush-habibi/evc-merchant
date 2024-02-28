@@ -113,6 +113,17 @@ type registerAddressDtoType = {
 
 export { registerAddressDto, registerAddressDtoType }
 
+//*deleteAddress
+const deleteAddressDto = Joi.object({
+    postCode: Joi.string().pattern(new RegExp(postcodeRegex)).message("invalid post code").required()
+});
+
+type deleteAddressDtoType = {
+    postCode: string
+}
+
+export { deleteAddressDto, deleteAddressDtoType }
+
 //*getUserAddresses
 const getUserAddressesDto = Joi.object({
     page: Joi.number().min(1)

@@ -59,6 +59,11 @@ const registerAddressDto = Joi.object({
     }
 }, 'properties consistency');
 export { registerAddressDto };
+//*deleteAddress
+const deleteAddressDto = Joi.object({
+    postCode: Joi.string().pattern(new RegExp(postcodeRegex)).message("invalid post code").required()
+});
+export { deleteAddressDto };
 //*getUserAddresses
 const getUserAddressesDto = Joi.object({
     page: Joi.number().min(1)

@@ -3,7 +3,7 @@ import { User } from "../models/user.model.js";
 import { Address } from "../models/address.model.js";
 import { createTokens, generateRandomNumber } from "../utils/generators.js";
 import { CustomErrorClass } from "../utils/customError.js";
-import { registerDtoType, preRegisterDtoType, loginDtoType, preRegisterEmailDtoType, registerEmailDtoType, registerAddressDtoType, getUserAddressesDtoType, registerStoreDtoType, preRegisterNotifPhoneDtoType, registerNotifPhoneDtoType, registerStoreLogoDtoType } from "../dtos/auth.dto.js";
+import { registerDtoType, preRegisterDtoType, loginDtoType, preRegisterEmailDtoType, registerEmailDtoType, registerAddressDtoType, getUserAddressesDtoType, registerStoreDtoType, preRegisterNotifPhoneDtoType, registerNotifPhoneDtoType, registerStoreLogoDtoType, deleteAddressDtoType } from "../dtos/auth.dto.js";
 import bcrypt from 'bcrypt';
 import { Store } from "../models/store.model.js";
 import crypto from "crypto";
@@ -181,7 +181,7 @@ export default class authController {
         const { address, city, longitude, latitude, postCode, state, number, publicMode } = req.body as registerAddressDtoType;
 
         try {
-            if (!req.user) return next(CustomErrorClass.internalError());
+            if (!req.user) return next(CustomErrorClass.userNotFound());
             let addressDoc = await Address.findOne({ postCode: postCode, phoneNumber: req.user.phoneNumber });
             if (!addressDoc) addressDoc = new Address();
             addressDoc.phoneNumber = req.user.phoneNumber;
@@ -201,6 +201,25 @@ export default class authController {
             })
         } catch (e) {
             next(e)
+        }
+    }
+
+    static async deleteAddress(req: Request, res: Response, next: NextFunction) {
+        const query = req.query as deleteAddressDtoType;
+
+        try {
+            if (!req.user) return next(CustomErrorClass.userNotFound());
+            let addressDoc = await Address.findOne({ postCode: query.postCode, phoneNumber: req.user.phoneNumber });
+            if (!addressDoc) return next(CustomErrorClass.addressNotFound());
+
+            const result = await addressDoc.deleteOne();
+            if (!result.acknowledged) return next(CustomErrorClass.internalError());
+
+            res.status(200).json({
+                message: "address removed!"
+            });
+        } catch (e) {
+            return next(e);
         }
     }
 
