@@ -31,7 +31,7 @@ export default class authController {
         }
     }
     static async register(req, res, next) {
-        const { phoneNumber, otp, fullName, password, bankNumber, nationalCode } = req.body;
+        const { phoneNumber, otp, password } = req.body;
         let accessToken, refreshToken;
         try {
             let user = await User.findOne({ phoneNumber });
@@ -46,20 +46,38 @@ export default class authController {
                 await req.redis.del(`OTP_${phoneNumber}`);
                 return next(CustomErrorClass.wrongOtp());
             }
-            user.fullName = fullName;
             user.password = bcrypt.hashSync(password, 10);
             [accessToken, refreshToken] = createTokens({
                 phoneNumber: phoneNumber,
                 id: user.id
             });
             user.refreshToken = refreshToken;
-            user.bankNumber = bankNumber; //todo:bank number should be assigned with national code - bank api needed
-            user.nationalCode = nationalCode;
             await user.save();
             await req.redis.del(`OTP_${phoneNumber}`);
             res.status(201).json({
                 message: "saved!",
                 data: { accessToken, refreshToken }
+            });
+        }
+        catch (e) {
+            return next(e);
+        }
+    }
+    static async editProfile(req, res, next) {
+        const body = req.body;
+        try {
+            const user = await User.findOne({ phoneNumber: req.user?.phoneNumber });
+            if (!user)
+                return next(CustomErrorClass.userNotFound());
+            if (body.fullName)
+                user.fullName = body.fullName;
+            if (body.bankNumber)
+                user.bankNumber = body.bankNumber;
+            if (body.nationalCode)
+                user.nationalCode = body.nationalCode;
+            await user.save();
+            res.status(201).json({
+                message: "user saved!",
             });
         }
         catch (e) {

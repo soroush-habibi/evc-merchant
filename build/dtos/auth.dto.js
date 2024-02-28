@@ -15,12 +15,16 @@ export { preRegisterDto };
 const registerDto = Joi.object({
     phoneNumber: Joi.string().pattern(new RegExp(phoneRegex)).message('invalid phone number').required(),
     otp: Joi.string().required().min(6).max(6),
-    fullName: Joi.string().required().min(2),
-    bankNumber: Joi.string().required().min(16).max(16),
-    nationalCode: Joi.string().required().pattern(new RegExp(nationalCodeRegex)).message("invalid national code"),
     password: Joi.string().required().min(4),
 });
 export { registerDto };
+//*editProfile
+const editProfileDto = Joi.object({
+    fullName: Joi.string().min(2),
+    bankNumber: Joi.string().min(16).max(16),
+    nationalCode: Joi.string().pattern(new RegExp(nationalCodeRegex)).message("invalid national code"),
+});
+export { editProfileDto };
 //*login
 const loginDto = Joi.object({
     phoneNumber: Joi.string().pattern(new RegExp(phoneRegex)).message('invalid phone number').required(),

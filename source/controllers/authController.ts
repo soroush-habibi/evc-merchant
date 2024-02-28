@@ -3,7 +3,7 @@ import { User } from "../models/user.model.js";
 import { Address } from "../models/address.model.js";
 import { createTokens, generateRandomNumber } from "../utils/generators.js";
 import { CustomErrorClass } from "../utils/customError.js";
-import { registerDtoType, preRegisterDtoType, loginDtoType, preRegisterEmailDtoType, registerEmailDtoType, registerAddressDtoType, getUserAddressesDtoType, registerStoreDtoType, preRegisterNotifPhoneDtoType, registerNotifPhoneDtoType, registerStoreLogoDtoType, deleteAddressDtoType } from "../dtos/auth.dto.js";
+import { registerDtoType, preRegisterDtoType, loginDtoType, preRegisterEmailDtoType, registerEmailDtoType, registerAddressDtoType, getUserAddressesDtoType, registerStoreDtoType, preRegisterNotifPhoneDtoType, registerNotifPhoneDtoType, registerStoreLogoDtoType, deleteAddressDtoType, editProfileDtoType } from "../dtos/auth.dto.js";
 import bcrypt from 'bcrypt';
 import { Store } from "../models/store.model.js";
 import crypto from "crypto";
@@ -38,7 +38,7 @@ export default class authController {
     }
 
     static async register(req: Request, res: Response, next: NextFunction) {
-        const { phoneNumber, otp, fullName, password, bankNumber, nationalCode } = req.body as registerDtoType;
+        const { phoneNumber, otp, password } = req.body as registerDtoType;
         let accessToken, refreshToken;
 
         try {
@@ -55,21 +55,39 @@ export default class authController {
                 return next(CustomErrorClass.wrongOtp());
             }
 
-            user.fullName = fullName;
             user.password = bcrypt.hashSync(password, 10);
             [accessToken, refreshToken] = createTokens({
                 phoneNumber: phoneNumber,
                 id: user.id
             });
             user.refreshToken = refreshToken;
-            user.bankNumber = bankNumber;                                   //todo:bank number should be assigned with national code - bank api needed
-            user.nationalCode = nationalCode;
             await user.save();
             await req.redis.del(`OTP_${phoneNumber as string}`);
 
             res.status(201).json({
                 message: "saved!",
                 data: { accessToken, refreshToken }
+            });
+        } catch (e) {
+            return next(e);
+        }
+    }
+
+    static async editProfile(req: Request, res: Response, next: NextFunction) {
+        const body = req.body as editProfileDtoType;
+
+        try {
+            const user = await User.findOne({ phoneNumber: req.user?.phoneNumber });
+            if (!user) return next(CustomErrorClass.userNotFound());
+
+            if (body.fullName) user.fullName = body.fullName;
+            if (body.bankNumber) user.bankNumber = body.bankNumber;
+            if (body.nationalCode) user.nationalCode = body.nationalCode;
+
+            await user.save();
+
+            res.status(201).json({
+                message: "user saved!",
             });
         } catch (e) {
             return next(e);

@@ -25,22 +25,31 @@ export { preRegisterDto, preRegisterDtoType }
 const registerDto = Joi.object({
     phoneNumber: Joi.string().pattern(new RegExp(phoneRegex)).message('invalid phone number').required(),
     otp: Joi.string().required().min(6).max(6),
-    fullName: Joi.string().required().min(2),
-    bankNumber: Joi.string().required().min(16).max(16),                        //todo:add validation
-    nationalCode: Joi.string().required().pattern(new RegExp(nationalCodeRegex)).message("invalid national code"),
     password: Joi.string().required().min(4),
 });
 
 type registerDtoType = {
     phoneNumber: string,
     otp: string,
-    fullName: string,
-    bankNumber: string,
-    nationalCode: string,
     password: string,
 }
 
 export { registerDto, registerDtoType }
+
+//*editProfile
+const editProfileDto = Joi.object({
+    fullName: Joi.string().min(2),
+    bankNumber: Joi.string().min(16).max(16),                        //todo:add validation
+    nationalCode: Joi.string().pattern(new RegExp(nationalCodeRegex)).message("invalid national code"),
+});
+
+type editProfileDtoType = {
+    fullName?: string,
+    bankNumber?: string,
+    nationalCode?: string,
+}
+
+export { editProfileDto, editProfileDtoType }
 
 //*login
 const loginDto = Joi.object({

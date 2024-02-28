@@ -1,7 +1,7 @@
 import express from "express";
 import authController from "../controllers/authController.js";
 import { genericValidator, FieldType } from "../utils/requestChecker.js";
-import { getUserAddressesDto, loginDto, preRegisterDto, preRegisterEmailDto, registerAddressDto, registerDto, registerEmailDto, preRegisterNotifPhoneDto, registerStoreDto, registerNotifPhoneDto, registerStoreLogoDto, deleteAddressDto } from "../dtos/auth.dto.js";
+import { getUserAddressesDto, loginDto, preRegisterDto, preRegisterEmailDto, registerAddressDto, registerDto, registerEmailDto, preRegisterNotifPhoneDto, registerStoreDto, registerNotifPhoneDto, registerStoreLogoDto, deleteAddressDto, editProfileDto } from "../dtos/auth.dto.js";
 import userJwt from "../middlewares/userJwt.js";
 
 const authRouter = express.Router();
@@ -27,6 +27,8 @@ authRouter.post("/profile/notifphone/otp", userJwt, genericValidator(preRegister
 authRouter.put("/profile/notifphone", userJwt, genericValidator(registerNotifPhoneDto), authController.registerNotifPhone);
 
 authRouter.get("/profile", userJwt, authController.getUserInfo);
+
+authRouter.put("/profile", userJwt, genericValidator(editProfileDto), authController.editProfile);
 
 authRouter.post("/store", userJwt, genericValidator(registerStoreDto), authController.registerStore);
 
