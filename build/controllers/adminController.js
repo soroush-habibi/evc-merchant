@@ -3,6 +3,8 @@ import { Product } from "../models/product.model.js";
 import { User } from "../models/user.model.js";
 import { Document } from "../models/document.model.js";
 import { documentStatusEnum } from "../enum/documentStatus.enum.js";
+import { Category } from "../models/category.model.js";
+import mongoose from "mongoose";
 const ENV = process.env.PRODUCTION;
 export default class adminController {
     static async getAdminProducts(req, res, next) {
@@ -29,16 +31,43 @@ export default class adminController {
     }
     static async updateProductStatus(req, res, next) {
         const query = req.query;
+        let session;
+        try {
+            session = await mongoose.startSession();
+            session.startTransaction();
+        }
+        catch (e) {
+            return next(e);
+        }
         try {
             const product = await Product.findById(query.productId);
             if (!product)
                 return next(CustomErrorClass.productNotFound());
-            await product.updateOne({ status: query.newStatus });
+            product.status = query.newStatus;
+            await product.save({ session });
+            let category = await Category.findOne({
+                category: product.category,
+                sub: product.sub
+            });
+            if (!category) {
+                if (!query.wage)
+                    throw CustomErrorClass.wageRequired();
+                category = new Category({
+                    category: product.category,
+                    sub: query.newSub ? query.newSub : product.sub,
+                    wage: query.wage
+                });
+                await category.save({ session });
+                product.sub = category.sub;
+                await product.save({ session });
+            }
+            await session.commitTransaction();
             res.status(201).json({
                 message: "status updated"
             });
         }
         catch (e) {
+            await session.abortTransaction();
             return next(e);
         }
     }

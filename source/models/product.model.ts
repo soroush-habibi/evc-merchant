@@ -6,6 +6,7 @@ import { productCategoryEnum } from '../enum/productCategory.enum.js';
 export interface IProduct {
     creator: mongoose.Schema.Types.ObjectId,
     category: productCategoryEnum,
+    sub: string,
     original: boolean,
     size: string,                   //*length-width-height
     weight: number,                 //*gram
@@ -31,6 +32,10 @@ const productSchema = new Schema<IProduct, ProductModel, IProductMethods>({
     category: {
         type: String,
         enum: productCategoryEnum,
+        required: true
+    },
+    sub: {
+        type: String,
         required: true
     },
     original: {

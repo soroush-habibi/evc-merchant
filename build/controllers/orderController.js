@@ -157,7 +157,7 @@ export default class orderController {
                     }
                 ], { session });
                 if (ordersAggregate.length === 0)
-                    return next(CustomErrorClass.orderNotFound());
+                    throw CustomErrorClass.orderNotFound();
                 let amount = 0;
                 for (let o of ordersAggregate) {
                     amount += o.totalPrice;
@@ -233,7 +233,7 @@ export default class orderController {
             await payment.save({ session });
             const order = await Order.findOne({ _id: payment.exId });
             if (!order)
-                return next(CustomErrorClass.badRequest());
+                throw CustomErrorClass.badRequest();
             order.status = orderStatusEnum.PROCESSING;
             await order.save({ session });
             let wallet = await Wallet.findOne({

@@ -12,6 +12,10 @@ const productSchema = new Schema({
         enum: productCategoryEnum,
         required: true
     },
+    sub: {
+        type: String,
+        required: true
+    },
     original: {
         type: Boolean,
         required: true

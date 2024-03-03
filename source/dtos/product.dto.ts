@@ -7,6 +7,7 @@ const sizeRegex = /^\d+-\d+-\d+$/;
 //*addProduct
 const addProductDto = Joi.object({
     category: Joi.string().valid(...Object.values(productCategoryEnum)).required(),
+    sub: Joi.string().required(),
     original: Joi.boolean().required(),
     size: Joi.string().pattern(sizeRegex).message("invalid size format. it should be d-d-d").required(),
     weight: Joi.number().required(),
@@ -22,6 +23,7 @@ const addProductDto = Joi.object({
 
 type addProductDtoType = {
     category: productCategoryEnum,
+    sub: string,
     original: boolean,
     size: string,
     weight: number,
@@ -78,13 +80,22 @@ const getMerchantProductsDto = Joi.object({
     page: Joi.number().integer().min(1),
     title: Joi.string(),
     category: Joi.string().valid(...Object.values(productCategoryEnum)),
+    sub: Joi.string(),
     mode: Joi.number().valid(1, 2)                                  //* 1=merchant products 2=all verified products
-});
+}).custom((value, helpers) => {
+    const { category, sub } = value;
+    if ((category && !sub) || (category && sub) || (!category && !sub)) {
+        return value;
+    } else {
+        return helpers.error('you can not pass the sub without category');
+    }
+}, 'properties consistency');
 
 type getMerchantProductsDtoType = {
     page?: number,
     title?: string,
     category?: productCategoryEnum,
+    sub?: string,
     mode?: number
 }
 

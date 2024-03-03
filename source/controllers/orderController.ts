@@ -168,10 +168,10 @@ export default class orderController {
                         }
                     }
                 ], { session });
-                if (ordersAggregate.length === 0) return next(CustomErrorClass.orderNotFound());
+                if (ordersAggregate.length === 0) throw CustomErrorClass.orderNotFound();
                 let amount = 0;
                 for (let o of ordersAggregate) {
-                    amount += o.totalPrice
+                    amount += o.totalPrice;
                     await Inventory.updateOne({
                         _id: o.items.inventoryId
                     }, {
@@ -252,7 +252,7 @@ export default class orderController {
             payment.done = true;
             await payment.save({ session });
             const order = await Order.findOne({ _id: payment.exId });
-            if (!order) return next(CustomErrorClass.badRequest());
+            if (!order) throw CustomErrorClass.badRequest();
             order.status = orderStatusEnum.PROCESSING;
             await order.save({ session });
             let wallet = await Wallet.findOne({

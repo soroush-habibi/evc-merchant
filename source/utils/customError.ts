@@ -32,7 +32,9 @@ export enum errorEnum {
     PAYMENT_NOT_FOUND = 122,
     ORDER_NOT_FOUND = 123,
     ADDRESS_NOT_FOUND = 124,
-    USER_NOT_VERIFIED = 125
+    USER_NOT_VERIFIED = 125,
+    WAGE_REQUIRED = 126,
+    CATEGORY_NOT_FOUND = 127
 }
 
 export class CustomErrorClass {
@@ -251,6 +253,22 @@ export class CustomErrorClass {
             name: "USER_NOT_VERIFIED",
             code: errorEnum.USER_NOT_VERIFIED,
             httpCode: 403
+        };
+    }
+
+    static wageRequired(): errorType {
+        return {
+            name: "WAGE_REQUIRED",
+            code: errorEnum.WAGE_REQUIRED,
+            httpCode: 400
+        };
+    }
+
+    static categoryNotFound(): errorType {
+        return {
+            name: "CATEGORY_NOT_FOUND",
+            code: errorEnum.CATEGORY_NOT_FOUND,
+            httpCode: 404
         };
     }
 }

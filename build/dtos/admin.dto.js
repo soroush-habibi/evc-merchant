@@ -21,7 +21,9 @@ const updateProductStatusDto = Joi.object({
         }
         return value;
     }, "validate objectId").required(),
-    newStatus: Joi.string().valid(...Object.values(productStatusEnum)).required()
+    newStatus: Joi.string().valid(...Object.values(productStatusEnum)).required(),
+    newSub: Joi.string(),
+    wage: Joi.number().min(0).max(100)
 });
 export { updateProductStatusDto };
 //*getUsers

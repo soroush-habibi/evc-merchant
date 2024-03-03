@@ -6,16 +6,25 @@ import { CustomErrorClass } from "../utils/customError.js";
 import { productStatusEnum } from "../enum/productStatus.enum.js";
 import { Inventory } from "../models/inventory.model.js";
 import { inventoryStatusEnum } from "../enum/inventoryStatus.enum.js";
-import { Payment } from "../models/payment.model.js";
-import { paymentTypeEnum } from "../enum/payment.enum.js";
+import { Category } from "../models/category.model.js";
 
 export default class storeController {
     static async searchProduct(req: Request, res: Response, next: NextFunction) {
         const query = req.query as searchProductDtoType;
 
         try {
-            const filter: any = {
-                category: query.category
+            const filter: any = {}
+
+            if (query.category) filter.category = query.category;
+            if (query.sub) filter.sub = query.sub;
+
+            if (query.category && query.sub) {
+                const category = await Category.findOne({
+                    category: query.category,
+                    sub: query.sub
+                });
+
+                if (!category) return next(CustomErrorClass.categoryNotFound());
             }
 
             let sort: any;

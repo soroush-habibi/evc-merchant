@@ -11,36 +11,3 @@ export var productCategoryEnum;
     productCategoryEnum["TOOL"] = "\u0627\u0628\u0632\u0627\u0631\u0622\u0644\u0627\u062A";
     productCategoryEnum["BABY"] = "\u0627\u0633\u0628\u0627\u0628 \u0628\u0627\u0632\u06CC \u06A9\u0648\u062F\u06A9 \u0648 \u0646\u0648\u0632\u0627\u062F";
 })(productCategoryEnum || (productCategoryEnum = {}));
-export var MOBILE;
-(function (MOBILE) {
-    MOBILE["MOBILE"] = "\u0645\u0648\u0628\u0627\u06CC\u0644";
-    MOBILE["TABLET"] = "\u062A\u0628\u0644\u062A";
-    MOBILE["EXT"] = "\u0644\u0648\u0627\u0632\u0645 \u062C\u0627\u0646\u0628\u06CC";
-})(MOBILE || (MOBILE = {}));
-export var HOME;
-(function (HOME) {
-})(HOME || (HOME = {}));
-export var DIGITAL;
-(function (DIGITAL) {
-})(DIGITAL || (DIGITAL = {}));
-export var FASION;
-(function (FASION) {
-})(FASION || (FASION = {}));
-export var HEALTH;
-(function (HEALTH) {
-})(HEALTH || (HEALTH = {}));
-export var MARKET;
-(function (MARKET) {
-})(MARKET || (MARKET = {}));
-export var BOOK;
-(function (BOOK) {
-})(BOOK || (BOOK = {}));
-export var SPORT;
-(function (SPORT) {
-})(SPORT || (SPORT = {}));
-export var TOOL;
-(function (TOOL) {
-})(TOOL || (TOOL = {}));
-export var BABY;
-(function (BABY) {
-})(BABY || (BABY = {}));

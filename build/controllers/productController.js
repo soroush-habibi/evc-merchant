@@ -7,6 +7,7 @@ import { productStatusEnum } from "../enum/productStatus.enum.js";
 import { User } from "../models/user.model.js";
 import { userStatusEnum } from "../enum/userStatus.enum.js";
 import { Store } from "../models/store.model.js";
+import { Category } from "../models/category.model.js";
 const ENV = process.env.PRODUCTION;
 export default class productController {
     static async addProduct(req, res, next) {
@@ -34,6 +35,7 @@ export default class productController {
             const product = new Product({
                 creator: req.user?.id,
                 category: form.category,
+                sub: form.sub,
                 original: form.original,
                 size: form.size,
                 title: form.title,
@@ -103,10 +105,20 @@ export default class productController {
             const filter = {
                 title: {
                     $regex: query.title ? new RegExp(query.title, "i") : ""
-                }, category: {
-                    $regex: query.category ? new RegExp(query.category, "i") : ""
                 }
             };
+            if (query.category)
+                filter.category = query.category;
+            if (query.sub)
+                filter.sub = query.sub;
+            if (query.category && query.sub) {
+                const category = await Category.findOne({
+                    category: query.category,
+                    sub: query.sub
+                });
+                if (!category)
+                    return next(CustomErrorClass.categoryNotFound());
+            }
             if (query.mode == 1) {
                 filter.creator = req.user?.id;
             }

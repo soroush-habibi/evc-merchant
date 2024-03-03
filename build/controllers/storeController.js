@@ -4,13 +4,24 @@ import { CustomErrorClass } from "../utils/customError.js";
 import { productStatusEnum } from "../enum/productStatus.enum.js";
 import { Inventory } from "../models/inventory.model.js";
 import { inventoryStatusEnum } from "../enum/inventoryStatus.enum.js";
+import { Category } from "../models/category.model.js";
 export default class storeController {
     static async searchProduct(req, res, next) {
         const query = req.query;
         try {
-            const filter = {
-                category: query.category
-            };
+            const filter = {};
+            if (query.category)
+                filter.category = query.category;
+            if (query.sub)
+                filter.sub = query.sub;
+            if (query.category && query.sub) {
+                const category = await Category.findOne({
+                    category: query.category,
+                    sub: query.sub
+                });
+                if (!category)
+                    return next(CustomErrorClass.categoryNotFound());
+            }
             let sort;
             if (query.text)
                 filter.$text = { $search: query.text };
