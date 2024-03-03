@@ -50,12 +50,12 @@ export default class adminController {
                 sub: product.sub
             });
             if (!category) {
-                if (!query.wage)
-                    throw CustomErrorClass.wageRequired();
+                if (!query.fee)
+                    throw CustomErrorClass.feeRequired();
                 category = new Category({
                     category: product.category,
                     sub: query.newSub ? query.newSub : product.sub,
-                    wage: query.wage
+                    fee: query.fee
                 });
                 await category.save({ session });
                 product.sub = category.sub;

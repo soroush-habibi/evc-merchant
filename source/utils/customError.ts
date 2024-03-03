@@ -33,7 +33,7 @@ export enum errorEnum {
     ORDER_NOT_FOUND = 123,
     ADDRESS_NOT_FOUND = 124,
     USER_NOT_VERIFIED = 125,
-    WAGE_REQUIRED = 126,
+    FEE_REQUIRED = 126,
     CATEGORY_NOT_FOUND = 127
 }
 
@@ -256,10 +256,10 @@ export class CustomErrorClass {
         };
     }
 
-    static wageRequired(): errorType {
+    static feeRequired(): errorType {
         return {
-            name: "WAGE_REQUIRED",
-            code: errorEnum.WAGE_REQUIRED,
+            name: "FEE_REQUIRED",
+            code: errorEnum.FEE_REQUIRED,
             httpCode: 400
         };
     }

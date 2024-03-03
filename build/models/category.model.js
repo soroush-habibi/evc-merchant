@@ -10,7 +10,7 @@ const categorySchema = new Schema({
         type: String,
         required: true
     },
-    wage: {
+    fee: {
         type: Number,
         required: true
     }

@@ -27,7 +27,7 @@ export var errorEnum;
     errorEnum[errorEnum["ORDER_NOT_FOUND"] = 123] = "ORDER_NOT_FOUND";
     errorEnum[errorEnum["ADDRESS_NOT_FOUND"] = 124] = "ADDRESS_NOT_FOUND";
     errorEnum[errorEnum["USER_NOT_VERIFIED"] = 125] = "USER_NOT_VERIFIED";
-    errorEnum[errorEnum["WAGE_REQUIRED"] = 126] = "WAGE_REQUIRED";
+    errorEnum[errorEnum["FEE_REQUIRED"] = 126] = "FEE_REQUIRED";
     errorEnum[errorEnum["CATEGORY_NOT_FOUND"] = 127] = "CATEGORY_NOT_FOUND";
 })(errorEnum || (errorEnum = {}));
 export class CustomErrorClass {
@@ -222,10 +222,10 @@ export class CustomErrorClass {
             httpCode: 403
         };
     }
-    static wageRequired() {
+    static feeRequired() {
         return {
-            name: "WAGE_REQUIRED",
-            code: errorEnum.WAGE_REQUIRED,
+            name: "FEE_REQUIRED",
+            code: errorEnum.FEE_REQUIRED,
             httpCode: 400
         };
     }

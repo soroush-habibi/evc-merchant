@@ -5,7 +5,7 @@ import { productCategoryEnum } from '../enum/productCategory.enum.js';
 export interface ICategory {
     category: productCategoryEnum,
     sub: string,
-    wage?: number
+    fee?: number
 }
 
 export interface ICategoryMethods { }
@@ -22,7 +22,7 @@ const categorySchema = new Schema<ICategory, CategoryModel, ICategoryMethods>({
         type: String,
         required: true
     },
-    wage: {
+    fee: {
         type: Number,
         required: true
     }
