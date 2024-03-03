@@ -180,7 +180,7 @@ export default class orderController {
                         status: orderStatusEnum.PAYMENT
                     }
                 }, { session });
-                const payment = await Payment.create({
+                const payment = new Payment({
                     userId: body.userId,
                     type: paymentTypeEnum.ORDER,
                     exId: body.orderId,
@@ -188,11 +188,14 @@ export default class orderController {
                     amount: amount,
                     token: transData.token
                 });
-                await OrderLog.create({
+                await payment.save({ session });
+                const log = new OrderLog({
                     orderId: body.orderId,
                     from: orderStatusEnum.CART,
                     to: orderStatusEnum.PAYMENT
                 });
+                await log.save({ session });
+                await session.commitTransaction();
                 res.status(201).json({
                     message: "payment created!",
                     data: transData
@@ -203,6 +206,7 @@ export default class orderController {
             }
         }
         catch (e) {
+            await session.abortTransaction();
             return next(e);
         }
     }
@@ -224,7 +228,6 @@ export default class orderController {
                 return next(CustomErrorClass.paymentNotFound());
             if (payment.token !== query.token || payment.done || payment.type !== paymentTypeEnum.ORDER)
                 return next(CustomErrorClass.badRequest());
-            //todo:ACID transaction
             payment.done = true;
             await payment.save({ session });
             const order = await Order.findOne({ _id: payment.exId });
@@ -236,17 +239,19 @@ export default class orderController {
                 userId: order.merchantId
             });
             if (!wallet) {
-                wallet = await Wallet.create({
+                wallet = new Wallet({
                     userId: order.merchantId
                 });
             }
             wallet.pending = payment.amount;
-            await wallet.save();
-            await OrderLog.create({
+            await wallet.save({ session });
+            const log = new OrderLog({
                 orderId: payment.exId,
                 from: orderStatusEnum.PAYMENT,
                 to: orderStatusEnum.PROCESSING
             });
+            await log.save({ session });
+            await session.commitTransaction();
             res.status(201).json({
                 message: "payment saved!",
                 data: {
@@ -255,6 +260,7 @@ export default class orderController {
             });
         }
         catch (e) {
+            await session.abortTransaction();
             return next(e);
         }
     }
