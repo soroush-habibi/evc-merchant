@@ -51,6 +51,10 @@ const productSchema = new Schema({
         type: Number,
         default: 0
     },
+    sales: {
+        type: Number,
+        default: 0
+    },
     addData: {
         type: mongoose.Schema.Types.Mixed,
         default: {}

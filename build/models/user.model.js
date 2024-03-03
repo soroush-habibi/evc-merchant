@@ -26,8 +26,7 @@ const userSchema = new Schema({
     },
     type: {
         type: String,
-        enum: merchantTypeEnum,
-        default: merchantTypeEnum.NATURAL
+        enum: merchantTypeEnum
     },
     companyCode: {
         type: Number

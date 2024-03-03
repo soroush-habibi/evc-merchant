@@ -2,3 +2,4 @@ node_modules
 .env
 product-photos
 document-files
+*.log

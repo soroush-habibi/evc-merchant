@@ -6,6 +6,8 @@ import { CustomErrorClass } from "../utils/customError.js";
 import { productStatusEnum } from "../enum/productStatus.enum.js";
 import { Inventory } from "../models/inventory.model.js";
 import { inventoryStatusEnum } from "../enum/inventoryStatus.enum.js";
+import { Payment } from "../models/payment.model.js";
+import { paymentTypeEnum } from "../enum/payment.enum.js";
 
 export default class storeController {
     static async searchProduct(req: Request, res: Response, next: NextFunction) {
@@ -24,7 +26,12 @@ export default class storeController {
                 if (!query.text) return next(CustomErrorClass.badRequest());
                 sort = { score: { $meta: "textScore" } }
             } else if (query.order === productOrderEnum.BEST_SELLER) {
-                sort = { score: { $meta: "textScore" } }                //todo:change needed
+                const bestSellers = await Product.find({}, {}, { sort: { sales: -1 }, limit: 50, skip: query.page ? (query.page - 1) * 50 : 0 });
+
+                return res.status(200).json({
+                    message: "products list",
+                    data: bestSellers
+                });
             } else if (query.order === productOrderEnum.CHEAP) {
                 const cheapestProducts = await Product.aggregate([
                     {

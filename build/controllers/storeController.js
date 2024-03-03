@@ -20,7 +20,11 @@ export default class storeController {
                 sort = { score: { $meta: "textScore" } };
             }
             else if (query.order === productOrderEnum.BEST_SELLER) {
-                sort = { score: { $meta: "textScore" } }; //todo:change needed
+                const bestSellers = await Product.find({}, {}, { sort: { sales: -1 }, limit: 50, skip: query.page ? (query.page - 1) * 50 : 0 });
+                return res.status(200).json({
+                    message: "products list",
+                    data: bestSellers
+                });
             }
             else if (query.order === productOrderEnum.CHEAP) {
                 const cheapestProducts = await Product.aggregate([

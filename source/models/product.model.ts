@@ -14,6 +14,7 @@ export interface IProduct {
     status: productStatusEnum,
     createdAt: Date,
     views: number,
+    sales: number,
     addData: string
 }
 
@@ -68,6 +69,10 @@ const productSchema = new Schema<IProduct, ProductModel, IProductMethods>({
         default: Date.now()
     },
     views: {
+        type: Number,
+        default: 0
+    },
+    sales: {
         type: Number,
         default: 0
     },

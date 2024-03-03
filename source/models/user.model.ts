@@ -61,8 +61,7 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>({
     },
     type: {
         type: String,
-        enum: merchantTypeEnum,
-        default: merchantTypeEnum.NATURAL
+        enum: merchantTypeEnum
     },
     companyCode: {                              //todo:add validation
         type: Number

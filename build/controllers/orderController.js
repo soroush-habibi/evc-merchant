@@ -9,6 +9,7 @@ import crypto from "crypto";
 import { Wallet } from "../models/wallet.model.js";
 import mongoose from "mongoose";
 import { OrderLog } from "../models/orderLog.model.js";
+import { Product } from "../models/product.model.js";
 const ENV = process.env.PRODUCTION;
 export default class orderController {
     static async addToCart(req, res, next) {
@@ -245,6 +246,13 @@ export default class orderController {
             }
             wallet.pending = payment.amount;
             await wallet.save({ session });
+            for (let i of order.items) {
+                const inventory = await Inventory.findById(i.inventoryId);
+                const product = await Product.findById(inventory?.productId);
+                if (product)
+                    product.sales += 1;
+                await product?.save({ session });
+            }
             const log = new OrderLog({
                 orderId: payment.exId,
                 from: orderStatusEnum.PAYMENT,
