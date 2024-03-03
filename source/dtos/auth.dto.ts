@@ -1,6 +1,7 @@
 import Joi from "joi";
 import { statesEnum } from "../enum/states.enum.js";
 import validator from "validator";
+import { merchantTypeEnum } from "../enum/merchantType.enum.js";
 
 const phoneRegex = /^09[0-9]{9}$/;
 const telephoneRegex = /^0\d{2,3}\d{8}$/;
@@ -38,15 +39,27 @@ export { registerDto, registerDtoType }
 
 //*editProfile
 const editProfileDto = Joi.object({
+    type: Joi.string().valid(...Object.values(merchantTypeEnum)).required(),
     fullName: Joi.string().min(2),
     bankNumber: Joi.string().min(16).max(16),                        //todo:add validation
-    nationalCode: Joi.string().pattern(new RegExp(nationalCodeRegex)).message("invalid national code"),
+    nationalCode: Joi.string().pattern(new RegExp(nationalCodeRegex)).message("invalid national code").when("type", {
+        is: merchantTypeEnum.NATURAL,
+        then: Joi.optional(),
+        otherwise: Joi.forbidden()
+    }),
+    companyCode: Joi.number().when("type", { is: merchantTypeEnum.JURIDICAL, then: Joi.optional(), otherwise: Joi.forbidden() }),
+    nationalId: Joi.number().when("type", { is: merchantTypeEnum.JURIDICAL, then: Joi.optional(), otherwise: Joi.forbidden() }),
+    economicCode: Joi.number().when("type", { is: merchantTypeEnum.JURIDICAL, then: Joi.optional(), otherwise: Joi.forbidden() })
 });
 
 type editProfileDtoType = {
+    type: merchantTypeEnum,
     fullName?: string,
     bankNumber?: string,
     nationalCode?: string,
+    companyCode?: number,
+    nationalId?: number,
+    economicCode?: number
 }
 
 export { editProfileDto, editProfileDtoType }

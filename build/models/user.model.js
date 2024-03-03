@@ -1,6 +1,7 @@
 import { model, Schema } from 'mongoose';
 import { userStatusEnum } from '../enum/userStatus.enum.js';
 import validator from 'validator';
+import { merchantTypeEnum } from '../enum/merchantType.enum.js';
 const userSchema = new Schema({
     fullName: {
         type: String,
@@ -22,6 +23,20 @@ const userSchema = new Schema({
             },
             message: "invalid national code"
         }
+    },
+    type: {
+        type: String,
+        enum: merchantTypeEnum,
+        default: merchantTypeEnum.NATURAL
+    },
+    companyCode: {
+        type: Number
+    },
+    nationalId: {
+        type: Number
+    },
+    economicCode: {
+        type: Number
     },
     email: {
         type: String,

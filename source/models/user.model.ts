@@ -1,6 +1,7 @@
 import { Model, model, Schema } from 'mongoose';
 import { userStatusEnum } from '../enum/userStatus.enum.js';
 import validator from 'validator';
+import { merchantTypeEnum } from '../enum/merchantType.enum.js';
 
 // enum Roles {
 //     user = "user",
@@ -18,6 +19,12 @@ export interface IUser {
     fullName?: string,
     bankNumber?: string,
     nationalCode?: string,
+    type: merchantTypeEnum,
+    //*juridical person data
+    companyCode?: number,
+    nationalId?: number,
+    economicCode?: number,
+    //*end
     email?: string,
     password?: string,
     refreshToken?: string,
@@ -51,6 +58,20 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>({
             },
             message: "invalid national code"
         }
+    },
+    type: {
+        type: String,
+        enum: merchantTypeEnum,
+        default: merchantTypeEnum.NATURAL
+    },
+    companyCode: {                              //todo:add validation
+        type: Number
+    },
+    nationalId: {                               //todo:add validation
+        type: Number
+    },
+    economicCode: {                             //todo:add validation
+        type: Number
     },
     email: {
         type: String,

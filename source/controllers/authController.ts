@@ -10,6 +10,8 @@ import crypto from "crypto";
 import fsExtra from 'fs-extra';
 import path from 'path';
 import { Wallet } from "../models/wallet.model.js";
+import { userStatusEnum } from "../enum/userStatus.enum.js";
+import { merchantTypeEnum } from "../enum/merchantType.enum.js";
 
 const ENV = process.env.PRODUCTION
 
@@ -80,10 +82,18 @@ export default class authController {
         try {
             const user = await User.findOne({ phoneNumber: req.user?.phoneNumber });
             if (!user) return next(CustomErrorClass.userNotFound());
+            if (user.type && user.type !== body.type) return next(CustomErrorClass.badRequest());
 
-            if (body.fullName) user.fullName = body.fullName;
-            if (body.bankNumber) user.bankNumber = body.bankNumber;
-            if (body.nationalCode) user.nationalCode = body.nationalCode;
+            if (body.type === merchantTypeEnum.NATURAL) {
+                if (body.fullName) user.fullName = body.fullName;
+                if (body.bankNumber) user.bankNumber = body.bankNumber;
+                if (body.nationalCode) user.nationalCode = body.nationalCode;
+            } else if (body.type === merchantTypeEnum.JURIDICAL) {
+                if (body.companyCode) user.companyCode = body.companyCode;
+                if (body.nationalId) user.nationalId = body.nationalId;
+                if (body.economicCode) user.economicCode = body.economicCode;
+            }
+            user.status = userStatusEnum.UNVERIFIED;
 
             await user.save();
 

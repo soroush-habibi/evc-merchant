@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import { ObjectSchema } from 'joi';
 import { CustomErrorClass } from "./customError.js";
 import Formidable from "formidable";
-import { isObject } from "class-validator";
 import { PersistentFile } from "formidable";
 
 export enum FieldType {
