@@ -38,7 +38,8 @@ export enum errorEnum {
     STORE_NOT_VERIFIED = 128,
     ORDER_NOT_RECEIVED = 129,
     NO_MATCH = 130,
-    TIMEOUT = 131
+    TIMEOUT = 131,
+    COMMENT_NOT_FOUND = 132
 }
 
 export class CustomErrorClass {
@@ -305,6 +306,14 @@ export class CustomErrorClass {
             name: "TIMEOUT",
             code: errorEnum.TIMEOUT,
             httpCode: 400
+        };
+    }
+
+    static commentNotFound(): errorType {
+        return {
+            name: "COMMENT_NOT_FOUND",
+            code: errorEnum.COMMENT_NOT_FOUND,
+            httpCode: 404
         };
     }
 }

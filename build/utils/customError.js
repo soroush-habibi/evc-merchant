@@ -33,6 +33,7 @@ export var errorEnum;
     errorEnum[errorEnum["ORDER_NOT_RECEIVED"] = 129] = "ORDER_NOT_RECEIVED";
     errorEnum[errorEnum["NO_MATCH"] = 130] = "NO_MATCH";
     errorEnum[errorEnum["TIMEOUT"] = 131] = "TIMEOUT";
+    errorEnum[errorEnum["COMMENT_NOT_FOUND"] = 132] = "COMMENT_NOT_FOUND";
 })(errorEnum || (errorEnum = {}));
 export class CustomErrorClass {
     static noEnv(varName) {
@@ -266,6 +267,13 @@ export class CustomErrorClass {
             name: "TIMEOUT",
             code: errorEnum.TIMEOUT,
             httpCode: 400
+        };
+    }
+    static commentNotFound() {
+        return {
+            name: "COMMENT_NOT_FOUND",
+            code: errorEnum.COMMENT_NOT_FOUND,
+            httpCode: 404
         };
     }
 }

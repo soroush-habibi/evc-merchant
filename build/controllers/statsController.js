@@ -56,4 +56,19 @@ export default class statsController {
             return next(e);
         }
     }
+    static async deleteComment(req, res, next) {
+        const query = req.query;
+        try {
+            const comment = await Comment.findOne({ _id: query.commentId, userId: query.userId });
+            if (!comment)
+                return next(CustomErrorClass.commentNotFound());
+            await comment.deleteOne();
+            res.status(201).json({
+                message: "comment deleted!"
+            });
+        }
+        catch (e) {
+            return next(e);
+        }
+    }
 }

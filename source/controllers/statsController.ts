@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomErrorClass } from "../utils/customError.js";
-import { addCommentDtoType } from "../dtos/stats.dto.js";
+import { addCommentDtoType, deleteCommentDtoType } from "../dtos/stats.dto.js";
 import { Inventory } from "../models/inventory.model.js";
 import { Order } from "../models/order.model.js";
 import { orderStatusEnum } from "../enum/orderStatus.enum.js";
@@ -52,6 +52,23 @@ export default class statsController {
 
             res.status(201).json({
                 message: "comment saved!"
+            });
+        } catch (e) {
+            return next(e);
+        }
+    }
+
+    static async deleteComment(req: Request, res: Response, next: NextFunction) {
+        const query = req.query as deleteCommentDtoType;
+
+        try {
+            const comment = await Comment.findOne({ _id: query.commentId, userId: query.userId });
+            if (!comment) return next(CustomErrorClass.commentNotFound());
+
+            await comment.deleteOne();
+
+            res.status(201).json({
+                message: "comment deleted!"
             });
         } catch (e) {
             return next(e);

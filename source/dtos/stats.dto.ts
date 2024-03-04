@@ -35,3 +35,26 @@ type addCommentDtoType = {
 }
 
 export { addCommentDto, addCommentDtoType }
+
+//*deleteComment
+const deleteCommentDto = Joi.object({
+    commentId: Joi.string().custom((value, helpers) => {
+        if (!Types.ObjectId.isValid(value)) {
+            return helpers.error('invalid objectId');
+        }
+        return value;
+    }, "validate objectId").required(),
+    userId: Joi.string().custom((value, helpers) => {
+        if (!Types.ObjectId.isValid(value)) {
+            return helpers.error('invalid objectId');
+        }
+        return value;
+    }, "validate objectId").required(),
+});
+
+type deleteCommentDtoType = {
+    commentId: string,
+    userId: string
+}
+
+export { deleteCommentDto, deleteCommentDtoType }
