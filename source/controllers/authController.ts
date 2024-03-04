@@ -12,6 +12,7 @@ import path from 'path';
 import { Wallet } from "../models/wallet.model.js";
 import { userStatusEnum } from "../enum/userStatus.enum.js";
 import { merchantTypeEnum } from "../enum/merchantType.enum.js";
+import { storeStatusEnum } from "../enum/storeStatus.enum.js";
 
 const ENV = process.env.PRODUCTION
 
@@ -342,6 +343,7 @@ export default class authController {
                 if (body.about) store.about = body.about;
                 if (body.phoneNumber) store.phoneNumber = body.phoneNumber;
                 if (body.website) store.website = body.website;
+                store.status = storeStatusEnum.UNVERIFIED;
                 await store.save();
             }
 

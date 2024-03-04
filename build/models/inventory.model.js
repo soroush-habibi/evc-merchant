@@ -38,6 +38,7 @@ const inventorySchema = new Schema({
             // delete ret.__v;
         }
     },
+    timestamps: true
 });
 inventorySchema.index({ productId: 1 });
 const Inventory = model('Inventory', inventorySchema);

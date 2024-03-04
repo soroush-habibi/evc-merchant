@@ -26,6 +26,7 @@ const categorySchema = new Schema({
             // delete ret.__v;
         }
     },
+    timestamps: true
 });
 categorySchema.index({ category: 1, sub: 1 });
 const Category = model('category', categorySchema);

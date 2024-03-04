@@ -65,6 +65,7 @@ const paymentSchema = new Schema<IPayment, PaymentModel, IPaymentMethods>({
             // delete ret.__v;
         }
     },
+    timestamps: true
 });
 
 paymentSchema.index({ userId: 1 });

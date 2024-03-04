@@ -36,6 +36,7 @@ const documentSchema = new Schema({
             // delete ret.__v;
         }
     },
+    timestamps: true
 });
 documentSchema.index({ merchantId: 1 });
 const Document = model('Document', documentSchema);

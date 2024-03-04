@@ -6,10 +6,6 @@ const userSchema = new Schema({
     fullName: {
         type: String,
     },
-    createdAt: {
-        type: Date,
-        default: Date.now()
-    },
     bankNumber: {
         type: String,
         minlength: 16,
@@ -81,6 +77,7 @@ const userSchema = new Schema({
             // delete ret.__v;
         }
     },
+    timestamps: true
 });
 userSchema.index({ phoneNumber: 1 }, { unique: true });
 const User = model('User', userSchema);

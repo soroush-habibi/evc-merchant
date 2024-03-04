@@ -50,6 +50,7 @@ const documentSchema = new Schema<IDocument, DocumentModel, IDocumentMethods>({
             // delete ret.__v;
         }
     },
+    timestamps: true
 });
 documentSchema.index({ merchantId: 1 });
 

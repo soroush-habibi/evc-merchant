@@ -74,6 +74,7 @@ const addressSchema = new Schema<IAddress, AddressModel, IAddressMethods>({
             // delete ret.__v;
         }
     },
+    timestamps: true
 });
 
 addressSchema.index({ postCode: 1, phoneNumber: 1 }, { unique: true });

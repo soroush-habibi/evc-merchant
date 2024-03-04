@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomErrorClass } from "../utils/customError.js";
-import { checkDocumentDtoType, getAdminProductsDtoType, getUsersDtoType, updateProductStatusDtoType, verifyStoreDtoType, verifyUserDtoType } from "../dtos/admin.dto.js";
+import { checkDocumentDtoType, getAdminProductsDtoType, getOrdersDtoType, getUsersDtoType, updateProductStatusDtoType, verifyStoreDtoType, verifyUserDtoType } from "../dtos/admin.dto.js";
 import { Product } from "../models/product.model.js";
 import { User } from "../models/user.model.js";
 import { Document } from "../models/document.model.js";
@@ -8,6 +8,7 @@ import { documentStatusEnum } from "../enum/documentStatus.enum.js";
 import { Category } from "../models/category.model.js";
 import mongoose from "mongoose";
 import { Store } from "../models/store.model.js";
+import { Order } from "../models/order.model.js";
 
 const ENV = process.env.PRODUCTION
 
@@ -181,6 +182,55 @@ export default class adminController {
 
             res.status(201).json({
                 message: "store updated!"
+            });
+        } catch (e) {
+            return next(e);
+        }
+    }
+
+    static async getOrders(req: Request, res: Response, next: NextFunction) {
+        const query = req.query as getOrdersDtoType;
+
+        try {
+            const filter: any = {}
+
+            if (query.merchantPhoneNumber) filter["merchant.phoneNumber"] = query.merchantPhoneNumber;
+            if (query.status) filter.status = query.status;
+
+            const orders = await Order.aggregate([
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'merchantId',
+                        foreignField: '_id',
+                        as: 'merchant'
+                    }
+                },
+                {
+                    $unwind: "$merchant"
+                },
+                {
+                    $match: filter
+                },
+                {
+                    $limit: 20
+                },
+                {
+                    $skip: query.page ? (query.page - 1) * 20 : 0
+                },
+                {
+                    $project: {
+                        "merchant.password": 0,
+                        "merchant.refreshToken": 0,
+                        "merchant._id": 0,
+                        "merchant.__v": 0
+                    }
+                }
+            ]);
+
+            res.status(200).json({
+                message: "orders list:",
+                data: orders
             });
         } catch (e) {
             return next(e);

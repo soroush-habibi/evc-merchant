@@ -38,6 +38,7 @@ const orderSchema = new Schema({
             // delete ret.__v;
         }
     },
+    timestamps: true
 });
 orderSchema.index({ userId: 1 });
 const Order = model('Order', orderSchema);

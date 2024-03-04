@@ -47,10 +47,6 @@ const productSchema = new Schema({
         enum: productStatusEnum,
         default: productStatusEnum.UNVERIFIED
     },
-    createdAt: {
-        type: Date,
-        default: Date.now()
-    },
     views: {
         type: Number,
         default: 0
@@ -75,6 +71,7 @@ const productSchema = new Schema({
             // delete ret.__v;
         }
     },
+    timestamps: true
 });
 productSchema.index({ category: 1 });
 productSchema.index({ views: 1 });

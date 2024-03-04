@@ -37,6 +37,7 @@ const walletSchema = new Schema<IWallet, WalletModel, IWalletMethods>({
             // delete ret.__v;
         }
     },
+    timestamps: true
 });
 
 walletSchema.index({ userId: 1 });

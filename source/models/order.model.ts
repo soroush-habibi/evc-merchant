@@ -51,6 +51,7 @@ const orderSchema = new Schema<IOrder, OrderModel, IOrderMethods>({
             // delete ret.__v;
         }
     },
+    timestamps: true
 });
 
 orderSchema.index({ userId: 1 });

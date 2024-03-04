@@ -25,6 +25,7 @@ const walletSchema = new Schema({
             // delete ret.__v;
         }
     },
+    timestamps: true
 });
 walletSchema.index({ userId: 1 });
 const Wallet = model('Wallet', walletSchema);

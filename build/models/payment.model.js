@@ -49,6 +49,7 @@ const paymentSchema = new Schema({
             // delete ret.__v;
         }
     },
+    timestamps: true
 });
 paymentSchema.index({ userId: 1 });
 paymentSchema.index({ timestamp: 1 });

@@ -15,10 +15,6 @@ const orderLogSchema = new Schema({
         type: String,
         required: true,
         enum: orderStatusEnum
-    },
-    date: {
-        type: Date,
-        default: new Date()
     }
 }, {
     toJSON: {
@@ -32,6 +28,7 @@ const orderLogSchema = new Schema({
             // delete ret.__v;
         }
     },
+    timestamps: true
 });
 const OrderLog = model('OrderLog', orderLogSchema);
 export { OrderLog };

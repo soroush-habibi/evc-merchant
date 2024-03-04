@@ -52,6 +52,7 @@ const inventorySchema = new Schema<IInventory, InventoryModel, IInventoryMethods
             // delete ret.__v;
         }
     },
+    timestamps: true
 });
 inventorySchema.index({ productId: 1 });
 

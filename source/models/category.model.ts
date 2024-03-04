@@ -38,6 +38,7 @@ const categorySchema = new Schema<ICategory, CategoryModel, ICategoryMethods>({
             // delete ret.__v;
         }
     },
+    timestamps: true
 });
 categorySchema.index({ category: 1, sub: 1 });
 

@@ -4,6 +4,7 @@ import { productStatusEnum } from "../enum/productStatus.enum.js";
 import { documentStatusEnum } from "../enum/documentStatus.enum.js";
 import { userStatusEnum } from "../enum/userStatus.enum.js";
 import { storeStatusEnum } from "../enum/storeStatus.enum.js";
+import { orderStatusEnum } from "../enum/orderStatus.enum.js";
 
 const phoneRegex = /^09[0-9]{9}$/;
 const nationalCodeRegex = /^\d{3}\d{6}\d{1}$/;
@@ -113,3 +114,18 @@ type verifyStoreDtoType = {
 }
 
 export { verifyStoreDto, verifyStoreDtoType }
+
+//*getOrders
+const getOrdersDto = Joi.object({
+    page: Joi.number().integer().min(1),
+    status: Joi.string().valid(...Object.values(orderStatusEnum)),
+    merchantPhoneNumber: Joi.string().pattern(new RegExp(phoneRegex)).message("invalid phone number")
+});
+
+type getOrdersDtoType = {
+    page?: number,
+    status?: orderStatusEnum,
+    merchantPhoneNumber?: string
+}
+
+export { getOrdersDto, getOrdersDtoType }

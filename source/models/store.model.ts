@@ -67,6 +67,7 @@ const storeSchema = new Schema<IStore, StoreModel, IStoreMethods>({
             // delete ret.__v;
         }
     },
+    timestamps: true
 });
 storeSchema.index({ name: 1 }, { unique: true });
 storeSchema.index({ merchantId: 1 }, { unique: true });

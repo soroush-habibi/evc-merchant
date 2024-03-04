@@ -55,6 +55,7 @@ const addressSchema = new Schema({
             // delete ret.__v;
         }
     },
+    timestamps: true
 });
 addressSchema.index({ postCode: 1, phoneNumber: 1 }, { unique: true });
 const Address = model('Address', addressSchema);

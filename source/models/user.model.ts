@@ -15,7 +15,6 @@ import { merchantTypeEnum } from '../enum/merchantType.enum.js';
 
 export interface IUser {
     phoneNumber: string,
-    createdAt: Date,
     fullName?: string,
     bankNumber?: string,
     nationalCode?: string,
@@ -40,10 +39,6 @@ type UserModel = Model<IUser, {}, IUserMethods>;
 const userSchema = new Schema<IUser, UserModel, IUserMethods>({
     fullName: {
         type: String,
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now()
     },
     bankNumber: {                                       //todo:add validation
         type: String,
@@ -116,6 +111,7 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>({
             // delete ret.__v;
         }
     },
+    timestamps: true
 });
 
 userSchema.index({ phoneNumber: 1 }, { unique: true });
