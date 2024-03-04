@@ -6,6 +6,7 @@ import { User } from "../models/user.model.js";
 import { userStatusEnum } from "../enum/userStatus.enum.js";
 import { Store } from "../models/store.model.js";
 import { productStatusEnum } from "../enum/productStatus.enum.js";
+import { storeStatusEnum } from "../enum/storeStatus.enum.js";
 const ENV = process.env.PRODUCTION;
 export default class inventoryController {
     static async addInventory(req, res, next) {
@@ -19,7 +20,8 @@ export default class inventoryController {
             const store = await Store.findOne({ merchantId: user.id });
             if (!store)
                 return next(CustomErrorClass.storeNotFound());
-            //todo:check store status
+            if (store.status !== storeStatusEnum.VERIFIED)
+                return next(CustomErrorClass.storeNotVerified());
             const product = await Product.findOne({ _id: body.productId, status: productStatusEnum.VERIFIED });
             if (!product)
                 return next(CustomErrorClass.productNotFound());

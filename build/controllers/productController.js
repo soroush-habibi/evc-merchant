@@ -8,6 +8,7 @@ import { User } from "../models/user.model.js";
 import { userStatusEnum } from "../enum/userStatus.enum.js";
 import { Store } from "../models/store.model.js";
 import { Category } from "../models/category.model.js";
+import { storeStatusEnum } from "../enum/storeStatus.enum.js";
 const ENV = process.env.PRODUCTION;
 export default class productController {
     static async addProduct(req, res, next) {
@@ -21,7 +22,8 @@ export default class productController {
             const store = await Store.findOne({ merchantId: user.id });
             if (!store)
                 return next(CustomErrorClass.storeNotFound());
-            //todo:check store status
+            if (store.status !== storeStatusEnum.VERIFIED)
+                return next(CustomErrorClass.storeNotVerified());
             let photo = [];
             if (form.photo)
                 for (let p = 0; p < form.photo.length; p++) {

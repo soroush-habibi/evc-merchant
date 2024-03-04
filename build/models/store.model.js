@@ -1,4 +1,5 @@
 import mongoose, { model, Schema } from 'mongoose';
+import { storeStatusEnum } from '../enum/storeStatus.enum.js';
 import validator from 'validator';
 const storeSchema = new Schema({
     merchantId: {
@@ -29,6 +30,14 @@ const storeSchema = new Schema({
     website: {
         type: String,
         validate: [validator.isURL, "not valid url"]
+    },
+    status: {
+        type: String,
+        enum: storeStatusEnum,
+        default: storeStatusEnum.UNVERIFIED
+    },
+    message: {
+        type: String
     }
 }, {
     toJSON: {

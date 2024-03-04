@@ -29,6 +29,7 @@ export var errorEnum;
     errorEnum[errorEnum["USER_NOT_VERIFIED"] = 125] = "USER_NOT_VERIFIED";
     errorEnum[errorEnum["FEE_REQUIRED"] = 126] = "FEE_REQUIRED";
     errorEnum[errorEnum["CATEGORY_NOT_FOUND"] = 127] = "CATEGORY_NOT_FOUND";
+    errorEnum[errorEnum["STORE_NOT_VERIFIED"] = 128] = "STORE_NOT_VERIFIED";
 })(errorEnum || (errorEnum = {}));
 export class CustomErrorClass {
     static noEnv(varName) {
@@ -234,6 +235,13 @@ export class CustomErrorClass {
             name: "CATEGORY_NOT_FOUND",
             code: errorEnum.CATEGORY_NOT_FOUND,
             httpCode: 404
+        };
+    }
+    static storeNotVerified() {
+        return {
+            name: "STORE_NOT_VERIFIED",
+            code: errorEnum.STORE_NOT_VERIFIED,
+            httpCode: 403
         };
     }
 }

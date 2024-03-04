@@ -3,6 +3,7 @@ import { Types } from "mongoose";
 import { productStatusEnum } from "../enum/productStatus.enum.js";
 import { documentStatusEnum } from "../enum/documentStatus.enum.js";
 import { userStatusEnum } from "../enum/userStatus.enum.js";
+import { storeStatusEnum } from "../enum/storeStatus.enum.js";
 
 const phoneRegex = /^09[0-9]{9}$/;
 const nationalCodeRegex = /^\d{3}\d{6}\d{1}$/;
@@ -49,7 +50,7 @@ export { updateProductStatusDto, updateProductStatusDtoType }
 //*getUsers
 const getUsersDto = Joi.object({
     page: Joi.number().integer().min(1),
-    phoneNumber: Joi.string(),
+    phoneNumber: Joi.string().pattern(new RegExp(phoneRegex)).message("invalid phone number"),
     fullName: Joi.string(),
     nationalCode: Joi.string(),
 });
@@ -65,7 +66,7 @@ export { getUsersDto, getUsersDtoType }
 
 //*verifyUser
 const verifyUserDto = Joi.object({
-    phoneNumber: Joi.string().required(),
+    phoneNumber: Joi.string().required().pattern(new RegExp(phoneRegex)).message("invalid phone number"),
     newStatus: Joi.string().valid(...Object.values(userStatusEnum)).required(),
     message: Joi.string()
 });
@@ -97,3 +98,18 @@ type checkDocumentDtoType = {
 }
 
 export { checkDocumentDto, checkDocumentDtoType }
+
+//*verifyStore
+const verifyStoreDto = Joi.object({
+    phoneNumber: Joi.string().required().pattern(new RegExp(phoneRegex)).message("invalid phone number"),
+    newStatus: Joi.string().valid(...Object.values(storeStatusEnum)).required(),
+    message: Joi.string()
+});
+
+type verifyStoreDtoType = {
+    phoneNumber: string,
+    newStatus: storeStatusEnum,
+    message?: string
+}
+
+export { verifyStoreDto, verifyStoreDtoType }

@@ -1,12 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomErrorClass } from "../utils/customError.js";
-import { checkDocumentDtoType, getAdminProductsDtoType, getUsersDtoType, updateProductStatusDtoType, verifyUserDtoType } from "../dtos/admin.dto.js";
+import { checkDocumentDtoType, getAdminProductsDtoType, getUsersDtoType, updateProductStatusDtoType, verifyStoreDtoType, verifyUserDtoType } from "../dtos/admin.dto.js";
 import { Product } from "../models/product.model.js";
 import { User } from "../models/user.model.js";
 import { Document } from "../models/document.model.js";
 import { documentStatusEnum } from "../enum/documentStatus.enum.js";
 import { Category } from "../models/category.model.js";
 import mongoose from "mongoose";
+import { Store } from "../models/store.model.js";
 
 const ENV = process.env.PRODUCTION
 
@@ -154,6 +155,32 @@ export default class adminController {
 
             res.status(201).json({
                 message: "user updated!"
+            });
+        } catch (e) {
+            return next(e);
+        }
+    }
+
+    static async verifyStore(req: Request, res: Response, next: NextFunction) {
+        const body = req.body as verifyStoreDtoType;
+
+        try {
+            const user = await User.findOne({ phoneNumber: body.phoneNumber });
+            if (!user) return next(CustomErrorClass.userNotFound());
+
+            const store = await Store.findOne({ merchantId: user.id });
+            if (!store) return next(CustomErrorClass.storeNotFound());
+
+            store.status = body.newStatus;
+            if (body.message) {
+                store.message = body.message;
+            } else {
+                store.message = undefined;
+            }
+            await store.save();
+
+            res.status(201).json({
+                message: "store updated!"
             });
         } catch (e) {
             return next(e);

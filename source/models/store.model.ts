@@ -1,4 +1,5 @@
 import mongoose, { Model, model, Schema } from 'mongoose';
+import { storeStatusEnum } from '../enum/storeStatus.enum.js';
 import validator from 'validator';
 
 export interface IStore {
@@ -7,7 +8,9 @@ export interface IStore {
     about: string,
     phoneNumber: string,
     logo: string,
-    website: string
+    website: string,
+    status: storeStatusEnum,
+    message?: string
 }
 
 export interface IStoreMethods { }
@@ -43,6 +46,14 @@ const storeSchema = new Schema<IStore, StoreModel, IStoreMethods>({
     website: {
         type: String,
         validate: [validator.isURL, "not valid url"]
+    },
+    status: {
+        type: String,
+        enum: storeStatusEnum,
+        default: storeStatusEnum.UNVERIFIED
+    },
+    message: {
+        type: String
     }
 }, {
     toJSON: {

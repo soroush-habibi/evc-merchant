@@ -34,7 +34,8 @@ export enum errorEnum {
     ADDRESS_NOT_FOUND = 124,
     USER_NOT_VERIFIED = 125,
     FEE_REQUIRED = 126,
-    CATEGORY_NOT_FOUND = 127
+    CATEGORY_NOT_FOUND = 127,
+    STORE_NOT_VERIFIED = 128
 }
 
 export class CustomErrorClass {
@@ -269,6 +270,14 @@ export class CustomErrorClass {
             name: "CATEGORY_NOT_FOUND",
             code: errorEnum.CATEGORY_NOT_FOUND,
             httpCode: 404
+        };
+    }
+
+    static storeNotVerified(): errorType {
+        return {
+            name: "STORE_NOT_VERIFIED",
+            code: errorEnum.STORE_NOT_VERIFIED,
+            httpCode: 403
         };
     }
 }

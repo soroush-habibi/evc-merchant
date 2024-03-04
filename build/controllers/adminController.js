@@ -5,6 +5,7 @@ import { Document } from "../models/document.model.js";
 import { documentStatusEnum } from "../enum/documentStatus.enum.js";
 import { Category } from "../models/category.model.js";
 import mongoose from "mongoose";
+import { Store } from "../models/store.model.js";
 const ENV = process.env.PRODUCTION;
 export default class adminController {
     static async getAdminProducts(req, res, next) {
@@ -134,6 +135,31 @@ export default class adminController {
             await user.save();
             res.status(201).json({
                 message: "user updated!"
+            });
+        }
+        catch (e) {
+            return next(e);
+        }
+    }
+    static async verifyStore(req, res, next) {
+        const body = req.body;
+        try {
+            const user = await User.findOne({ phoneNumber: body.phoneNumber });
+            if (!user)
+                return next(CustomErrorClass.userNotFound());
+            const store = await Store.findOne({ merchantId: user.id });
+            if (!store)
+                return next(CustomErrorClass.storeNotFound());
+            store.status = body.newStatus;
+            if (body.message) {
+                store.message = body.message;
+            }
+            else {
+                store.message = undefined;
+            }
+            await store.save();
+            res.status(201).json({
+                message: "store updated!"
             });
         }
         catch (e) {
