@@ -1,5 +1,4 @@
 import mongoose, { Model, model, Schema } from 'mongoose';
-import { orderStatusEnum } from "../enum/orderStatus.enum.js";
 import validator from 'validator';
 
 export interface IComment {
@@ -13,7 +12,9 @@ export interface IComment {
     rate: number,
     suggest: boolean,
     like: number,
-    dislike: number
+    dislike: number,
+    createdAt: Date,
+    updatedAt: Date
 }
 
 export interface ICommentMethods { }
@@ -68,6 +69,12 @@ const commentSchema = new Schema<IComment, CommentModel, ICommentMethods>({
     dislike: {
         type: Number,
         default: 0
+    },
+    createdAt: {
+        type: Date
+    },
+    updatedAt: {
+        type: Date
     }
 }, {
     toJSON: {

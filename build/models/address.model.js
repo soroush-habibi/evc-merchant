@@ -42,6 +42,12 @@ const addressSchema = new Schema({
     public: {
         type: Boolean,
         default: true
+    },
+    createdAt: {
+        type: Date
+    },
+    updatedAt: {
+        type: Date
     }
 }, {
     toJSON: {

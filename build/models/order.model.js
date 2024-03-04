@@ -25,6 +25,12 @@ const orderSchema = new Schema({
         type: String,
         enum: orderStatusEnum,
         default: orderStatusEnum.CART
+    },
+    createdAt: {
+        type: Date
+    },
+    updatedAt: {
+        type: Date
     }
 }, {
     toJSON: {

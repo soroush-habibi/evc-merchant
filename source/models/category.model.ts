@@ -5,7 +5,9 @@ import { productCategoryEnum } from '../enum/productCategory.enum.js';
 export interface ICategory {
     category: productCategoryEnum,
     sub: string,
-    fee?: number
+    fee?: number,
+    createdAt: Date,
+    updatedAt: Date
 }
 
 export interface ICategoryMethods { }
@@ -25,6 +27,12 @@ const categorySchema = new Schema<ICategory, CategoryModel, ICategoryMethods>({
     fee: {
         type: Number,
         required: true
+    },
+    createdAt: {
+        type: Date
+    },
+    updatedAt: {
+        type: Date
     }
 }, {
     toJSON: {

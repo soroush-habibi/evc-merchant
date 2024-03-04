@@ -13,6 +13,12 @@ const categorySchema = new Schema({
     fee: {
         type: Number,
         required: true
+    },
+    createdAt: {
+        type: Date
+    },
+    updatedAt: {
+        type: Date
     }
 }, {
     toJSON: {

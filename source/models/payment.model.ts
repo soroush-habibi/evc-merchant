@@ -9,7 +9,9 @@ export interface IPayment {
     timestamp: number,
     token: string,
     amount: number,
-    done: boolean
+    done: boolean,
+    createdAt: Date,
+    updatedAt: Date
 }
 
 export interface IPaymentMethods { }
@@ -52,6 +54,12 @@ const paymentSchema = new Schema<IPayment, PaymentModel, IPaymentMethods>({
     done: {
         type: Boolean,
         default: false
+    },
+    createdAt: {
+        type: Date
+    },
+    updatedAt: {
+        type: Date
     }
 }, {
     toJSON: {

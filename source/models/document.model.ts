@@ -8,7 +8,9 @@ export interface IDocument {
     type: documentTypeEnum,
     doc: string,
     status: documentStatusEnum,
-    message: string
+    message: string,
+    createdAt: Date,
+    updatedAt: Date
 }
 
 export interface IDocumentMethods { }
@@ -37,6 +39,12 @@ const documentSchema = new Schema<IDocument, DocumentModel, IDocumentMethods>({
     },
     message: {
         type: String
+    },
+    createdAt: {
+        type: Date
+    },
+    updatedAt: {
+        type: Date
     }
 }, {
     toJSON: {

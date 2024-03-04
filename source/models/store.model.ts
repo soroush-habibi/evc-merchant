@@ -10,7 +10,9 @@ export interface IStore {
     logo: string,
     website: string,
     status: storeStatusEnum,
-    message?: string
+    message?: string,
+    createdAt: Date,
+    updatedAt: Date
 }
 
 export interface IStoreMethods { }
@@ -54,6 +56,12 @@ const storeSchema = new Schema<IStore, StoreModel, IStoreMethods>({
     },
     message: {
         type: String
+    },
+    createdAt: {
+        type: Date
+    },
+    updatedAt: {
+        type: Date
     }
 }, {
     toJSON: {

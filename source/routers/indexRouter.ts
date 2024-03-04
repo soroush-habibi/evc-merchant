@@ -6,6 +6,7 @@ import inventoryRouter from "./inventoryRouter.js";
 import documentRouter from "./documentRouter.js";
 import storeRouter from "./storeRouter.js";
 import orderRouter from "./orderRouter.js";
+import statsRouter from "./statsRouter.js";
 
 const indexRouter = express.Router();
 
@@ -22,5 +23,7 @@ indexRouter.use("/document", documentRouter);
 indexRouter.use("/store", storeRouter);
 
 indexRouter.use("/order", orderRouter);
+
+indexRouter.use("/stats", statsRouter);
 
 export default indexRouter;

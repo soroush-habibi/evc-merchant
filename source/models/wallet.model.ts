@@ -5,6 +5,8 @@ export interface IWallet {
     userId: mongoose.Schema.Types.ObjectId,
     balance: number,
     pending: number,
+    createdAt: Date,
+    updatedAt: Date
 }
 
 export interface IWalletMethods { }
@@ -24,6 +26,12 @@ const walletSchema = new Schema<IWallet, WalletModel, IWalletMethods>({
     pending: {
         type: Number,
         default: 0
+    },
+    createdAt: {
+        type: Date
+    },
+    updatedAt: {
+        type: Date
     }
 }, {
     toJSON: {

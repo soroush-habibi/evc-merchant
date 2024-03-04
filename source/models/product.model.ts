@@ -15,7 +15,9 @@ export interface IProduct {
     status: productStatusEnum,
     views: number,
     sales: number,
-    addData: string
+    addData: string,
+    createdAt: Date,
+    updatedAt: Date
 }
 
 export interface IProductMethods { }
@@ -79,6 +81,12 @@ const productSchema = new Schema<IProduct, ProductModel, IProductMethods>({
     addData: {
         type: mongoose.Schema.Types.Mixed,
         default: {}
+    },
+    createdAt: {
+        type: Date
+    },
+    updatedAt: {
+        type: Date
     }
 }, {
     toJSON: {

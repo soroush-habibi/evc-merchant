@@ -58,6 +58,12 @@ const productSchema = new Schema({
     addData: {
         type: mongoose.Schema.Types.Mixed,
         default: {}
+    },
+    createdAt: {
+        type: Date
+    },
+    updatedAt: {
+        type: Date
     }
 }, {
     toJSON: {

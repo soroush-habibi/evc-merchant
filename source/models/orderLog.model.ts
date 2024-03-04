@@ -6,6 +6,8 @@ export interface IOrderLog {
     orderId: mongoose.Schema.Types.ObjectId,
     from: orderStatusEnum,
     to: orderStatusEnum,
+    createdAt: Date,
+    updatedAt: Date
 }
 
 export interface IOrderLogMethods { }
@@ -27,6 +29,12 @@ const orderLogSchema = new Schema<IOrderLog, OrderLogModel, IOrderLogMethods>({
         type: String,
         required: true,
         enum: orderStatusEnum
+    },
+    createdAt: {
+        type: Date
+    },
+    updatedAt: {
+        type: Date
     }
 }, {
     toJSON: {

@@ -47,6 +47,12 @@ const commentSchema = new Schema({
     dislike: {
         type: Number,
         default: 0
+    },
+    createdAt: {
+        type: Date
+    },
+    updatedAt: {
+        type: Date
     }
 }, {
     toJSON: {

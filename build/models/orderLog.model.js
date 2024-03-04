@@ -15,6 +15,12 @@ const orderLogSchema = new Schema({
         type: String,
         required: true,
         enum: orderStatusEnum
+    },
+    createdAt: {
+        type: Date
+    },
+    updatedAt: {
+        type: Date
     }
 }, {
     toJSON: {

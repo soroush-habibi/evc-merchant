@@ -35,7 +35,10 @@ export enum errorEnum {
     USER_NOT_VERIFIED = 125,
     FEE_REQUIRED = 126,
     CATEGORY_NOT_FOUND = 127,
-    STORE_NOT_VERIFIED = 128
+    STORE_NOT_VERIFIED = 128,
+    ORDER_NOT_RECEIVED = 129,
+    NO_MATCH = 130,
+    TIMEOUT = 131
 }
 
 export class CustomErrorClass {
@@ -278,6 +281,30 @@ export class CustomErrorClass {
             name: "STORE_NOT_VERIFIED",
             code: errorEnum.STORE_NOT_VERIFIED,
             httpCode: 403
+        };
+    }
+
+    static orderNotReceived(): errorType {
+        return {
+            name: "ORDER_NOT_RECEIVED",
+            code: errorEnum.ORDER_NOT_RECEIVED,
+            httpCode: 403
+        };
+    }
+
+    static noMatch(): errorType {
+        return {
+            name: "NO_MATCH",
+            code: errorEnum.NO_MATCH,
+            httpCode: 400
+        };
+    }
+
+    static timeout(): errorType {
+        return {
+            name: "TIMEOUT",
+            code: errorEnum.TIMEOUT,
+            httpCode: 400
         };
     }
 }

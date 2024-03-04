@@ -25,6 +25,12 @@ const inventorySchema = new Schema({
         type: String,
         enum: inventoryStatusEnum,
         default: inventoryStatusEnum.ACTIVE
+    },
+    createdAt: {
+        type: Date
+    },
+    updatedAt: {
+        type: Date
     }
 }, {
     toJSON: {

@@ -16,7 +16,9 @@ export interface IAddress {
     address: string,
     number?: number,
     postCode: string,
-    public: boolean
+    public: boolean,
+    createdAt: Date,
+    updatedAt: Date
 }
 
 export interface IAddressMethods { }
@@ -61,6 +63,12 @@ const addressSchema = new Schema<IAddress, AddressModel, IAddressMethods>({
     public: {
         type: Boolean,
         default: true
+    },
+    createdAt: {
+        type: Date
+    },
+    updatedAt: {
+        type: Date
     }
 }, {
     toJSON: {

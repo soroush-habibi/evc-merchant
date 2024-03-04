@@ -7,7 +7,9 @@ export interface IInventory {
     productId: mongoose.Schema.Types.ObjectId,
     price: number,
     count: number,
-    status: inventoryStatusEnum
+    status: inventoryStatusEnum,
+    createdAt: Date,
+    updatedAt: Date
 }
 
 export interface IInventoryMethods { }
@@ -39,6 +41,12 @@ const inventorySchema = new Schema<IInventory, InventoryModel, IInventoryMethods
         type: String,
         enum: inventoryStatusEnum,
         default: inventoryStatusEnum.ACTIVE
+    },
+    createdAt: {
+        type: Date
+    },
+    updatedAt: {
+        type: Date
     }
 }, {
     toJSON: {

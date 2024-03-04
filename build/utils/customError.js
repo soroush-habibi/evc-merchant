@@ -30,6 +30,9 @@ export var errorEnum;
     errorEnum[errorEnum["FEE_REQUIRED"] = 126] = "FEE_REQUIRED";
     errorEnum[errorEnum["CATEGORY_NOT_FOUND"] = 127] = "CATEGORY_NOT_FOUND";
     errorEnum[errorEnum["STORE_NOT_VERIFIED"] = 128] = "STORE_NOT_VERIFIED";
+    errorEnum[errorEnum["ORDER_NOT_RECEIVED"] = 129] = "ORDER_NOT_RECEIVED";
+    errorEnum[errorEnum["NO_MATCH"] = 130] = "NO_MATCH";
+    errorEnum[errorEnum["TIMEOUT"] = 131] = "TIMEOUT";
 })(errorEnum || (errorEnum = {}));
 export class CustomErrorClass {
     static noEnv(varName) {
@@ -242,6 +245,27 @@ export class CustomErrorClass {
             name: "STORE_NOT_VERIFIED",
             code: errorEnum.STORE_NOT_VERIFIED,
             httpCode: 403
+        };
+    }
+    static orderNotReceived() {
+        return {
+            name: "ORDER_NOT_RECEIVED",
+            code: errorEnum.ORDER_NOT_RECEIVED,
+            httpCode: 403
+        };
+    }
+    static noMatch() {
+        return {
+            name: "NO_MATCH",
+            code: errorEnum.NO_MATCH,
+            httpCode: 400
+        };
+    }
+    static timeout() {
+        return {
+            name: "TIMEOUT",
+            code: errorEnum.TIMEOUT,
+            httpCode: 400
         };
     }
 }

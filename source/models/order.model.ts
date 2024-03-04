@@ -6,7 +6,9 @@ export interface IOrder {
     userId: mongoose.Schema.Types.ObjectId,
     merchantId: mongoose.Schema.Types.ObjectId,
     items: { inventoryId: mongoose.Schema.Types.ObjectId, count: number }[],
-    status: orderStatusEnum
+    status: orderStatusEnum,
+    createdAt: Date,
+    updatedAt: Date
 }
 
 export interface IOrderMethods { }
@@ -38,6 +40,12 @@ const orderSchema = new Schema<IOrder, OrderModel, IOrderMethods>({
         type: String,
         enum: orderStatusEnum,
         default: orderStatusEnum.CART
+    },
+    createdAt: {
+        type: Date
+    },
+    updatedAt: {
+        type: Date
     }
 }, {
     toJSON: {

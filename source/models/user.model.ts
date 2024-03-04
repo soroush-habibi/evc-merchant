@@ -29,7 +29,9 @@ export interface IUser {
     refreshToken?: string,
     notifPhone?: string,
     status: userStatusEnum,
-    message?: string
+    message?: string,
+    createdAt: Date,
+    updatedAt: Date
 }
 
 export interface IUserMethods { }
@@ -97,6 +99,12 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>({
     },
     message: {
         type: String
+    },
+    createdAt: {
+        type: Date
+    },
+    updatedAt: {
+        type: Date
     }
 }, {
     toJSON: {

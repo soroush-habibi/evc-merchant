@@ -12,6 +12,12 @@ const walletSchema = new Schema({
     pending: {
         type: Number,
         default: 0
+    },
+    createdAt: {
+        type: Date
+    },
+    updatedAt: {
+        type: Date
     }
 }, {
     toJSON: {

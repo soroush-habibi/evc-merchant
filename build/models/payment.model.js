@@ -36,6 +36,12 @@ const paymentSchema = new Schema({
     done: {
         type: Boolean,
         default: false
+    },
+    createdAt: {
+        type: Date
+    },
+    updatedAt: {
+        type: Date
     }
 }, {
     toJSON: {
