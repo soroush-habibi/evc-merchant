@@ -79,3 +79,44 @@ type confirmCallbackDtoType = {
 }
 
 export { confirmCallbackDto, confirmCallbackDtoType }
+
+//*getUserOrder
+const getUserOrderDto = Joi.object({
+    userId: Joi.string().custom((value, helpers) => {
+        if (!Types.ObjectId.isValid(value)) {
+            return helpers.error('invalid objectId');
+        }
+        return value;
+    }, "validate objectId").required(),
+    orderId: Joi.string().custom((value, helpers) => {
+        if (!Types.ObjectId.isValid(value)) {
+            return helpers.error('invalid objectId');
+        }
+        return value;
+    }, "validate objectId").required()
+});
+
+type getUserOrderDtoType = {
+    userId: string,
+    orderId: string
+}
+
+export { getUserOrderDto, getUserOrderDtoType }
+
+//*getUserOrders
+const getUserOrdersDto = Joi.object({
+    userId: Joi.string().custom((value, helpers) => {
+        if (!Types.ObjectId.isValid(value)) {
+            return helpers.error('invalid objectId');
+        }
+        return value;
+    }, "validate objectId").required(),
+    page: Joi.number().integer().min(1)
+});
+
+type getUserOrdersDtoType = {
+    userId?: string,
+    page?: number
+}
+
+export { getUserOrdersDto, getUserOrdersDtoType }

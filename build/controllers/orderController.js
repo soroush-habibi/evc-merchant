@@ -272,4 +272,49 @@ export default class orderController {
             return next(e);
         }
     }
+    static async getUserOrder(req, res, next) {
+        const params = req.params;
+        try {
+            const order = await Order.findOne({ _id: params.orderId, userId: params.userId });
+            if (!order)
+                return next(CustomErrorClass.orderNotFound());
+            res.status(200).json({
+                message: "order data",
+                data: order
+            });
+        }
+        catch (e) {
+            return next(e);
+        }
+    }
+    static async getUserOrders(req, res, next) {
+        const query = req.query;
+        try {
+            const orders = await Order.aggregate([
+                {
+                    $match: {
+                        userId: new mongoose.Types.ObjectId(query.userId)
+                    }
+                },
+                {
+                    $limit: 10
+                },
+                {
+                    $skip: query.page ? (query.page - 1) * 10 : 0
+                },
+                {
+                    $sort: {
+                        updatedAt: -1
+                    }
+                }
+            ]);
+            res.status(200).json({
+                message: "orders",
+                data: orders
+            });
+        }
+        catch (e) {
+            return next(e);
+        }
+    }
 }

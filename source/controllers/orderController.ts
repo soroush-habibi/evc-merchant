@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomErrorClass } from "../utils/customError.js";
-import { addToCartDtoType, confirmCallbackDtoType, confirmOrderDtoType, getCartsDtoType } from "../dtos/order.dto.js";
+import { addToCartDtoType, confirmCallbackDtoType, confirmOrderDtoType, getCartsDtoType, getUserOrderDtoType, getUserOrdersDtoType } from "../dtos/order.dto.js";
 import { Inventory } from "../models/inventory.model.js";
 import { Order } from "../models/order.model.js";
 import { orderStatusEnum } from "../enum/orderStatus.enum.js";
@@ -296,6 +296,54 @@ export default class orderController {
             });
         } catch (e) {
             await session.abortTransaction();
+            return next(e);
+        }
+    }
+
+    static async getUserOrder(req: Request, res: Response, next: NextFunction) {
+        const params = req.params as getUserOrderDtoType;
+
+        try {
+            const order = await Order.findOne({ _id: params.orderId, userId: params.userId });
+            if (!order) return next(CustomErrorClass.orderNotFound());
+
+            res.status(200).json({
+                message: "order data",
+                data: order
+            });
+        } catch (e) {
+            return next(e);
+        }
+    }
+
+    static async getUserOrders(req: Request, res: Response, next: NextFunction) {
+        const query = req.query as getUserOrdersDtoType;
+
+        try {
+            const orders = await Order.aggregate([
+                {
+                    $match: {
+                        userId: new mongoose.Types.ObjectId(query.userId)
+                    }
+                },
+                {
+                    $limit: 10
+                },
+                {
+                    $skip: query.page ? (query.page - 1) * 10 : 0
+                },
+                {
+                    $sort: {
+                        updatedAt: -1
+                    }
+                }
+            ]);
+
+            res.status(200).json({
+                message: "orders",
+                data: orders
+            });
+        } catch (e) {
             return next(e);
         }
     }

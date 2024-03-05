@@ -50,3 +50,30 @@ const confirmCallbackDto = Joi.object({
     token: Joi.string().uuid().required()
 });
 export { confirmCallbackDto };
+//*getUserOrder
+const getUserOrderDto = Joi.object({
+    userId: Joi.string().custom((value, helpers) => {
+        if (!Types.ObjectId.isValid(value)) {
+            return helpers.error('invalid objectId');
+        }
+        return value;
+    }, "validate objectId").required(),
+    orderId: Joi.string().custom((value, helpers) => {
+        if (!Types.ObjectId.isValid(value)) {
+            return helpers.error('invalid objectId');
+        }
+        return value;
+    }, "validate objectId").required()
+});
+export { getUserOrderDto };
+//*getUserOrders
+const getUserOrdersDto = Joi.object({
+    userId: Joi.string().custom((value, helpers) => {
+        if (!Types.ObjectId.isValid(value)) {
+            return helpers.error('invalid objectId');
+        }
+        return value;
+    }, "validate objectId").required(),
+    page: Joi.number().integer().min(1)
+});
+export { getUserOrdersDto };
