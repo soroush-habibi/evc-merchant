@@ -3,6 +3,7 @@ import { Inventory } from "../models/inventory.model.js";
 import { Order } from "../models/order.model.js";
 import { orderStatusEnum } from "../enum/orderStatus.enum.js";
 import { Comment } from "../models/comment.model.js";
+import mongoose from "mongoose";
 export default class statsController {
     static async addComment(req, res, next) {
         const body = req.body;
@@ -65,6 +66,44 @@ export default class statsController {
             await comment.deleteOne();
             res.status(201).json({
                 message: "comment deleted!"
+            });
+        }
+        catch (e) {
+            return next(e);
+        }
+    }
+    static async getProductComments(req, res, next) {
+        const query = req.query;
+        try {
+            const comments = await Comment.aggregate([
+                {
+                    $lookup: {
+                        from: "inventories",
+                        localField: "inventoryId",
+                        foreignField: "_id",
+                        as: "inventory"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "stores",
+                        localField: "inventory.merchantId",
+                        foreignField: "merchantId",
+                        as: "store"
+                    }
+                },
+                {
+                    $unwind: "$inventory"
+                },
+                {
+                    $match: {
+                        "inventory.productId": new mongoose.Types.ObjectId(query.productId)
+                    }
+                }
+            ]);
+            res.status(200).json({
+                message: "comments:",
+                data: comments
             });
         }
         catch (e) {

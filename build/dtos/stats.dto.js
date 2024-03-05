@@ -38,3 +38,14 @@ const deleteCommentDto = Joi.object({
     }, "validate objectId").required(),
 });
 export { deleteCommentDto };
+//*getProductComments
+const getProductCommentsDto = Joi.object({
+    productId: Joi.string().custom((value, helpers) => {
+        if (!Types.ObjectId.isValid(value)) {
+            return helpers.error('invalid objectId');
+        }
+        return value;
+    }, "validate objectId").required(),
+    page: Joi.number().integer().min(1),
+});
+export { getProductCommentsDto };

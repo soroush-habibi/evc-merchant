@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomErrorClass } from "../utils/customError.js";
-import { addCommentDtoType, deleteCommentDtoType } from "../dtos/stats.dto.js";
+import { addCommentDtoType, deleteCommentDtoType, getProductCommentsDtoType } from "../dtos/stats.dto.js";
 import { Inventory } from "../models/inventory.model.js";
 import { Order } from "../models/order.model.js";
 import { orderStatusEnum } from "../enum/orderStatus.enum.js";
 import { Comment } from "../models/comment.model.js";
+import mongoose from "mongoose";
 
 export default class statsController {
     static async addComment(req: Request, res: Response, next: NextFunction) {
@@ -69,6 +70,46 @@ export default class statsController {
 
             res.status(201).json({
                 message: "comment deleted!"
+            });
+        } catch (e) {
+            return next(e);
+        }
+    }
+
+    static async getProductComments(req: Request, res: Response, next: NextFunction) {
+        const query = req.query as getProductCommentsDtoType;
+
+        try {
+            const comments = await Comment.aggregate([
+                {
+                    $lookup: {
+                        from: "inventories",
+                        localField: "inventoryId",
+                        foreignField: "_id",
+                        as: "inventory"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "stores",
+                        localField: "inventory.merchantId",
+                        foreignField: "merchantId",
+                        as: "store"
+                    }
+                },
+                {
+                    $unwind: "$inventory"
+                },
+                {
+                    $match: {
+                        "inventory.productId": new mongoose.Types.ObjectId(query.productId)
+                    }
+                }
+            ]);
+
+            res.status(200).json({
+                message: "comments:",
+                data: comments
             });
         } catch (e) {
             return next(e);
