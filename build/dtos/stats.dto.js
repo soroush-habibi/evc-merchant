@@ -49,3 +49,23 @@ const getProductCommentsDto = Joi.object({
     page: Joi.number().integer().min(1),
 });
 export { getProductCommentsDto };
+//*getProductStats
+const getProductStatsDto = Joi.object({
+    productId: Joi.string().custom((value, helpers) => {
+        if (!Types.ObjectId.isValid(value)) {
+            return helpers.error('invalid objectId');
+        }
+        return value;
+    }, "validate objectId").required()
+});
+export { getProductStatsDto };
+//*getMerchantStats
+const getMerchantStatsDto = Joi.object({
+    merchantId: Joi.string().custom((value, helpers) => {
+        if (!Types.ObjectId.isValid(value)) {
+            return helpers.error('invalid objectId');
+        }
+        return value;
+    }, "validate objectId").required()
+});
+export { getMerchantStatsDto };

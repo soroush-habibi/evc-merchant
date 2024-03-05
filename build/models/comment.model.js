@@ -14,6 +14,11 @@ const commentSchema = new Schema({
         ref: "Order",
         required: true
     },
+    productId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
+        required: true
+    },
     title: {
         type: String,
         required: true

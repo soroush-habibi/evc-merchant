@@ -5,6 +5,7 @@ export interface IComment {
     userId: mongoose.Schema.Types.ObjectId,
     inventoryId: mongoose.Schema.Types.ObjectId,
     orderId: mongoose.Schema.Types.ObjectId,
+    productId: mongoose.Schema.Types.ObjectId,
     title: string,
     context: string,
     pros: string[],
@@ -34,6 +35,11 @@ const commentSchema = new Schema<IComment, CommentModel, ICommentMethods>({
     orderId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Order",
+        required: true
+    },
+    productId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
         required: true
     },
     title: {

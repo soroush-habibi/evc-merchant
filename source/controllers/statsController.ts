@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomErrorClass } from "../utils/customError.js";
-import { addCommentDtoType, deleteCommentDtoType, getProductCommentsDtoType } from "../dtos/stats.dto.js";
+import { addCommentDtoType, deleteCommentDtoType, getMerchantStatsDtoType, getProductCommentsDtoType, getProductStatsDtoType } from "../dtos/stats.dto.js";
 import { Inventory } from "../models/inventory.model.js";
 import { Order } from "../models/order.model.js";
 import { orderStatusEnum } from "../enum/orderStatus.enum.js";
@@ -22,7 +22,7 @@ export default class statsController {
             if (!inventoryIds.includes(body.inventoryId)) return next(CustomErrorClass.noMatch());
             const inventory = await Inventory.findById(body.inventoryId);
             if (!inventory) return next(CustomErrorClass.inventoryNotFound());
-            let comment = await Comment.findOne({ orderId: body.orderId, userId: order.userId, inventoryId: body.inventoryId });
+            let comment = await Comment.findOne({ orderId: body.orderId, userId: order.userId, inventoryId: body.inventoryId, productId: inventory.productId });
 
             if (comment) {
                 const tempTime = comment.createdAt.getTime() + (1000 * 60 * 60 * 24 * 7);
@@ -40,6 +40,7 @@ export default class statsController {
                     orderId: body.orderId,
                     userId: order.userId,
                     inventoryId: body.inventoryId,
+                    productId: inventory.productId,
                     title: body.title,
                     context: body.context,
                     pros: body.pros,
@@ -101,6 +102,9 @@ export default class statsController {
                     $unwind: "$inventory"
                 },
                 {
+                    $unwind: "$store"
+                },
+                {
                     $match: {
                         "inventory.productId": new mongoose.Types.ObjectId(query.productId)
                     }
@@ -110,6 +114,91 @@ export default class statsController {
             res.status(200).json({
                 message: "comments:",
                 data: comments
+            });
+        } catch (e) {
+            return next(e);
+        }
+    }
+
+    static async getProductStats(req: Request, res: Response, next: NextFunction) {
+        const query = req.query as getProductStatsDtoType;
+
+        try {
+            const result = await Comment.aggregate([
+                {
+                    $match: {
+                        productId: new mongoose.Types.ObjectId(query.productId)
+                    }
+                },
+                {
+                    $group: {
+                        _id: "$productId",
+                        avgRate: { $avg: "$rate" },
+                        totalComments: { $sum: 1 },
+                        suggestTrueCount: { $sum: { $cond: { if: { $eq: ["$suggest", true] }, then: 1, else: 0 } } }
+                    }
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        avgRate: 1,
+                        suggestTruePercentage: { $multiply: [{ $divide: ["$suggestTrueCount", "$totalComments"] }, 100] },
+                        totalComments: 1,
+                    }
+                }
+            ]);
+
+            res.status(200).json({
+                message: "product stats",
+                data: result[0]
+            });
+        } catch (e) {
+            return next(e);
+        }
+    }
+
+    static async getMerchantStats(req: Request, res: Response, next: NextFunction) {
+        const query = req.query as getMerchantStatsDtoType;
+
+        try {
+            const result = await Comment.aggregate([
+                {
+                    $lookup: {
+                        from: "inventories",
+                        localField: "inventoryId",
+                        foreignField: "_id",
+                        as: "inventory"
+                    }
+                },
+                {
+                    $unwind: "$inventory"
+                },
+                {
+                    $match: {
+                        "inventory.merchantId": new mongoose.Types.ObjectId(query.merchantId)
+                    }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        avgRate: { $avg: "$rate" },
+                        totalComments: { $sum: 1 },
+                        suggestTrueCount: { $sum: { $cond: { if: { $eq: ["$suggest", true] }, then: 1, else: 0 } } }
+                    }
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        avgRate: 1,
+                        suggestTruePercentage: { $multiply: [{ $divide: ["$suggestTrueCount", "$totalComments"] }, 100] },
+                        totalComments: 1,
+                    }
+                }
+            ]);
+
+            res.status(200).json({
+                message: "merchant stats",
+                data: result
             });
         } catch (e) {
             return next(e);
