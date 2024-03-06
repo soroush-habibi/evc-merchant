@@ -1,4 +1,4 @@
-FROM node:18
+FROM node:18-apine3.16
 
 RUN mkdir -p /home/merchant
 
