@@ -1,5 +1,5 @@
 node_modules
-.env
+*.env
 product-photos
 document-files
 *.log
