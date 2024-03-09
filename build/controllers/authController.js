@@ -11,6 +11,7 @@ import { Wallet } from "../models/wallet.model.js";
 import { userStatusEnum } from "../enum/userStatus.enum.js";
 import { merchantTypeEnum } from "../enum/merchantType.enum.js";
 import { storeStatusEnum } from "../enum/storeStatus.enum.js";
+import { sendSms } from "../utils/sms.js";
 const ENV = process.env.PRODUCTION;
 export default class authController {
     static async preRegister(req, res, next) {
@@ -23,8 +24,8 @@ export default class authController {
             if (existedOtp)
                 return next(CustomErrorClass.activeOtp());
             const newOtp = ENV === "production" ? generateRandomNumber(6) : '123456';
-            //todo:where is sendSMS service?
-            // const sms = ENV === "production" ? await sendSms(phoneNumber as string, newOtp) : { code: 200, msg: "testing" };
+            if (ENV === "production")
+                await sendSms(phoneNumber, newOtp);
             await req.redis.set(`OTP_${phoneNumber}`, newOtp, 'EX', process.env.REDIS_TTL || "60");
             res.status(201).json({
                 message: "otp sent!"
@@ -184,8 +185,8 @@ export default class authController {
             if (user.email)
                 return next(CustomErrorClass.emailRegisteredAlready());
             const newOtp = ENV === "production" ? generateRandomNumber(6) : '123456';
-            //todo:where is send email service?
-            // const sms = ENV === "production" ? await sendSms(phoneNumber as string, newOtp) : { code: 200, msg: "testing" };
+            if (ENV === "production")
+                await sendSms(req.user?.phoneNumber, newOtp);
             await req.redis.set(`EOTP_${email}`, newOtp, 'EX', process.env.REDIS_EMAIL_TTL || "120");
             res.status(201).json({
                 message: "otp sent!"
@@ -389,8 +390,8 @@ export default class authController {
             if (existedOtp)
                 return next(CustomErrorClass.activeOtp());
             const newOtp = ENV === "production" ? generateRandomNumber(6) : '123456';
-            //todo:where is sendSMS service?
-            // const sms = ENV === "production" ? await sendSms(phoneNumber as string, newOtp) : { code: 200, msg: "testing" };
+            if (ENV === "production")
+                await sendSms(body.phoneNumber, newOtp);
             await req.redis.set(`NOTP_${body.phoneNumber}`, newOtp, 'EX', process.env.REDIS_TTL || "60");
             res.status(201).json({
                 message: "otp sent!"
