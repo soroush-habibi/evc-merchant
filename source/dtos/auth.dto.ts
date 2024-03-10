@@ -217,7 +217,6 @@ export { registerNotifPhoneDto, registerNotifPhoneDtoType }
 
 //*registerStoreLogo
 const registerStoreLogoDto = Joi.object({
-    phoneNumber: Joi.string().pattern(new RegExp(phoneRegex)).message('invalid phone number').required(),
     logo: Joi.array().max(1).items(Joi.object({
         originalFilename: Joi.string().required(),
         mimetype: Joi.string().required(),
@@ -227,8 +226,20 @@ const registerStoreLogoDto = Joi.object({
 });
 
 type registerStoreLogoDtoType = {
-    phoneNumber: string,
     logo: string[]
 }
 
 export { registerStoreLogoDto, registerStoreLogoDtoType }
+
+//*refreshToken
+const refreshTokenDto = Joi.object({
+    accessToken: Joi.string().required(),
+    refreshToken: Joi.string().required()
+});
+
+type refreshTokenDtoType = {
+    accessToken: string,
+    refreshToken: string
+}
+
+export { refreshTokenDto, refreshTokenDtoType }

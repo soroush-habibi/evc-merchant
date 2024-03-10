@@ -12,6 +12,7 @@ import { userStatusEnum } from "../enum/userStatus.enum.js";
 import { merchantTypeEnum } from "../enum/merchantType.enum.js";
 import { storeStatusEnum } from "../enum/storeStatus.enum.js";
 import { sendSms } from "../utils/sms.js";
+import JWT from "jsonwebtoken";
 const ENV = process.env.PRODUCTION;
 export default class authController {
     static async preRegister(req, res, next) {
@@ -148,6 +149,47 @@ export default class authController {
         }
         catch (e) {
             return next(e);
+        }
+    }
+    static async refreshToken(req, res, next) {
+        const body = req.body;
+        try {
+            const data = JWT.verify(body.accessToken, process.env.JWT_SECRET);
+            const user = await User.findById(data.payload.id);
+            if (!user)
+                return next(CustomErrorClass.userNotFound());
+            return res.json({
+                message: "token is valid"
+            });
+        }
+        catch (e) {
+            if (e.name === "TokenExpiredError") {
+                try {
+                    const data = JWT.verify(body.refreshToken, process.env.JWT_REFRESH_SECRET);
+                    const user = await User.findById(data.payload.id);
+                    if (!user)
+                        return next(CustomErrorClass.userNotFound());
+                    if (user.refreshToken !== body.refreshToken) {
+                        user.refreshToken = "";
+                        await user.save();
+                        return next(CustomErrorClass.authError());
+                    }
+                    const [accessToken, refreshToken] = createTokens({
+                        phoneNumber: user.phoneNumber,
+                        id: user.id
+                    });
+                    user.refreshToken = refreshToken;
+                    await user.save();
+                    return res.json({
+                        message: "token refreshed!",
+                        data: { accessToken, refreshToken }
+                    });
+                }
+                catch (e) {
+                    return next(CustomErrorClass.authError());
+                }
+            }
+            return next(CustomErrorClass.authError());
         }
     }
     static async changePassword(req, res, next) {
@@ -366,7 +408,7 @@ export default class authController {
             }
             fsExtra.copyFileSync(form.logo[0].filepath, path.join(String(process.env.PRODUCT_PHOTO_FOLDER), uuid));
             await Store.updateOne({
-                phoneNumber: form.phoneNumber
+                phoneNumber: req.user?.phoneNumber
             }, {
                 logo: path.join(String(process.env.PRODUCT_PHOTO_FOLDER), uuid)
             });

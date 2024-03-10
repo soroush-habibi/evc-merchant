@@ -111,7 +111,6 @@ const registerNotifPhoneDto = Joi.object({
 export { registerNotifPhoneDto };
 //*registerStoreLogo
 const registerStoreLogoDto = Joi.object({
-    phoneNumber: Joi.string().pattern(new RegExp(phoneRegex)).message('invalid phone number').required(),
     logo: Joi.array().max(1).items(Joi.object({
         originalFilename: Joi.string().required(),
         mimetype: Joi.string().required(),
@@ -120,3 +119,9 @@ const registerStoreLogoDto = Joi.object({
     }).unknown(true)).required()
 });
 export { registerStoreLogoDto };
+//*refreshToken
+const refreshTokenDto = Joi.object({
+    accessToken: Joi.string().required(),
+    refreshToken: Joi.string().required()
+});
+export { refreshTokenDto };
