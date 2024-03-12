@@ -14,12 +14,17 @@ export default async (req, res, next) => {
     catch (e) {
         return next(CustomErrorClass.authError());
     }
-    const existedUser = await User.findOne({ phoneNumber: data.payload.phoneNumber });
-    if (!existedUser?.refreshToken)
+    try {
+        const existedUser = await User.findOne({ phoneNumber: data.payload.phoneNumber });
+        if (!existedUser?.refreshToken)
+            return next(CustomErrorClass.authError());
+        req.user = {
+            phoneNumber: data.payload.phoneNumber,
+            id: data.payload.id
+        };
+    }
+    catch (e) {
         return next(CustomErrorClass.authError());
-    req.user = {
-        phoneNumber: data.payload.phoneNumber,
-        id: data.payload.id
-    };
+    }
     next();
 };

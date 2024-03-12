@@ -39,7 +39,8 @@ export enum errorEnum {
     ORDER_NOT_RECEIVED = 129,
     NO_MATCH = 130,
     TIMEOUT = 131,
-    COMMENT_NOT_FOUND = 132
+    COMMENT_NOT_FOUND = 132,
+    EVC_AUTH_ERROR = 133
 }
 
 export class CustomErrorClass {
@@ -73,7 +74,7 @@ export class CustomErrorClass {
         return {
             name: "AUTH_ERROR",
             code: errorEnum.AUTH_ERROR,
-            httpCode: 403
+            httpCode: 401
         };
     }
 
@@ -314,6 +315,14 @@ export class CustomErrorClass {
             name: "COMMENT_NOT_FOUND",
             code: errorEnum.COMMENT_NOT_FOUND,
             httpCode: 404
+        };
+    }
+
+    static evcAuthError(): errorType {
+        return {
+            name: "EVC_AUTH_ERROR",
+            code: errorEnum.EVC_AUTH_ERROR,
+            httpCode: 400
         };
     }
 }

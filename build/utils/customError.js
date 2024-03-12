@@ -34,6 +34,7 @@ export var errorEnum;
     errorEnum[errorEnum["NO_MATCH"] = 130] = "NO_MATCH";
     errorEnum[errorEnum["TIMEOUT"] = 131] = "TIMEOUT";
     errorEnum[errorEnum["COMMENT_NOT_FOUND"] = 132] = "COMMENT_NOT_FOUND";
+    errorEnum[errorEnum["EVC_AUTH_ERROR"] = 133] = "EVC_AUTH_ERROR";
 })(errorEnum || (errorEnum = {}));
 export class CustomErrorClass {
     static noEnv(varName) {
@@ -63,7 +64,7 @@ export class CustomErrorClass {
         return {
             name: "AUTH_ERROR",
             code: errorEnum.AUTH_ERROR,
-            httpCode: 403
+            httpCode: 401
         };
     }
     static activeOtp() {
@@ -274,6 +275,13 @@ export class CustomErrorClass {
             name: "COMMENT_NOT_FOUND",
             code: errorEnum.COMMENT_NOT_FOUND,
             httpCode: 404
+        };
+    }
+    static evcAuthError() {
+        return {
+            name: "EVC_AUTH_ERROR",
+            code: errorEnum.EVC_AUTH_ERROR,
+            httpCode: 400
         };
     }
 }

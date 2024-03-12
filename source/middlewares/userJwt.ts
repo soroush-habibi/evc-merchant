@@ -16,12 +16,16 @@ export default async (req: Request, res: Response, next: NextFunction) => {
         return next(CustomErrorClass.authError());
     }
 
-    const existedUser = await User.findOne({ phoneNumber: (data as JwtPayload).payload.phoneNumber });
-    if (!existedUser?.refreshToken) return next(CustomErrorClass.authError());
+    try {
+        const existedUser = await User.findOne({ phoneNumber: (data as JwtPayload).payload.phoneNumber });
+        if (!existedUser?.refreshToken) return next(CustomErrorClass.authError());
 
-    req.user = {
-        phoneNumber: (data as JwtPayload).payload.phoneNumber,
-        id: (data as JwtPayload).payload.id
+        req.user = {
+            phoneNumber: (data as JwtPayload).payload.phoneNumber,
+            id: (data as JwtPayload).payload.id
+        }
+    } catch (e) {
+        return next(CustomErrorClass.authError());
     }
 
     next();

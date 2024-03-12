@@ -13,11 +13,19 @@ import { merchantTypeEnum } from "../enum/merchantType.enum.js";
 import { storeStatusEnum } from "../enum/storeStatus.enum.js";
 import { sendSms } from "../utils/sms.js";
 import JWT from "jsonwebtoken";
+import axios from "axios";
 const ENV = process.env.PRODUCTION;
 export default class authController {
     static async preRegister(req, res, next) {
         const { phoneNumber } = req.body;
         try {
+            const evcUser = await axios.get(`https://api.test.evipclub.org/user/admin/exist/${phoneNumber}`, {
+                headers: {
+                    "x-api-key": process.env.EVC_ADMIN_API_KEY
+                }
+            });
+            if (evcUser.data.statusCode !== 200)
+                return next(CustomErrorClass.evcAuthError());
             let user = await User.findOne({ phoneNumber });
             if (!user)
                 user = await User.create({ phoneNumber });
