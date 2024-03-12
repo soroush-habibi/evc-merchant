@@ -7,6 +7,7 @@ import documentRouter from "./documentRouter.js";
 import storeRouter from "./storeRouter.js";
 import orderRouter from "./orderRouter.js";
 import statsRouter from "./statsRouter.js";
+import gatewayRouter from "./gatewayRouter.js";
 
 const indexRouter = express.Router();
 
@@ -25,5 +26,7 @@ indexRouter.use("/store", storeRouter);
 indexRouter.use("/order", orderRouter);
 
 indexRouter.use("/stats", statsRouter);
+
+indexRouter.use("/gateway", gatewayRouter);
 
 export default indexRouter;

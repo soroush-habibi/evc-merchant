@@ -2,9 +2,14 @@ import { model, Schema } from 'mongoose';
 import { userStatusEnum } from '../enum/userStatus.enum.js';
 import validator from 'validator';
 import { merchantTypeEnum } from '../enum/merchantType.enum.js';
+import crypto from "crypto";
 const userSchema = new Schema({
     fullName: {
         type: String,
+    },
+    apiKey: {
+        type: String,
+        default: crypto.randomUUID()
     },
     bankNumber: {
         type: String,

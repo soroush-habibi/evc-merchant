@@ -2,6 +2,7 @@ import { Model, model, Schema } from 'mongoose';
 import { userStatusEnum } from '../enum/userStatus.enum.js';
 import validator from 'validator';
 import { merchantTypeEnum } from '../enum/merchantType.enum.js';
+import crypto from "crypto";
 
 // enum Roles {
 //     user = "user",
@@ -16,6 +17,7 @@ import { merchantTypeEnum } from '../enum/merchantType.enum.js';
 export interface IUser {
     phoneNumber: string,
     fullName?: string,
+    apiKey: string,
     bankNumber?: string,
     nationalCode?: string,
     type: merchantTypeEnum,
@@ -41,6 +43,10 @@ type UserModel = Model<IUser, {}, IUserMethods>;
 const userSchema = new Schema<IUser, UserModel, IUserMethods>({
     fullName: {
         type: String,
+    },
+    apiKey: {
+        type: String,
+        default: crypto.randomUUID()
     },
     bankNumber: {                                       //todo:add validation
         type: String,
