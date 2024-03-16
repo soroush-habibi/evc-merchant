@@ -434,7 +434,8 @@ export default class authController {
                 merchantId: req.user?.id
             }, {
                 $set: {
-                    logo: body.logoUrl
+                    logo: body.logoUrl,
+                    status: storeStatusEnum.UNVERIFIED
                 }
             });
 

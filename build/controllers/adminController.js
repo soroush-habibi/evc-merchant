@@ -107,10 +107,34 @@ export default class adminController {
                 filter.fullName = { $regex: new RegExp(query.fullName, "i") };
             if (query.nationalCode)
                 filter.nationalCode = { $regex: new RegExp(query.nationalCode, "i") };
-            const users = await User.find(filter, {}, {
-                limit: 10,
-                skip: query.page ? (query.page - 1) * 10 : 0
-            });
+            const users = await User.aggregate([
+                {
+                    $match: filter
+                },
+                {
+                    $lookup: {
+                        from: "stores",
+                        localField: "_id",
+                        foreignField: "merchantId",
+                        as: "store"
+                    }
+                },
+                {
+                    $unwind: "$store"
+                },
+                {
+                    $project: {
+                        password: 0,
+                        refreshToken: 0
+                    }
+                },
+                {
+                    $limit: 10
+                },
+                {
+                    $skip: query.page ? (query.page - 1) * 10 : 0
+                }
+            ]);
             res.status(200).json({
                 message: "users list",
                 data: users
