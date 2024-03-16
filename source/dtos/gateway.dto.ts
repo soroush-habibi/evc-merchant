@@ -13,3 +13,19 @@ type createGatewayDtoType = {
 }
 
 export { createGatewayDto, createGatewayDtoType }
+
+//*getGateway
+const getGatewayDto = Joi.object({
+    gatewayId: Joi.string().custom((value, helpers) => {
+        if (!Types.ObjectId.isValid(value)) {
+            return helpers.error('invalid objectId');
+        }
+        return value;
+    }, "validate objectId").required()
+});
+
+type getGatewayDtoType = {
+    gatewayId: string
+}
+
+export { getGatewayDto, getGatewayDtoType }

@@ -122,6 +122,7 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>({
         transform: function (doc, ret) {
             delete ret._id;
             delete ret.refreshToken;
+            delete ret.password
             // delete ret.__v;
         }
     },

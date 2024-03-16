@@ -85,6 +85,7 @@ const userSchema = new Schema({
         transform: function (doc, ret) {
             delete ret._id;
             delete ret.refreshToken;
+            delete ret.password;
             // delete ret.__v;
         }
     },
