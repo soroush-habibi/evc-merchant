@@ -31,15 +31,16 @@ export default class gatewayController {
     static async getGateway(req, res, next) {
         const query = req.query;
         try {
-            const gateway = await Gateway.findById(query.gatewayId);
+            const gateway = await Gateway.findById(query.gatewayId).select(["-createdAt", "-updatedAt"]);
             if (!gateway)
                 return next(CustomErrorClass.gatewayNotFound());
-            const merchant = await User.findById(gateway.merchantId);
+            const merchant = await User.findById(gateway.merchantId).select(["-apiKey", "-createdAt", "-updatedAt"]);
             if (!merchant)
                 return next(CustomErrorClass.userNotFound());
             if (merchant.status !== userStatusEnum.VERIFIED)
                 return next(CustomErrorClass.userNotVerified());
-            const store = await Store.findOne({ merchantId: merchant.id });
+            const store = await Store.findOne({ merchantId: merchant.id }).select(["-createdAt", "-updatedAt"]);
+            ;
             if (!store)
                 return next(CustomErrorClass.storeNotFound());
             if (store.status !== storeStatusEnum.VERIFIED)

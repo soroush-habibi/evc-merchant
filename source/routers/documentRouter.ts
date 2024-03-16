@@ -6,7 +6,7 @@ import { getDocumentsDto, sendDocumentDto } from "../dtos/document.dto.js";
 
 const documentRouter = express.Router();
 
-documentRouter.post("/", userJwt, genericValidator(sendDocumentDto, FieldType.FORM), documentController.sendDocument);
+documentRouter.post("/", userJwt, genericValidator(sendDocumentDto), documentController.sendDocument);
 
 documentRouter.get("/", userJwt, genericValidator(getDocumentsDto, FieldType.QUERY), documentController.getDocuments);
 
