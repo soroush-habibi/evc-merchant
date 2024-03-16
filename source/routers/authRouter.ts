@@ -38,7 +38,7 @@ authRouter.put("/profile", userJwt, genericValidator(editProfileDto), authContro
 
 authRouter.post("/store", userJwt, genericValidator(registerStoreDto), authController.registerStore);
 
-authRouter.put("/store/logo", userJwt, genericValidator(registerStoreLogoDto, FieldType.FORM), authController.registerStoreLogo);
+authRouter.put("/store/logo", userJwt, genericValidator(registerStoreLogoDto), authController.registerStoreLogo);
 
 authRouter.get("/store", userJwt, authController.getStoreInfo);
 

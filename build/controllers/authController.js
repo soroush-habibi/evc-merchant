@@ -4,9 +4,6 @@ import { createTokens, generateRandomNumber } from "../utils/generators.js";
 import { CustomErrorClass } from "../utils/customError.js";
 import bcrypt from 'bcrypt';
 import { Store } from "../models/store.model.js";
-import crypto from "crypto";
-import fsExtra from 'fs-extra';
-import path from 'path';
 import { Wallet } from "../models/wallet.model.js";
 import { userStatusEnum } from "../enum/userStatus.enum.js";
 import { merchantTypeEnum } from "../enum/merchantType.enum.js";
@@ -408,17 +405,14 @@ export default class authController {
         }
     }
     static async registerStoreLogo(req, res, next) {
-        const form = req.form;
+        const body = req.body;
         try {
-            const uuid = crypto.randomUUID();
-            if (!fsExtra.existsSync(String(process.env.PRODUCT_PHOTO_FOLDER))) {
-                fsExtra.mkdirSync(String(process.env.PRODUCT_PHOTO_FOLDER));
-            }
-            fsExtra.copyFileSync(form.logo[0].filepath, path.join(String(process.env.PRODUCT_PHOTO_FOLDER), uuid));
             await Store.updateOne({
-                phoneNumber: req.user?.phoneNumber
+                merchantId: req.user?.id
             }, {
-                logo: path.join(String(process.env.PRODUCT_PHOTO_FOLDER), uuid)
+                $set: {
+                    logo: body.logoUrl
+                }
             });
             res.status(201).json({
                 message: "logo saved!"

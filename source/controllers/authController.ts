@@ -427,19 +427,17 @@ export default class authController {
     }
 
     static async registerStoreLogo(req: Request, res: Response, next: NextFunction) {
-        const form = req.form as registerStoreLogoDtoType;
+        const body = req.body as registerStoreLogoDtoType;
 
         try {
-            const uuid = crypto.randomUUID();
-            if (!fsExtra.existsSync(String(process.env.PRODUCT_PHOTO_FOLDER))) {
-                fsExtra.mkdirSync(String(process.env.PRODUCT_PHOTO_FOLDER));
-            }
-            fsExtra.copyFileSync((form.logo[0] as any).filepath, path.join(String(process.env.PRODUCT_PHOTO_FOLDER), uuid));
             await Store.updateOne({
-                phoneNumber: req.user?.phoneNumber
+                merchantId: req.user?.id
             }, {
-                logo: path.join(String(process.env.PRODUCT_PHOTO_FOLDER), uuid)
+                $set: {
+                    logo: body.logoUrl
+                }
             });
+
 
             res.status(201).json({
                 message: "logo saved!"

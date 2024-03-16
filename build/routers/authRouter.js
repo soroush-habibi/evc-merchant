@@ -20,6 +20,6 @@ authRouter.get("/profile/wallet", userJwt, authController.getWallet);
 authRouter.get("/profile", userJwt, authController.getUserInfo);
 authRouter.put("/profile", userJwt, genericValidator(editProfileDto), authController.editProfile);
 authRouter.post("/store", userJwt, genericValidator(registerStoreDto), authController.registerStore);
-authRouter.put("/store/logo", userJwt, genericValidator(registerStoreLogoDto, FieldType.FORM), authController.registerStoreLogo);
+authRouter.put("/store/logo", userJwt, genericValidator(registerStoreLogoDto), authController.registerStoreLogo);
 authRouter.get("/store", userJwt, authController.getStoreInfo);
 export default authRouter;
