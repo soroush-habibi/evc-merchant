@@ -29,3 +29,26 @@ type getGatewayDtoType = {
 }
 
 export { getGatewayDto, getGatewayDtoType }
+
+//*startPayment
+const startPaymentDto = Joi.object({
+    gatewayId: Joi.string().custom((value, helpers) => {
+        if (!Types.ObjectId.isValid(value)) {
+            return helpers.error('invalid objectId');
+        }
+        return value;
+    }, "validate objectId").required(),
+    paymentId: Joi.string().custom((value, helpers) => {
+        if (!Types.ObjectId.isValid(value)) {
+            return helpers.error('invalid objectId');
+        }
+        return value;
+    }, "validate objectId").required()
+});
+
+type startPaymentDtoType = {
+    gatewayId: string,
+    paymentId: string
+}
+
+export { startPaymentDto, startPaymentDtoType }

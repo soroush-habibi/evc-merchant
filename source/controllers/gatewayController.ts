@@ -1,11 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomErrorClass } from "../utils/customError.js";
-import { createGatewayDtoType, getGatewayDtoType } from "../dtos/gateway.dto.js";
+import { createGatewayDtoType, getGatewayDtoType, startPaymentDtoType } from "../dtos/gateway.dto.js";
 import { User } from "../models/user.model.js";
 import { Gateway } from "../models/gateway.model.js";
 import { userStatusEnum } from "../enum/userStatus.enum.js";
 import { Store } from "../models/store.model.js";
 import { storeStatusEnum } from "../enum/storeStatus.enum.js";
+import { gatewayStatusEnum } from "../enum/gatewayStatus.enum.js";
 
 export default class gatewayController {
     static async createGateway(req: Request, res: Response, next: NextFunction) {
@@ -50,6 +51,29 @@ export default class gatewayController {
             res.status(200).json({
                 message: "gateway",
                 data: { gateway, merchant, store }
+            });
+        } catch (e) {
+            return next(e);
+        }
+    }
+
+    static async startPayment(req: Request, res: Response, next: NextFunction) {
+        const body = req.body as startPaymentDtoType;
+
+        try {
+            const gateway = await Gateway.findById(body.gatewayId);
+            if (!gateway) return next(CustomErrorClass.gatewayNotFound());
+            if (gateway.status !== gatewayStatusEnum.INIT) return next(CustomErrorClass.gatewayFinished());
+
+            await Gateway.updateOne({
+                _id: body.gatewayId
+            }, {
+                paymentId: body.paymentId,
+                status: gatewayStatusEnum.PAYMENT
+            });
+
+            res.status(201).json({
+                message: "payment started"
             });
         } catch (e) {
             return next(e);

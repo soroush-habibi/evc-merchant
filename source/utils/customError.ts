@@ -42,7 +42,8 @@ export enum errorEnum {
     COMMENT_NOT_FOUND = 132,
     EVC_AUTH_ERROR = 133,
     GATEWAY_NOT_FOUND = 134,
-    FORBIDDEN = 135
+    FORBIDDEN = 135,
+    GATEWAY_FINISHED = 136
 }
 
 export class CustomErrorClass {
@@ -341,6 +342,14 @@ export class CustomErrorClass {
             name: "FORBIDDEN",
             code: errorEnum.FORBIDDEN,
             httpCode: 403
+        };
+    }
+
+    static gatewayFinished(): errorType {
+        return {
+            name: "GATEWAY_FINISHED",
+            code: errorEnum.GATEWAY_FINISHED,
+            httpCode: 400
         };
     }
 }

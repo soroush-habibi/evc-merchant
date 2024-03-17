@@ -26,6 +26,9 @@ const gatewaySchema = new Schema({
         type: Number,
         required: true
     },
+    paymentId: {
+        type: mongoose.Schema.Types.ObjectId
+    },
     status: {
         type: String,
         enum: gatewayStatusEnum,

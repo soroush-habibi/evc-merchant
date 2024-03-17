@@ -37,6 +37,7 @@ export var errorEnum;
     errorEnum[errorEnum["EVC_AUTH_ERROR"] = 133] = "EVC_AUTH_ERROR";
     errorEnum[errorEnum["GATEWAY_NOT_FOUND"] = 134] = "GATEWAY_NOT_FOUND";
     errorEnum[errorEnum["FORBIDDEN"] = 135] = "FORBIDDEN";
+    errorEnum[errorEnum["GATEWAY_FINISHED"] = 136] = "GATEWAY_FINISHED";
 })(errorEnum || (errorEnum = {}));
 export class CustomErrorClass {
     static noEnv(varName) {
@@ -298,6 +299,13 @@ export class CustomErrorClass {
             name: "FORBIDDEN",
             code: errorEnum.FORBIDDEN,
             httpCode: 403
+        };
+    }
+    static gatewayFinished() {
+        return {
+            name: "GATEWAY_FINISHED",
+            code: errorEnum.GATEWAY_FINISHED,
+            httpCode: 400
         };
     }
 }
