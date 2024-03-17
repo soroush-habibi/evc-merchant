@@ -36,6 +36,7 @@ export var errorEnum;
     errorEnum[errorEnum["COMMENT_NOT_FOUND"] = 132] = "COMMENT_NOT_FOUND";
     errorEnum[errorEnum["EVC_AUTH_ERROR"] = 133] = "EVC_AUTH_ERROR";
     errorEnum[errorEnum["GATEWAY_NOT_FOUND"] = 134] = "GATEWAY_NOT_FOUND";
+    errorEnum[errorEnum["FORBIDDEN"] = 135] = "FORBIDDEN";
 })(errorEnum || (errorEnum = {}));
 export class CustomErrorClass {
     static noEnv(varName) {
@@ -290,6 +291,13 @@ export class CustomErrorClass {
             name: "GATEWAY_NOT_FOUND",
             code: errorEnum.GATEWAY_NOT_FOUND,
             httpCode: 404
+        };
+    }
+    static forbidden() {
+        return {
+            name: "FORBIDDEN",
+            code: errorEnum.FORBIDDEN,
+            httpCode: 403
         };
     }
 }

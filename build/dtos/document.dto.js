@@ -14,3 +14,8 @@ const getDocumentsDto = Joi.object({
     status: Joi.string().valid(...Object.values(documentStatusEnum))
 });
 export { getDocumentsDto };
+//*verifyDocumentUrl
+const verifyDocumentUrlDto = Joi.object({
+    url: Joi.string().uri().required()
+});
+export { verifyDocumentUrlDto };

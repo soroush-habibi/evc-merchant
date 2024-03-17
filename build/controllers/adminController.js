@@ -238,4 +238,18 @@ export default class adminController {
             return next(e);
         }
     }
+    static async verifyDocumentUrl(req, res, next) {
+        const query = req.query;
+        try {
+            const document = await Document.findOne({ doc: query.url });
+            if (!document)
+                return next(CustomErrorClass.documentNotFound());
+            res.status(200).json({
+                message: "ok"
+            });
+        }
+        catch (e) {
+            return next(e);
+        }
+    }
 }

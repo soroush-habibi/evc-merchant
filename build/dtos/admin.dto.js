@@ -69,3 +69,8 @@ const getOrdersDto = Joi.object({
     merchantPhoneNumber: Joi.string().pattern(new RegExp(phoneRegex)).message("invalid phone number")
 });
 export { getOrdersDto };
+//*verifyDocumentUrl
+const verifyDocumentUrlDto = Joi.object({
+    url: Joi.string().uri().required()
+});
+export { verifyDocumentUrlDto };

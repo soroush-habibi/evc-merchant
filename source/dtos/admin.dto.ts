@@ -129,3 +129,14 @@ type getOrdersDtoType = {
 }
 
 export { getOrdersDto, getOrdersDtoType }
+
+//*verifyDocumentUrl
+const verifyDocumentUrlDto = Joi.object({
+    url: Joi.string().uri().required()
+});
+
+type verifyDocumentUrlDtoType = {
+    url: string
+}
+
+export { verifyDocumentUrlDto, verifyDocumentUrlDtoType }

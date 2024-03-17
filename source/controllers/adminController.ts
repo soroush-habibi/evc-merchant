@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomErrorClass } from "../utils/customError.js";
-import { checkDocumentDtoType, getAdminProductsDtoType, getOrdersDtoType, getUsersDtoType, updateProductStatusDtoType, verifyStoreDtoType, verifyUserDtoType } from "../dtos/admin.dto.js";
+import { checkDocumentDtoType, getAdminProductsDtoType, getOrdersDtoType, getUsersDtoType, updateProductStatusDtoType, verifyDocumentUrlDtoType, verifyStoreDtoType, verifyUserDtoType } from "../dtos/admin.dto.js";
 import { Product } from "../models/product.model.js";
 import { User } from "../models/user.model.js";
 import { Document } from "../models/document.model.js";
@@ -255,6 +255,21 @@ export default class adminController {
             res.status(200).json({
                 message: "orders list:",
                 data: orders
+            });
+        } catch (e) {
+            return next(e);
+        }
+    }
+
+    static async verifyDocumentUrl(req: Request, res: Response, next: NextFunction) {
+        const query = req.query as verifyDocumentUrlDtoType;
+
+        try {
+            const document = await Document.findOne({ doc: query.url });
+            if (!document) return next(CustomErrorClass.documentNotFound());
+
+            res.status(200).json({
+                message: "ok"
             });
         } catch (e) {
             return next(e);

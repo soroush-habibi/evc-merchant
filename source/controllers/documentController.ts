@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomErrorClass } from "../utils/customError.js";
-import { getDocumentsDtoType, sendDocumentDtoType } from "../dtos/document.dto.js";
+import { verifyDocumentUrlDtoType, getDocumentsDtoType, sendDocumentDtoType } from "../dtos/document.dto.js";
 import { Document } from "../models/document.model.js";
 import { documentStatusEnum } from "../enum/documentStatus.enum.js";
 
@@ -53,6 +53,22 @@ export default class documentController {
                 message: "list of documents!",
                 data: documents
             })
+        } catch (e) {
+            return next(e);
+        }
+    }
+
+    static async verifyDocumentUrl(req: Request, res: Response, next: NextFunction) {
+        const query = req.query as verifyDocumentUrlDtoType;
+
+        try {
+            const document = await Document.findOne({ doc: query.url });
+            if (!document) return next(CustomErrorClass.documentNotFound());
+            if (String(document.merchantId) !== req.user?.id) return next(CustomErrorClass.forbidden());
+
+            res.status(200).json({
+                message: "ok"
+            });
         } catch (e) {
             return next(e);
         }

@@ -29,3 +29,14 @@ type getDocumentsDtoType = {
 }
 
 export { getDocumentsDto, getDocumentsDtoType }
+
+//*verifyDocumentUrl
+const verifyDocumentUrlDto = Joi.object({
+    url: Joi.string().uri().required()
+});
+
+type verifyDocumentUrlDtoType = {
+    url: string
+}
+
+export { verifyDocumentUrlDto, verifyDocumentUrlDtoType }
