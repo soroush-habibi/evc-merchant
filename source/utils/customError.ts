@@ -43,7 +43,8 @@ export enum errorEnum {
     EVC_AUTH_ERROR = 133,
     GATEWAY_NOT_FOUND = 134,
     FORBIDDEN = 135,
-    GATEWAY_FINISHED = 136
+    GATEWAY_FINISHED = 136,
+    GATEWAY_PAYMENT_NOT_FOUND = 137
 }
 
 export class CustomErrorClass {
@@ -350,6 +351,14 @@ export class CustomErrorClass {
             name: "GATEWAY_FINISHED",
             code: errorEnum.GATEWAY_FINISHED,
             httpCode: 400
+        };
+    }
+
+    static gatewayPaymentNotFound(): errorType {
+        return {
+            name: "GATEWAY_PAYMENT_NOT_FOUND",
+            code: errorEnum.GATEWAY_PAYMENT_NOT_FOUND,
+            httpCode: 404
         };
     }
 }

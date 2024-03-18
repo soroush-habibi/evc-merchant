@@ -38,6 +38,7 @@ export var errorEnum;
     errorEnum[errorEnum["GATEWAY_NOT_FOUND"] = 134] = "GATEWAY_NOT_FOUND";
     errorEnum[errorEnum["FORBIDDEN"] = 135] = "FORBIDDEN";
     errorEnum[errorEnum["GATEWAY_FINISHED"] = 136] = "GATEWAY_FINISHED";
+    errorEnum[errorEnum["GATEWAY_PAYMENT_NOT_FOUND"] = 137] = "GATEWAY_PAYMENT_NOT_FOUND";
 })(errorEnum || (errorEnum = {}));
 export class CustomErrorClass {
     static noEnv(varName) {
@@ -306,6 +307,13 @@ export class CustomErrorClass {
             name: "GATEWAY_FINISHED",
             code: errorEnum.GATEWAY_FINISHED,
             httpCode: 400
+        };
+    }
+    static gatewayPaymentNotFound() {
+        return {
+            name: "GATEWAY_PAYMENT_NOT_FOUND",
+            code: errorEnum.GATEWAY_PAYMENT_NOT_FOUND,
+            httpCode: 404
         };
     }
 }

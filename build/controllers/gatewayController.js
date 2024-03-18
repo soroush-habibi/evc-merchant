@@ -77,4 +77,25 @@ export default class gatewayController {
             return next(e);
         }
     }
+    static async verifyPayment(req, res, next) {
+        const body = req.body;
+        try {
+            const gateway = await Gateway.findById(body.gatewayId);
+            if (!gateway)
+                return next(CustomErrorClass.gatewayNotFound());
+            if (gateway.status !== gatewayStatusEnum.PAYMENT)
+                return next(CustomErrorClass.gatewayPaymentNotFound());
+            await Gateway.updateOne({
+                _id: body.gatewayId
+            }, {
+                status: body.status
+            });
+            res.status(201).json({
+                message: "payment updated"
+            });
+        }
+        catch (e) {
+            return next(e);
+        }
+    }
 }

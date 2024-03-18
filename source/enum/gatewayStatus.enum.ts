@@ -1,6 +1,6 @@
 export enum gatewayStatusEnum {
     INIT = "init",
     PAYMENT = "payment",
-    EXPIRED = "expired",
+    CANCELED = "canceled",
     FINISHED = "finished"
 }

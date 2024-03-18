@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomErrorClass } from "../utils/customError.js";
-import { createGatewayDtoType, getGatewayDtoType, startPaymentDtoType } from "../dtos/gateway.dto.js";
+import { createGatewayDtoType, getGatewayDtoType, startPaymentDtoType, verifyPaymentDtoType } from "../dtos/gateway.dto.js";
 import { User } from "../models/user.model.js";
 import { Gateway } from "../models/gateway.model.js";
 import { userStatusEnum } from "../enum/userStatus.enum.js";
@@ -74,6 +74,28 @@ export default class gatewayController {
 
             res.status(201).json({
                 message: "payment started"
+            });
+        } catch (e) {
+            return next(e);
+        }
+    }
+
+    static async verifyPayment(req: Request, res: Response, next: NextFunction) {
+        const body = req.body as verifyPaymentDtoType;
+
+        try {
+            const gateway = await Gateway.findById(body.gatewayId);
+            if (!gateway) return next(CustomErrorClass.gatewayNotFound());
+            if (gateway.status !== gatewayStatusEnum.PAYMENT) return next(CustomErrorClass.gatewayPaymentNotFound());
+
+            await Gateway.updateOne({
+                _id: body.gatewayId
+            }, {
+                status: body.status
+            });
+
+            res.status(201).json({
+                message: "payment updated"
             });
         } catch (e) {
             return next(e);
