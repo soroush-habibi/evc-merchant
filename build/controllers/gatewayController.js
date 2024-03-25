@@ -35,7 +35,7 @@ export default class gatewayController {
             const gateway = await Gateway.findById(query.gatewayId).select(["-createdAt", "-updatedAt"]);
             if (!gateway)
                 return next(CustomErrorClass.gatewayNotFound());
-            const merchant = await User.findById(gateway.merchantId).select(["-apiKey", "-createdAt", "-updatedAt"]);
+            const merchant = await User.findById(gateway.merchantId);
             if (!merchant)
                 return next(CustomErrorClass.userNotFound());
             if (merchant.status !== userStatusEnum.VERIFIED)
@@ -48,7 +48,7 @@ export default class gatewayController {
                 return next(CustomErrorClass.storeNotVerified());
             res.status(200).json({
                 message: "gateway",
-                data: { gateway, merchant, store }
+                data: { gateway, store }
             });
         }
         catch (e) {
