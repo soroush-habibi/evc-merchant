@@ -86,13 +86,13 @@ export default class gatewayController {
     static async verifyPayment(req, res, next) {
         const body = req.body;
         try {
-            const gateway = await Gateway.findById(body.gatewayId);
+            const gateway = await Gateway.findOne({ paymentId: body.paymentId });
             if (!gateway)
                 return next(CustomErrorClass.gatewayNotFound());
             if (gateway.status !== gatewayStatusEnum.PAYMENT)
                 return next(CustomErrorClass.gatewayPaymentNotFound());
             await Gateway.updateOne({
-                _id: body.gatewayId
+                paymentId: body.paymentId
             }, {
                 status: body.status
             });

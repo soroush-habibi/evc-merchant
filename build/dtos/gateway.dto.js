@@ -29,12 +29,7 @@ const startPaymentDto = Joi.object({
 export { startPaymentDto };
 //*verifyPayment
 const verifyPaymentDto = Joi.object({
-    gatewayId: Joi.string().custom((value, helpers) => {
-        if (!Types.ObjectId.isValid(value)) {
-            return helpers.error('invalid objectId');
-        }
-        return value;
-    }, "validate objectId").required(),
+    paymentId: Joi.string().required(),
     status: Joi.string().valid("canceled", "finished").required()
 });
 export { verifyPaymentDto };

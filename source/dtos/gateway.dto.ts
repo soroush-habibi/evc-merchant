@@ -50,17 +50,12 @@ export { startPaymentDto, startPaymentDtoType }
 
 //*verifyPayment
 const verifyPaymentDto = Joi.object({
-    gatewayId: Joi.string().custom((value, helpers) => {
-        if (!Types.ObjectId.isValid(value)) {
-            return helpers.error('invalid objectId');
-        }
-        return value;
-    }, "validate objectId").required(),
+    paymentId: Joi.string().required(),
     status: Joi.string().valid("canceled", "finished").required()
 });
 
 type verifyPaymentDtoType = {
-    gatewayId: string,
+    paymentId: string,
     status: string
 }
 
