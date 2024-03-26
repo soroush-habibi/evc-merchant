@@ -27,7 +27,7 @@ const gatewaySchema = new Schema({
         required: true
     },
     paymentId: {
-        type: mongoose.Schema.Types.ObjectId
+        type: String
     },
     status: {
         type: String,

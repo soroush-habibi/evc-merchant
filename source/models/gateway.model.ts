@@ -7,7 +7,7 @@ export interface IGateway {
     timestamp: number,
     callback: string,
     amount: number,
-    paymentId: mongoose.Schema.Types.ObjectId,
+    paymentId: string,
     status: gatewayStatusEnum,
     createdAt: Date,
     updatedAt: Date
@@ -43,7 +43,7 @@ const gatewaySchema = new Schema<IGateway, GatewayModel, IGatewayMethods>({
         required: true
     },
     paymentId: {
-        type: mongoose.Schema.Types.ObjectId
+        type: String
     },
     status: {
         type: String,
