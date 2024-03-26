@@ -63,6 +63,12 @@ export default class gatewayController {
         try {
             const gateway = await Gateway.findById(body.gatewayId);
             if (!gateway) return next(CustomErrorClass.gatewayNotFound());
+            if (gateway.status === gatewayStatusEnum.PAYMENT) {
+                return res.status(200).json({
+                    message: "payment exists",
+                    data: `https://evipclub.org/gateway-redirect/${gateway.paymentId}`
+                });
+            }
             if (gateway.status !== gatewayStatusEnum.INIT) return next(CustomErrorClass.gatewayFinished());
 
             await Gateway.updateOne({
