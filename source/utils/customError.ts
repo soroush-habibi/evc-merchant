@@ -44,7 +44,8 @@ export enum errorEnum {
     GATEWAY_NOT_FOUND = 134,
     FORBIDDEN = 135,
     GATEWAY_FINISHED = 136,
-    GATEWAY_PAYMENT_NOT_FOUND = 137
+    GATEWAY_PAYMENT_NOT_FOUND = 137,
+    PAYMENT_EXISTS = 138
 }
 
 export class CustomErrorClass {
@@ -359,6 +360,14 @@ export class CustomErrorClass {
             name: "GATEWAY_PAYMENT_NOT_FOUND",
             code: errorEnum.GATEWAY_PAYMENT_NOT_FOUND,
             httpCode: 404
+        };
+    }
+
+    static paymentExists(): errorType {
+        return {
+            name: "PAYMENT_EXISTS",
+            code: errorEnum.PAYMENT_EXISTS,
+            httpCode: 400
         };
     }
 }

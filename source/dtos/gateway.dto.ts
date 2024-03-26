@@ -37,25 +37,28 @@ const startPaymentDto = Joi.object({
             return helpers.error('invalid objectId');
         }
         return value;
-    }, "validate objectId").required(),
-    paymentId: Joi.string().required()
+    }, "validate objectId").required()
 });
 
 type startPaymentDtoType = {
-    gatewayId: string,
-    paymentId: string
+    gatewayId: string
 }
 
 export { startPaymentDto, startPaymentDtoType }
 
 //*verifyPayment
 const verifyPaymentDto = Joi.object({
-    paymentId: Joi.string().required(),
+    gatewayId: Joi.string().custom((value, helpers) => {
+        if (!Types.ObjectId.isValid(value)) {
+            return helpers.error('invalid objectId');
+        }
+        return value;
+    }, "validate objectId").required(),
     status: Joi.string().valid("canceled", "finished").required()
 });
 
 type verifyPaymentDtoType = {
-    paymentId: string,
+    gatewayId: string,
     status: string
 }
 

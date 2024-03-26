@@ -63,18 +63,12 @@ export default class gatewayController {
         try {
             const gateway = await Gateway.findById(body.gatewayId);
             if (!gateway) return next(CustomErrorClass.gatewayNotFound());
-            if (gateway.status === gatewayStatusEnum.PAYMENT) {
-                return res.status(200).json({
-                    message: "payment exists",
-                    data: `https://evipclub.org/gateway-redirect/${gateway.paymentId}`
-                });
-            }
+            if (gateway.status === gatewayStatusEnum.PAYMENT) return next(CustomErrorClass.paymentExists());
             if (gateway.status !== gatewayStatusEnum.INIT) return next(CustomErrorClass.gatewayFinished());
 
             await Gateway.updateOne({
                 _id: body.gatewayId
             }, {
-                paymentId: body.paymentId,
                 status: gatewayStatusEnum.PAYMENT
             });
 
@@ -90,12 +84,12 @@ export default class gatewayController {
         const body = req.body as verifyPaymentDtoType;
 
         try {
-            const gateway = await Gateway.findOne({ paymentId: body.paymentId })
+            const gateway = await Gateway.findById(body.gatewayId)
             if (!gateway) return next(CustomErrorClass.gatewayNotFound());
             if (gateway.status !== gatewayStatusEnum.PAYMENT) return next(CustomErrorClass.gatewayPaymentNotFound());
 
             await Gateway.updateOne({
-                paymentId: body.paymentId
+                _id: body.gatewayId
             }, {
                 status: body.status
             });
